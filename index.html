@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Nuvexa</title>
+    
     <!-- 1. Supabase kütüphanesini dışarıdan çağırıyoruz -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. Stil Kodların (CSS) -->
+    <style>
+        :root{color-scheme:dark;--bg:#0f1020;--p1:#171830;--p2:#1e2040;--p3:#2a2d55;--tx:#e8e9ff;--mu:#9a9dc9;--ac:#7c5cff;--ac2:#22d3ee;--rd:#ff5d73;--gr:#34d399}
+        *{box-sizing:border-box;margin:0}
+        html,body{height:100%;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+        body{padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+        #app{height:100%;display:flex;overflow:hidden}
+        button,input{font:inherit;color:inherit}
+    </style>
 </head>
 <body>
 
-    <!-- 2. Kendi bağlantı ve uygulama kodlarımız -->
+    <!-- 3. Supabase Bağlantı ve Başlangıç Kodları -->
     <script>
         const supabaseUrl = 'https://awenfsewnqbqahqrosxr.supabase.co';
         const supabaseKey = 'sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
         
-        // Çakışmayı önlemek için 'supabase' yerine 'sb' kullanıyoruz
         const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         let db = { users: {}, servers: {}, dms: {}, fr: {}, gifs: {} };
@@ -46,8 +57,6 @@
         veritabaniYukle();
     </script>
 
-</body>
-</html>
 <html lang="tr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nuvexa</title>
