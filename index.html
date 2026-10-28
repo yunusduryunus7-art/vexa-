@@ -6,23 +6,26 @@
 <!-- 2. Sonra kendi bağlantı kodlarımızı yazıyoruz -->
 <script>
     const supabaseUrl = 'https://awenfsewnqbqahqrosxr.supabase.co';
-    const supabaseKey = 'sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I'; // Kendi gerçek anahtarın tek satırda kaldı
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseKey = 'sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
+    
+    // Değişken adını 'supabase' yerine 'sb' yapıyoruz ki çakışma olmasın:
+    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Başlangıç Verisi ve Diğer Kodların...
     let db = { users: {}, servers: {}, dms: {}, fr: {}, gifs: {} };
     let me = ls.get('nvx_me');
 
     const save = async () => {
         ls.set('nvx_db', JSON.stringify(db));
-        const { error } = await supabase
+        // Supabase yerine 'sb' kullanıyoruz:
+        const { error } = await sb
             .from('kv')
             .upsert({ id: 'main_db', data: db });
         if (error) console.error('Buluta kaydedilemedi:', error);
     };
 
     async function veritabaniYukle() {
-        const { data, error } = await supabase
+        // Supabase yerine 'sb' kullanıyoruz:
+        const { data, error } = await sb
             .from('kv')
             .select('data')
             .eq('id', 'main_db')
@@ -40,7 +43,7 @@
     veritabaniYukle();
 </script>
 
-</script>
+
 <html lang="tr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nuvexa</title>
