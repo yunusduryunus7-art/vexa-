@@ -1,47 +1,50 @@
-
 <!DOCTYPE html>
-<!-- 1. Önce Supabase kütüphanesini dışarıdan çağırıyoruz -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuvexa</title>
+    <!-- 1. Supabase kütüphanesini dışarıdan çağırıyoruz -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
 
-<!-- 2. Sonra kendi bağlantı kodlarımızı yazıyoruz -->
-<script>
-    const supabaseUrl = 'https://awenfsewnqbqahqrosxr.supabase.co';
-    const supabaseKey = 'sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
-    
-    // Değişken adını 'supabase' yerine 'sb' yapıyoruz ki çakışma olmasın:
-    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+    <!-- 2. Kendi bağlantı ve uygulama kodlarımız -->
+    <script>
+        const supabaseUrl = 'https://awenfsewnqbqahqrosxr.supabase.co';
+        const supabaseKey = 'sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
+        
+        // Çakışmayı önlemek için 'supabase' yerine 'sb' kullanıyoruz
+        const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    let db = { users: {}, servers: {}, dms: {}, fr: {}, gifs: {} };
-    let me = ls.get('nvx_me');
+        let db = { users: {}, servers: {}, dms: {}, fr: {}, gifs: {} };
+        let me = ls.get('nvx_me');
 
-    const save = async () => {
-        ls.set('nvx_db', JSON.stringify(db));
-        // Supabase yerine 'sb' kullanıyoruz:
-        const { error } = await sb
-            .from('kv')
-            .upsert({ id: 'main_db', data: db });
-        if (error) console.error('Buluta kaydedilemedi:', error);
-    };
+        const save = async () => {
+            ls.set('nvx_db', JSON.stringify(db));
+            const { error } = await sb
+                .from('kv')
+                .upsert({ id: 'main_db', data: db });
+            if (error) console.error('Buluta kaydedilemedi:', error);
+        };
 
-    async function veritabaniYukle() {
-        // Supabase yerine 'sb' kullanıyoruz:
-        const { data, error } = await sb
-            .from('kv')
-            .select('data')
-            .eq('id', 'main_db')
-            .single();
+        async function veritabaniYukle() {
+            const { data, error } = await sb
+                .from('kv')
+                .select('data')
+                .eq('id', 'main_db')
+                .single();
 
-        if (data && data.data) {
-            db = data.data;
-            console.log('Veriler buluttan başarıyla yüklendi!');
-        } else {
-            console.log('Bulutta veri bulunamadı, yerel veriler kullanılıyor.');
+            if (data && data.data) {
+                db = data.data;
+                console.log('Veriler buluttan başarıyla yüklendi!');
+            } else {
+                console.log('Bulutta veri bulunamadı, yerel veriler kullanılıyor.');
+            }
+            render();
         }
-        render();
-    }
 
-    veritabaniYukle();
-</script>
+        veritabaniYukle();
+    </script>
 
 
 <html lang="tr"><head><meta charset="utf-8">
