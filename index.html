@@ -64,12 +64,17 @@ html,body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden}
 .gt{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}.gt button{white-space:nowrap;padding:5px 12px;font-size:13px}.gres{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:45vh;overflow-y:auto}.gres img{width:100%;height:90px;object-fit:cover;border-radius:10px;display:block;background:var(--p3)}.gres .ga{width:100%;height:90px;font-size:34px;margin:0}
 .chk input[type=radio],.chk input[type=checkbox]{padding:0}
 </style></head><body><div id="app"></div>
+<script>
+(function(){function show(m){var a=document.getElementById('app');if(a&&!a.children.length)a.innerHTML='<pre style="color:#ff5d73;padding:20px;white-space:pre-wrap;font:14px/1.5 monospace">Nuvexa açılamadı.\n\nHata: '+String(m).replace(/</g,'&lt;')+'\n\nBu yazının ekran görüntüsünü gönder.</pre>'}
+addEventListener('error',function(e){var t=e.target;show(t&&t.src?'Dosya yüklenemedi: '+t.src:(e.message||e.error))},true);
+addEventListener('unhandledrejection',function(e){show(e.reason&&e.reason.message||e.reason)})})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-client.umd.min.js"></script>
 <script>
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
-onst GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv';
+const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -374,7 +379,7 @@ A.mpick=i=>{const x=ML[i],m=mq();if(!x||!m)return rmPop();const v=m.i.value,end=
 
 
 /* ===== Klavye düzeni + mesaj menüsü (sil / rapor et) ===== */
-(()=>{const vv=window.visualViewport;if(!vv)return;const fit=()=>{const b=document.body;b.style.height=vv.height+'px';b.style.transform=vv.offsetTop?`translateY(${vv.offsetTop}px)`:'';b.style.paddingBottom=(innerHeight-vv.height>120)?'0':''};vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit);fit()})();
+(()=>{const vv=window.visualViewport;if(!vv)return;const fit=()=>{if(!vv.height||vv.height<150)return;const b=document.body;b.style.height=vv.height+'px';b.style.transform=vv.offsetTop?`translateY(${vv.offsetTop}px)`:'';b.style.paddingBottom=(innerHeight-vv.height>120)?'0':''};vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit);fit()})();
 let lastEl=null;
 document.addEventListener('click',e=>{lastEl=e.target.closest('[data-a]')},true);
 A.mmenu=id=>{const m=MS.find(x=>x.id===id);if(!m||!lastEl)return;const r=lastEl.getBoundingClientRect();
@@ -444,3 +449,4 @@ A.delCat=async i=>{if(!confirm('Kategori silinsin mi? İçindeki kanallar silinm
   render();
 })();
 </script></body></html>
+
