@@ -75,6 +75,7 @@ addEventListener('unhandledrejection',function(e){show(e.reason&&e.reason.messag
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
 const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv';
+const LK_URL='wss://XXXX.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -444,9 +445,14 @@ A.editCat=i=>{const k=CAT.find(x=>x.id===i);if(!k)return;modal('Kategoriyi Düze
 A.delCat=async i=>{if(!confirm('Kategori silinsin mi? İçindeki kanallar silinmez.'))return;await sb.from('categories').delete().eq('id',i);S.modal=null;await load();render()};
 
 (async()=>{
-  const {data}=await sb.auth.getSession();
-  if(data.session){me=data.session.user.id;await load();if(!P[me]){await sb.auth.signOut();me=null}else subscribe()}
-  render();
+  const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
+  app.innerHTML='<div class="empty">Yükleniyor…</div>';
+  try{
+    const {data}=await to(sb.auth.getSession(),8000);
+    if(data.session){me=data.session.user.id;await to(load(),12000);if(!P[me]){await sb.auth.signOut();me=null}else subscribe()}
+    render();
+  }catch(e){
+    app.innerHTML='<div class="empty"><h2>Sunucuya bağlanılamadı</h2><p>'+esc(e.message||e)+'</p><p style="margin-top:10px">İnternetini ve VPN\'ini kontrol et. Supabase projen duraklatılmış olabilir (Supabase panelinde "Restore project").</p><button class="btn" onclick="location.reload()" style="margin-top:14px">Yeniden dene</button></div>';
+  }
 })();
 </script></body></html>
-
