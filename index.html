@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Nuvexa</title>
 <style>
 :root{color-scheme:dark;--bg:#0f1020;--p1:#171830;--p2:#1e2040;--p3:#2a2d55;--tx:#e8e9ff;--mu:#9a9dc9;--ac:#7c5cff;--ac2:#22d3ee;--rd:#ff5d73;--gr:#34d399}
@@ -38,7 +38,7 @@ input:focus{border-color:var(--ac)}
 .mem{width:220px;background:var(--p1);padding:12px;overflow-y:auto;flex:none}
 .empty{margin:auto;text-align:center;color:var(--mu);padding:24px}
 .empty h2{color:var(--tx);margin-bottom:6px;font-size:24px}
-.ov{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:9;padding:16px}
+.ov{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:40;padding:16px}
 .md{background:var(--p1);border-radius:16px;padding:22px;width:min(420px,100%);max-height:90%;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
 .md h3{font-size:20px}.md label{font-size:12px;color:var(--mu);font-weight:700;display:block;margin-bottom:4px}
 .row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
@@ -57,13 +57,16 @@ input:focus{border-color:var(--ac)}
 .vgrid{flex:1;display:flex;flex-wrap:wrap;gap:16px;padding:24px;align-content:flex-start;overflow-y:auto}.vc{width:170px;height:130px;background:var(--p1);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px solid transparent;transition:.15s}.vc.sp{border-color:var(--gr);box-shadow:0 0 18px #34d39966}.vbar{padding:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .sv{position:relative}.bdg{position:absolute;right:-4px;bottom:-4px;background:var(--rd);color:#fff;border-radius:10px;min-width:18px;height:18px;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px;border:2px solid #0a0b18}
 .mn{background:#7c5cff33;color:#c4b5ff;border-radius:5px;padding:0 3px;font-weight:600}.mn.me{background:#f59e0b33;color:#fcd34d}.m.hl{background:#f59e0b14;box-shadow:inset 3px 0 #f59e0b;padding-left:8px;border-radius:6px}
+.cat button{padding:6px 12px;margin:-6px -6px}
+html,body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden}
+.m{position:relative;border-radius:8px;padding:6px 40px 6px 8px}.m:hover{background:#ffffff08}.m>div:nth-child(2){flex:1;min-width:0}
+.mm{position:absolute;right:4px;top:4px;width:30px;height:28px;border-radius:8px;background:var(--p1);opacity:0;font-weight:700}.m:hover .mm,.mm:focus{opacity:1}@media(hover:none){.mm{opacity:.85}}
 </style></head><body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-client.umd.min.js"></script>
 <script>
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
-const LK_URL='wss://XXXX.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -146,7 +149,7 @@ r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" dat
 const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
 const f=$('.in input');if(f){f.value=old;if((oldF||!old)&&!S.modal&&innerWidth>700)f.focus()}}
 
-const modal=(t,b,ok,fn)=>{S.modal={t,b,ok,fn};render()};
+const modal=(t,b,ok,fn)=>{S.modal={t,b,ok,fn};S.nav=false;render()};
 const close=()=>{S.modal=null;render()};
 const go=async()=>{S.nav=false;await loadMsgs();render()};
 
@@ -228,7 +231,7 @@ const ANIM='zıpla|😂|bounce|#f59e0b;kalp|😍|pulse|#ec4899;sinir|😡|shake|
 const gifHTML=g=>{if(g.startsWith('u:'))return`<img src="${esc(g.slice(2))}" alt="gif" style="display:block;max-width:260px;max-height:220px;border-radius:12px;margin-top:4px">`;const a=ANIM[+g.slice(2)];return a?`<div class="ga" style="background:linear-gradient(135deg,${a[3]},#1e2040)"><span style="display:block;animation:g-${a[2]} 1s infinite">${a[1]}</span><small>${a[0].toUpperCase()}</small></div>`:''};
 
 msgsHTML=function(){return MS.map(m=>{const u=U(m.user_id),s=S.view==='server'?srv():null,nm=s?nick(s.id,m.user_id):u.name;
-return`<div class="m${hl(m)}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div><b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`}</div></div>`}).join('')};
+return`<div class="m${hl(m)}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div><b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`}).join('')};
 
 memHTML=function(){if(S.view!=='server')return'';const s=srv(),L=MB.filter(m=>m.server_id===s.id);
 return`<div class="mem"><div class="cat">ÜYELER — ${L.length}</div>`+L.map(m=>{const r=rolesOf(s.id,m.user_id)[0];return`<button class="it" data-a="prof" data-i="${m.user_id}" style="color:${rcol(s.id,m.user_id)}">${av(U(m.user_id),28)}<span>${esc(nick(s.id,m.user_id))}${s.owner===m.user_id?' 👑':''}<small style="display:block;color:var(--mu);font-size:11px">${r?esc(r.name):''}</small></span></button>`}).join('')+`</div>`};
@@ -363,6 +366,20 @@ document.addEventListener('input',e=>{if(e.target.name!=='x')return;const m=mq()
   if(!ML.length)return rmPop();const r=m.i.getBoundingClientRect();
   pop(r.left,r.top-ML.length*46-16,ML.map((x,i)=>`<button type="button" class="it" data-a="mpick" data-i="${i}">${x.id?av(U(x.id),26):'<span style="width:26px;text-align:center">📢</span>'}<span>${esc(x.n)}<small style="display:block;color:var(--mu);font-size:11px">${esc(x.u)}</small></span></button>`).join(''),Math.min(300,innerWidth-16))});
 A.mpick=i=>{const x=ML[i],m=mq();if(!x||!m)return rmPop();const v=m.i.value,end=m.i.selectionStart,ins='@'+x.n+' ';m.i.value=v.slice(0,m.at)+ins+v.slice(end);const c=m.at+ins.length;m.i.setSelectionRange(c,c);if(x.id)MEN[x.n]=x.id;rmPop();m.i.focus()};
+
+
+/* ===== Klavye düzeni + mesaj menüsü (sil / rapor et) ===== */
+(()=>{const vv=window.visualViewport;if(!vv)return;const fit=()=>{const b=document.body;b.style.height=vv.height+'px';b.style.transform=vv.offsetTop?`translateY(${vv.offsetTop}px)`:'';b.style.paddingBottom=(innerHeight-vv.height>120)?'0':''};vv.addEventListener('resize',fit);vv.addEventListener('scroll',fit);fit()})();
+let lastEl=null;
+document.addEventListener('click',e=>{lastEl=e.target.closest('[data-a]')},true);
+A.mmenu=id=>{const m=MS.find(x=>x.id===id);if(!m||!lastEl)return;const r=lastEl.getBoundingClientRect();
+  pop(r.right-170,r.bottom+4,m.user_id===me?`<button class="it" data-a="dmsg" data-i="${id}">🗑 Mesajı sil</button>`:`<button class="it" data-a="rmsg" data-i="${id}">🚩 Mesajı rapor et</button>`,170)};
+A.dmsg=async id=>{rmPop();const m=MS.find(x=>x.id===id);if(!m||m.user_id!==me||!confirm('Mesaj silinsin mi?'))return;const {error}=await sb.from('messages').delete().eq('id',id);if(error)return alert(error.message);await loadMsgs();render()};
+A.rmsg=id=>{rmPop();const m=MS.find(x=>x.id===id);if(!m)return;
+  modal('Mesajı Rapor Et',`<small style="color:var(--mu)">@${esc(U(m.user_id).username)} kullanıcısının mesajını bildiriyorsun.</small><div><label>SEBEP</label><select name="why">${['Taciz / zorbalık','Spam','Uygunsuz içerik','Nefret söylemi','Dolandırıcılık','Diğer'].map(x=>`<option>${x}</option>`).join('')}</select></div>`+inp('note','EK AÇIKLAMA (isteğe bağlı)','','text','maxlength=200'),'Raporu Gönder',async d=>{
+    const txt=m.gif?'[GIF]':(m.body||'').replace(/<@([0-9a-f-]{36})>/g,(x,i)=>'@'+U(i).username);
+    const {error}=await sb.from('reports').insert({by_user:me,against:m.user_id,why:d.get('why'),note:d.get('note'),msg:txt,place:S.view==='server'?srv().name+' / #'+(chan()?.name||''):'DM'});
+    S.modal=null;render();alert(error?error.message:'Rapor gönderildi, teşekkürler.')})};
 
 (async()=>{
   const {data}=await sb.auth.getSession();
