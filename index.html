@@ -63,7 +63,7 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const COLS=['#7c5cff','#22d3ee','#f472b6','#f59e0b','#34d399','#fb7185','#60a5fa','#a78bfa'];
-let me=null,P={},SV=[],MB=[],CH=[],MS=[],subbed=false,rt,FR=[],RL=[],MR=[];
+let me=null,P={},SV=[],MB=[],CH=[],MS=[],subbed=false,rt,FR=[],RL=[],MR=[],DMP=[];
 let S={view:'home',sid:null,cid:null,dm:null,modal:null,tab:'login',err:'',q:'',nav:false};
 
 const dk=(a,b)=>[a,b].sort().join('_');
@@ -81,6 +81,7 @@ async function load(){
   const [a,b,c,d]=await Promise.all([sb.from('profiles').select('*'),sb.from('servers').select('*').order('created_at'),sb.from('members').select('*'),sb.from('channels').select('*').order('name')]);
   P={};(a.data||[]).forEach(p=>P[p.id]=p);SV=b.data||[];MB=c.data||[];CH=d.data||[];
   const [e,f,g]=await Promise.all([sb.from('friendships').select('*'),sb.from('roles').select('*'),sb.from('member_roles').select('*')]);FR=e.data||[];RL=f.data||[];MR=g.data||[];
+  const dm=await sb.from('messages').select('dm_key').not('dm_key','is',null).limit(1000);DMP=[...new Set((dm.data||[]).flatMap(r=>r.dm_key.split('_')).filter(x=>x!==me))];
   await loadMsgs();
 }
 async function loadMsgs(){
@@ -104,7 +105,7 @@ ${r?inp('name','TAKMA AD','','text','maxlength=24'):''}${inp('username','KULLANI
 
 function sideHTML(){let h='';const u=U(me);
 if(S.view!=='server'){
-  h=`<div class="sh">Direkt Mesajlar</div><div class="list"><div class="cat">KULLANICILAR</div>`+Object.values(P).filter(x=>x.id!==me).map(x=>`<button class="it ${S.dm===x.id?'on':''}" data-a="dm" data-i="${x.id}">${av(x,30)}<span>${esc(x.name)}</span></button>`).join('')+(Object.keys(P).length<2?'<div class="empty" style="font-size:13px">Henüz başka kullanıcı yok.</div>':'')+`</div>`;
+  h=`<div class="sh">Direkt Mesajlar</div><div class="list"><div class="cat">KULLANICILAR</div>`+dmUsers().map(x=>`<button class="it ${S.dm===x.id?'on':''}" data-a="dm" data-i="${x.id}">${av(x,30)}<span>${esc(x.name)}</span></button>`).join('')+(dmUsers().length?'':'<div class="empty" style="font-size:13px">Arkadaşların ve mesajlaştığın kişiler burada görünür.</div>')+`</div>`;
 }else{
   const s=srv(),own=s.owner===me,ln=(c,ic)=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${ic} ${esc(c.name)}</button>${own?`<button class="x" data-a="delCh" data-i="${c.id}">✕</button>`:''}</div>`;
   const cs=CH.filter(c=>c.server_id===s.id);
@@ -205,6 +206,8 @@ else if(f==='send'){const x=(d.get('x')||'').trim();if(!x)return;e.target.x.valu
 
 
 /* ===== Eklentiler: arkadaşlık, roller, profil kartı, GIF, fotoğraf, rapor ===== */
+const rem=i=>{try{const k='nvx_dm_'+me,a=JSON.parse(localStorage.getItem(k)||'[]');if(!a.includes(i)){a.push(i);localStorage.setItem(k,JSON.stringify(a))}}catch(e){}};
+function dmUsers(){const ids=new Set(DMP);FR.filter(f=>f.status==='ok').forEach(f=>ids.add(f.a===me?f.b:f.a));try{JSON.parse(localStorage.getItem('nvx_dm_'+me)||'[]').forEach(i=>ids.add(i))}catch(e){}if(S.dm)ids.add(S.dm);return[...ids].filter(i=>P[i]&&i!==me).map(i=>P[i])}
 const rolesOf=(sid,u)=>MR.filter(x=>x.server_id===sid&&x.user_id===u).map(x=>RL.find(r=>r.id===x.role_id)).filter(Boolean);
 const rcol=(sid,u)=>rolesOf(sid,u)[0]?.color||'#fff';
 const frOf=u=>FR.find(f=>(f.a===me&&f.b===u)||(f.a===u&&f.b===me));
@@ -230,7 +233,7 @@ const _mh=mainHTML;mainHTML=function(){return S.view==='home'&&S.fr?friendsHTML(
 const _h=A.home,_d=A.dm;A.home=()=>{S.fr=false;_h()};A.dm=i=>{S.fr=false;_d(i)};
 A.friends=()=>{S.view='home';S.sid=null;S.fr=true;S.fm=null;S.nav=false;render()};
 A.ftab=i=>{S.tf=i;S.fm=null;render()};
-A.gdm=i=>{S.modal=null;S.view='home';S.sid=null;S.fr=false;S.dm=i;go()};
+A.gdm=i=>{rem(i);S.modal=null;S.view='home';S.sid=null;S.fr=false;S.dm=i;go()};
 A.freq=i=>mut(sb.from('friendships').insert({a:me,b:i}));
 A.facc=i=>mut(sb.from('friendships').update({status:'ok'}).eq('a',i).eq('b',me));
 A.fdel=i=>mut(sb.from('friendships').delete().or(`and(a.eq.${me},b.eq.${i}),and(a.eq.${i},b.eq.${me})`));
