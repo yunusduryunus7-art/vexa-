@@ -61,17 +61,20 @@ input:focus{border-color:var(--ac)}
 html,body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden}
 .m{position:relative;border-radius:8px;padding:6px 40px 6px 8px}.m:hover{background:#ffffff08}.m>div:nth-child(2){flex:1;min-width:0}
 .mm{position:absolute;right:4px;top:4px;width:30px;height:28px;border-radius:8px;background:var(--p1);opacity:0;font-weight:700}.m:hover .mm,.mm:focus{opacity:1}@media(hover:none){.mm{opacity:.85}}
+.gt{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}.gt button{white-space:nowrap;padding:5px 12px;font-size:13px}.gres{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:45vh;overflow-y:auto}.gres img{width:100%;height:90px;object-fit:cover;border-radius:10px;display:block;background:var(--p3)}.gres .ga{width:100%;height:90px;font-size:34px;margin:0}
+.chk input[type=radio],.chk input[type=checkbox]{padding:0}
 </style></head><body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-client.umd.min.js"></script>
 <script>
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
+const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv'; /* developers.giphy.com > Create an API Key */*/
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const COLS=['#7c5cff','#22d3ee','#f472b6','#f59e0b','#34d399','#fb7185','#60a5fa','#a78bfa'];
-let me=null,P={},SV=[],MB=[],CH=[],MS=[],subbed=false,rt,FR=[],RL=[],MR=[],DMP=[];
+let me=null,P={},SV=[],MB=[],CH=[],MS=[],subbed=false,rt,FR=[],RL=[],MR=[],DMP=[],CAT=[];
 let S={view:'home',sid:null,cid:null,dm:null,modal:null,tab:'login',err:'',q:'',nav:false};
 
 const dk=(a,b)=>[a,b].sort().join('_');
@@ -88,7 +91,7 @@ const inp=(k,l,v='',t='text',x='')=>`<div><label>${l}</label><input name="${k}" 
 async function load(){
   const [a,b,c,d]=await Promise.all([sb.from('profiles').select('*'),sb.from('servers').select('*').order('created_at'),sb.from('members').select('*'),sb.from('channels').select('*').order('name')]);
   P={};(a.data||[]).forEach(p=>P[p.id]=p);SV=b.data||[];MB=c.data||[];CH=d.data||[];
-  const [e,f,g]=await Promise.all([sb.from('friendships').select('*'),sb.from('roles').select('*'),sb.from('member_roles').select('*')]);FR=e.data||[];RL=f.data||[];MR=g.data||[];
+  const [e,f,g,k]=await Promise.all([sb.from('friendships').select('*'),sb.from('roles').select('*'),sb.from('member_roles').select('*'),sb.from('categories').select('*')]);FR=e.data||[];RL=f.data||[];MR=g.data||[];CAT=k.data||[];
   const dm=await sb.from('messages').select('dm_key').not('dm_key','is',null).limit(1000);DMP=[...new Set((dm.data||[]).flatMap(r=>r.dm_key.split('_')).filter(x=>x!==me))];
   const mq2=await sb.from('messages').select('id,channel_id,created_at,user_id').not('channel_id','is',null).or(`body.ilike.*<@${me}>*,body.ilike.*@everyone*`).order('created_at',{ascending:false}).limit(300);MROWS=mq2.data||[];MLOADED=true;
   await loadMsgs();
@@ -118,7 +121,7 @@ if(S.view!=='server'){
 }else{
   const s=srv(),own=s.owner===me,ln=(c,ic)=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${ic} ${esc(c.name)}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="delCh" data-i="${c.id}">✕</button>`:''}</div>`;
   const cs=CH.filter(c=>c.server_id===s.id);
-  h=`<button class="sh" data-a="srvMenu"><span>${esc(s.name)}</span><span>⌄</span></button><div class="list"><div class="cat">METİN KANALLARI ${own?'<button data-a="addCh" data-i="text">+</button>':''}</div>`+cs.filter(c=>c.type==='text').map(c=>ln(c,'#')).join('')+`<div class="cat">SES KANALLARI ${own?'<button data-a="addCh" data-i="voice">+</button>':''}</div>`+cs.filter(c=>c.type==='voice').map(c=>ln(c,'🔊')).join('')+`</div>`;
+  h=`<button class="sh" data-a="srvMenu"><span>${esc(s.name)}</span><span>⌄</span></button><div class="list">${chList(s,own)}</div>`;
 }
 return`<div class="side">${h}<div class="me"><button style="display:flex;gap:8px;align-items:center;flex:1;min-width:0;text-align:left" data-a="settings">${av(u,34)}<div class="n"><b>${esc(u.name)}</b><small>@${esc(u.username)}</small></div></button><button class="ib" data-a="settings">⚙</button></div></div>`}
 
@@ -131,11 +134,11 @@ if(S.view==='disc'){const q=S.q.toLowerCase(),L=SV.filter(s=>!q||s.name.toLowerC
 return`<div class="main"><div class="mh">${hb}🧭 Keşfet</div><div class="list" style="padding:18px"><h2 style="font-size:24px">Sunucuları keşfet</h2><small style="color:var(--mu)">Herkesin açtığı tüm sunucular · ${L.length} sunucu</small><input id="dq" placeholder="Sunucu ara…" value="${esc(S.q)}" style="margin:14px 0"><div class="grid">`+L.map(({s,n})=>{const j=isMem(s.id);return`<div class="card"><div style="display:flex;gap:10px;align-items:center"><div class="sv" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}</div><div><b>${esc(s.name)}</b><br><small style="color:var(--mu)">👑 ${esc(U(s.owner).name)} · 👥 ${n}</small></div></div><button class="btn ${j?'g':''}" data-a="${j?'srv':'jsrv'}" data-i="${s.id}">${j?'Sunucuyu Aç':'Katıl'}</button></div>`}).join('')+`</div>${L.length?'':'<div class="empty">Sunucu bulunamadı.</div>'}</div></div>`}
 if(S.view==='home'){
   if(!S.dm)return`<div class="main"><div class="mh">${hb}</div><div class="empty"><div class="logo" style="font-size:44px">Nuvexa</div><h2>Hoş geldin, ${esc(U(me).name)}!</h2><p>Soldan biriyle yazış, 🧭 ile sunucu keşfet ya da + ile kendi sunucunu aç.</p></div></div>`;
-  const u=U(S.dm);return`<div class="main"><div class="mh">${hb}${av(u,28)} ${esc(u.name)} <small style="color:var(--mu);font-weight:400">@${esc(u.username)}</small></div><div id="msgs">${msgsHTML()||`<div class="empty"><h2>${esc(u.name)}</h2>ile sohbetin başlangıcı.</div>`}</div><form class="in" data-f="send"><input name="x" autocomplete=off placeholder="${esc(u.name)} kişisine mesaj gönder"><button type="button" class="btn g" data-a="gif0">GIF</button><button class="btn">Gönder</button></form></div>`}
+  const u=U(S.dm);return`<div class="main"><div class="mh">${hb}${av(u,28)} ${esc(u.name)} <small style="color:var(--mu);font-weight:400">@${esc(u.username)}</small></div><div id="msgs">${msgsHTML()||`<div class="empty"><h2>${esc(u.name)}</h2>ile sohbetin başlangıcı.</div>`}</div><form class="in" data-f="send"><button type="button" class="btn g" data-a="attach" title="Fotoğraf / video ekle" style="padding:0 16px;font-size:20px">+</button><input name="x" autocomplete=off placeholder="${esc(u.name)} kişisine mesaj gönder"><button type="button" class="btn g" data-a="gif0">GIF</button><button class="btn">Gönder</button></form></div>`}
 const c=chan();
 if(!c)return`<div class="main"><div class="mh">${hb}</div><div class="empty">Kanal yok.</div></div>`;
 if(c.type==='voice')return`<div class="main"><div class="mh">${hb}🔊 ${esc(c.name)}</div><div class="empty"><h2>Sesli sohbet yakında</h2>Gerçek sesli konuşma için WebRTC altyapısı (ör. LiveKit) eklenmesi gerekiyor.</div></div>`;
-return`<div class="main"><div class="mh">${hb}# ${esc(c.name)}</div><div id="msgs">${msgsHTML()||`<div class="empty"><h2>#${esc(c.name)} kanalına hoş geldin</h2>İlk mesajı sen yaz.</div>`}</div><form class="in" data-f="send"><input name="x" autocomplete=off placeholder="#${esc(c.name)} kanalına mesaj gönder"><button type="button" class="btn g" data-a="gif0">GIF</button><button class="btn">Gönder</button></form></div>`}
+return`<div class="main"><div class="mh">${hb}# ${esc(c.name)}</div><div id="msgs">${msgsHTML()||`<div class="empty"><h2>#${esc(c.name)} kanalına hoş geldin</h2>İlk mesajı sen yaz.</div>`}</div><form class="in" data-f="send"><button type="button" class="btn g" data-a="attach" title="Fotoğraf / video ekle" style="padding:0 16px;font-size:20px">+</button><input name="x" autocomplete=off placeholder="#${esc(c.name)} kanalına mesaj gönder"><button type="button" class="btn g" data-a="gif0">GIF</button><button class="btn">Gönder</button></form></div>`}
 
 function memHTML(){if(S.view!=='server')return'';const s=srv(),L=MB.filter(m=>m.server_id===s.id);
 return`<div class="mem"><div class="cat">ÜYELER — ${L.length}</div>`+L.map(m=>`<div class="it" style="color:var(--tx);cursor:default">${av(U(m.user_id),28)}<span>${esc(nick(s.id,m.user_id))}${s.owner===m.user_id?' 👑':''}</span></div>`).join('')+`</div>`}
@@ -167,7 +170,8 @@ async jsrv(i){const {error}=await sb.from('members').insert({server_id:i,user_id
 addSrv(){modal('Sunucu Oluştur',inp('name','SUNUCU ADI',U(me).name+' sunucusu','text','required maxlength=30')+inp('icon','SİMGE (emoji, isteğe bağlı)','','text','maxlength=2'),'Oluştur',async d=>{
   const {data:s,error}=await sb.from('servers').insert({name:d.get('name'),icon:d.get('icon'),owner:me}).select().single();if(error)return alert(error.message);
   await sb.from('members').insert({server_id:s.id,user_id:me});
-  await sb.from('channels').insert([{server_id:s.id,name:'genel',type:'text'},{server_id:s.id,name:'Sohbet Odası',type:'voice'}]);
+  const {data:kc}=await sb.from('categories').insert([{server_id:s.id,name:'Metin Kanalları'},{server_id:s.id,name:'Ses Kanalları'}]).select();
+  await sb.from('channels').insert([{server_id:s.id,name:'genel',type:'text',category_id:kc?.find(x=>x.name==='Metin Kanalları')?.id||null},{server_id:s.id,name:'Sohbet Odası',type:'voice',category_id:kc?.find(x=>x.name==='Ses Kanalları')?.id||null}]);
   S.modal=null;await load();A.srv(s.id)})},
 addCh(t){modal(t==='text'?'Metin Kanalı Oluştur':'Ses Kanalı Oluştur',inp('name','KANAL ADI','','text','required maxlength=24'),'Oluştur',async d=>{
   const {data:c,error}=await sb.from('channels').insert({server_id:S.sid,name:d.get('name').trim(),type:t}).select().single();if(error)return alert(error.message);
@@ -228,7 +232,8 @@ async function upl(f,w,h){if(!f||!f.size)return null;const b=await rez(f,w,h);if
 const fileIn=(n,l,has,rn)=>`<div><label>${l}</label><input type="file" name="${n}" accept="image/*">${has?`<label class="chk" style="margin-top:6px"><input type="checkbox" name="${rn}">Kaldır</label>`:''}</div>`;
 
 const ANIM='zıpla|😂|bounce|#f59e0b;kalp|😍|pulse|#ec4899;sinir|😡|shake|#ef4444;parti|🥳|spin|#8b5cf6;selam|👋|wave|#0ea5e9;uykulu|😴|float|#6366f1;ateş|🔥|flick|#f97316;şok|🤯|pop|#14b8a6;havalı|😎|swing|#22c55e;ağla|😭|bounce|#3b82f6;tamam|👍|pop|#10b981;alkış|👏|pop|#eab308;tebrik|🎉|bounce|#a855f7;kedi|🐱|bounce|#f59e0b;köpek|🐶|pop|#a16207;uzay|🚀|float|#6366f1;hayalet|👻|float|#64748b;gözler|👀|swing|#0ea5e9;pizza|🍕|spin|#ea580c;kupa|🏆|pop|#f59e0b;kırık|💔|shake|#be123c;gülme|🤣|bounce|#f59e0b;korku|😱|shake|#a855f7;müzik|🎵|swing|#8b5cf6'.split(';').map(s=>s.split('|'));
-const gifHTML=g=>{if(g.startsWith('u:'))return`<img src="${esc(g.slice(2))}" alt="gif" style="display:block;max-width:260px;max-height:220px;border-radius:12px;margin-top:4px">`;const a=ANIM[+g.slice(2)];return a?`<div class="ga" style="background:linear-gradient(135deg,${a[3]},#1e2040)"><span style="display:block;animation:g-${a[2]} 1s infinite">${a[1]}</span><small>${a[0].toUpperCase()}</small></div>`:''};
+const okU=u=>/^https:\/\//i.test(u);
+const gifHTML=g=>{if(g[0]==='v')return okU(g.slice(2))?`<video src="${esc(g.slice(2))}" controls playsinline preload="metadata" style="display:block;max-width:300px;max-height:260px;border-radius:12px;margin-top:4px"></video>`:'';if(g[0]==='i')return okU(g.slice(2))?`<a href="${esc(g.slice(2))}" target="_blank" rel="noopener"><img src="${esc(g.slice(2))}" loading="lazy" alt="foto" style="display:block;max-width:300px;max-height:300px;border-radius:12px;margin-top:4px"></a>`:'';if(g.startsWith('u:'))return`<img src="${esc(g.slice(2))}" alt="gif" style="display:block;max-width:260px;max-height:220px;border-radius:12px;margin-top:4px">`;const a=ANIM[+g.slice(2)];return a?`<div class="ga" style="background:linear-gradient(135deg,${a[3]},#1e2040)"><span style="display:block;animation:g-${a[2]} 1s infinite">${a[1]}</span><small>${a[0].toUpperCase()}</small></div>`:''};
 
 msgsHTML=function(){return MS.map(m=>{const u=U(m.user_id),s=S.view==='server'?srv():null,nm=s?nick(s.id,m.user_id):u.name;
 return`<div class="m${hl(m)}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div><b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`}).join('')};
@@ -283,7 +288,7 @@ A.renSrv=()=>{const s=srv();modal('Sunucuyu Düzenle',fileIn('img','SUNUCU FOTO�
 A.gif0=()=>{S.gq='';A.gif()};
 A.gif=()=>{const q=(S.gq||'').toLowerCase();modal('GIF Seç',`<input id="gq" placeholder="GIF ara…" autocomplete="off" value="${esc(S.gq||'')}"><div class="gp" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px">${ANIM.map((a,i)=>a[0].includes(q)?`<button type="button" data-a="sg" data-i="a:${i}" style="padding:0">${gifHTML('a:'+i)}</button>`:'').join('')}</div><div><label>GALERİDEN GIF YÜKLE (en fazla 400 KB)</label><input type="file" id="gifup" accept="image/gif"></div>`,null)};
 A.sg=async g=>{const row={user_id:me,body:'',gif:g};if(S.view==='home')row.dm_key=dk(me,S.dm);else row.channel_id=S.cid;const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);S.modal=null;await loadMsgs();render()};
-document.addEventListener('input',e=>{if(e.target.id!=='gq')return;S.gq=e.target.value;A.gif();const d=$('#gq');d.focus();d.setSelectionRange(d.value.length,d.value.length)});
+document.addEventListener('input',e=>{if(e.target.id!=='gq')return;S.gq=e.target.value;gSearch()});
 document.addEventListener('change',async e=>{if(e.target.id!=='gifup')return;const f=e.target.files[0];if(!f)return;if(f.type!=='image/gif')return alert('Sadece .gif dosyası seç.');if(f.size>400*1024)return alert('GIF en fazla 400 KB olabilir.');
   const p=me+'/'+Date.now()+'.gif',{error}=await sb.storage.from('media').upload(p,f,{contentType:'image/gif'});if(error)return alert(error.message);A.sg('u:'+sb.storage.from('media').getPublicUrl(p).data.publicUrl)});
 
@@ -381,10 +386,61 @@ A.rmsg=id=>{rmPop();const m=MS.find(x=>x.id===id);if(!m)return;
     const {error}=await sb.from('reports').insert({by_user:me,against:m.user_id,why:d.get('why'),note:d.get('note'),msg:txt,place:S.view==='server'?srv().name+' / #'+(chan()?.name||''):'DM'});
     S.modal=null;render();alert(error?error.message:'Rapor gönderildi, teşekkürler.')})};
 
+
+/* ===== GIF (GIPHY) + fotoğraf/video ekleme + kategoriler ===== */
+const GCATS=[['🔥 Popüler','trending'],['😄 Mutlu','happy'],['😢 Üzgün','sad'],['😡 Sinirli','angry'],['😍 Aşk','love'],['😂 Komik','funny'],['😱 Şaşkın','shocked'],['🥳 Kutlama','celebrate'],['👏 Alkış','applause'],['👍 Evet','yes'],['👎 Hayır','no'],['👋 Selam','hello'],['😴 Yorgun','tired'],['🐱 Hayvan','cute animals'],['🎮 Oyun','gaming'],['🎌 Anime','anime'],['💃 Dans','dance'],['⚽ Spor','sports'],['🌙 İyi geceler','good night'],['☀️ Günaydın','good morning'],['✨ Emoji','emoji']];
+let GR=[],gseq=0,gtm;const gcache={},gm=t=>`<small style="grid-column:1/-1;color:var(--mu)">${t}</small>`;
+const gSearch=()=>{clearTimeout(gtm);gtm=setTimeout(gLoad,450)};
+function gTabs(){const t=$('#gtabs');if(t)t.innerHTML=GCATS.map((c,i)=>`<button type="button" class="btn ${!(S.gq||'').trim()&&(S.gt||0)===i?'':'g'}" data-a="gtab" data-i="${i}">${c[0]}</button>`).join('')}
+function gShow(b){b.innerHTML=GR.map((g,i)=>`<button type="button" data-a="sgu" data-i="${i}" style="padding:0"><img loading="lazy" src="${esc(g.t)}" alt="gif"></button>`).join('')||gm('Sonuç bulunamadı.')}
+async function gLoad(){const box=$('#gres');if(!box)return;gTabs();const q=(S.gq||'').trim(),tab=GCATS[S.gt||0],my=++gseq;
+  if(!q&&tab[1]==='emoji'){GR=[];box.innerHTML=ANIM.map((a,i)=>`<button type="button" data-a="sg" data-i="a:${i}" style="padding:0">${gifHTML('a:'+i)}</button>`).join('');return}
+  if(!GIPHY_KEY||GIPHY_KEY==='GIPHY_ANAHTARI'){box.innerHTML=gm('Gerçek GIF aramak için dosyanın başına GIPHY anahtarını ekle. Şimdilik "Emoji" sekmesini kullanabilirsin.');return}
+  const key=q||tab[1];if(gcache[key]){GR=gcache[key];gShow(box);return}
+  box.innerHTML=gm('Yükleniyor…');
+  const base='https://api.giphy.com/v1/gifs/',qs=`api_key=${GIPHY_KEY}&limit=36&rating=pg-13&lang=tr`;
+  try{const r=await fetch((q||key!=='trending')?`${base}search?${qs}&q=${encodeURIComponent(key)}`:`${base}trending?${qs}`);
+    if(r.status===429)throw new Error('Saatlik GIF sınırına ulaşıldı, biraz sonra tekrar dene.');
+    const j=await r.json();if(my!==gseq)return;
+    GR=(j.data||[]).map(g=>({t:g.images.fixed_width_small.url,u:(g.images.downsized_medium||g.images.original).url}));gcache[key]=GR;gShow(box)
+  }catch(e){if(my===gseq)box.innerHTML=gm(esc(e.message||'GIF yüklenemedi'))}}
+A.gif=()=>{S.gq=S.gq||'';S.gt=S.gt||0;modal('GIF Seç',`<input id="gq" placeholder="GIF ara… (ör. mutlu, kedi, selam)" autocomplete="off" value="${esc(S.gq)}"><div class="gt" id="gtabs"></div><div class="gres" id="gres"></div><small style="color:var(--mu)">Powered by GIPHY</small><div><label>GALERİDEN GIF YÜKLE (en fazla 400 KB)</label><input type="file" id="gifup" accept="image/gif"></div>`,null);gLoad()};
+A.gtab=i=>{S.gt=+i;S.gq='';const q=$('#gq');if(q)q.value='';gLoad()};
+A.sgu=i=>{if(GR[i])A.sg('u:'+GR[i].u)};
+
+/* + düğmesi: galeriden fotoğraf / video */
+const toast=t=>{let e=$('#toast');if(!e){e=document.createElement('div');e.id='toast';e.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--p3);padding:10px 16px;border-radius:12px;z-index:60';document.body.appendChild(e)}e.textContent=t;e.style.display=t?'block':'none'};
+const rzm=(f,m)=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(r,'image/jpeg',.85)};im.onerror=()=>r(null);im.src=fr.result};fr.readAsDataURL(f)});
+(()=>{const f=document.createElement('input');f.type='file';f.id='attf';f.accept='image/*,video/*';f.hidden=true;document.body.appendChild(f);
+f.addEventListener('change',async()=>{const x=f.files[0];f.value='';if(!x)return;const vid=x.type.startsWith('video/'),gif=x.type==='image/gif';
+  if(!vid&&!x.type.startsWith('image/'))return alert('Sadece fotoğraf veya video seçebilirsin.');
+  if(vid&&x.size>25*1024*1024)return alert('Video en fazla 25 MB olabilir.');if(gif&&x.size>8*1024*1024)return alert('GIF en fazla 8 MB olabilir.');
+  toast('Yükleniyor…');let b=x,ct=x.type,ext=(x.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5);
+  if(!vid&&!gif){b=await rzm(x,1600);if(!b){toast('');return alert('Fotoğraf okunamadı.')}ct='image/jpeg';ext='jpg'}
+  const p=me+'/'+Date.now()+'.'+ext,{error}=await sb.storage.from('media').upload(p,b,{contentType:ct});toast('');if(error)return alert(error.message);
+  A.sg((vid?'v:':'i:')+sb.storage.from('media').getPublicUrl(p).data.publicUrl)})})();
+A.attach=()=>$('#attf').click();
+
+/* Kanal listesi: kategoriler + tür seçerek kanal oluşturma */
+function chList(s,own){const cs=CH.filter(c=>c.server_id===s.id).sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==='text'?-1:1),cats=CAT.filter(c=>c.server_id===s.id);
+  const ln=c=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${c.type==='voice'?'🔊':'#'} ${esc(c.name)}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="editCh" data-i="${c.id}">✏️</button>`:''}</div>`;
+  return`<div class="cat"><span>KANALLAR</span>${own?'<button data-a="addMenu">+</button>':''}</div>`+cs.filter(c=>!cats.some(k=>k.id===c.category_id)).map(ln).join('')+cats.map(k=>`<div class="cat"><span>${esc(k.name.toUpperCase())}</span>${own?`<span><button data-a="addCh" data-i="${k.id}">+</button><button data-a="editCat" data-i="${k.id}">✏️</button></span>`:''}</div>`+cs.filter(c=>c.category_id===k.id).map(ln).join('')).join('')}
+const catSel=(sid,cur)=>`<div><label>KATEGORİ</label><select name="cat"><option value="">Kategorisiz</option>${CAT.filter(k=>k.server_id===sid).map(k=>`<option value="${k.id}" ${k.id===cur?'selected':''}>${esc(k.name)}</option>`).join('')}</select></div>`;
+A.addMenu=()=>modal('Oluştur',`<button type="button" class="it" data-a="addCh" data-i="">＃ Kanal oluştur</button><button type="button" class="it" data-a="addCat">📁 Kategori oluştur</button>`);
+A.addCh=cid=>{const s=srv();if(!s)return;modal('Kanal Oluştur',`<div><label>KANAL TÜRÜ</label><label class="chk"><input type="radio" name="t" value="text" checked># Metin: mesaj, GIF, fotoğraf, video</label><label class="chk"><input type="radio" name="t" value="voice">🔊 Ses: sesli konuşma</label></div>`+inp('name','KANAL ADI','','text','required maxlength=24')+catSel(s.id,cid),'Oluştur',async d=>{
+  const {data:c,error}=await sb.from('channels').insert({server_id:s.id,name:d.get('name').trim(),type:d.get('t'),category_id:d.get('cat')||null}).select().single();if(error)return alert(error.message);
+  S.cid=c.id;S.modal=null;await load();render()})};
+A.editCh=i=>{rmPop();const c=CH.find(x=>x.id===i);if(!c)return;modal('Kanalı Düzenle',inp('name','KANAL ADI',c.name,'text','required maxlength=24')+catSel(c.server_id,c.category_id)+`<button type="button" class="btn r" data-a="delCh" data-i="${i}">Kanalı Sil</button>`,'Kaydet',async d=>{
+  const {error}=await sb.from('channels').update({name:d.get('name').trim(),category_id:d.get('cat')||null}).eq('id',i);if(error)return alert(error.message);S.modal=null;await load();render()})};
+A.addCat=()=>modal('Kategori Oluştur',inp('name','KATEGORİ ADI','','text','required maxlength=24')+'<small style="color:var(--mu)">Kanalları gruplayan başlık. Örn: Oyunlar, Sohbet, Duyurular</small>','Oluştur',async d=>{
+  const {error}=await sb.from('categories').insert({server_id:S.sid,name:d.get('name').trim()});if(error)return alert(error.message);S.modal=null;await load();render()});
+A.editCat=i=>{const k=CAT.find(x=>x.id===i);if(!k)return;modal('Kategoriyi Düzenle',inp('name','KATEGORİ ADI',k.name,'text','required maxlength=24')+`<small style="color:var(--mu)">Silersen içindeki kanallar silinmez, kategorisiz kalır.</small><button type="button" class="btn r" data-a="delCat" data-i="${i}">Kategoriyi Sil</button>`,'Kaydet',async d=>{
+  await sb.from('categories').update({name:d.get('name').trim()}).eq('id',i);S.modal=null;await load();render()})};
+A.delCat=async i=>{if(!confirm('Kategori silinsin mi? İçindeki kanallar silinmez.'))return;await sb.from('categories').delete().eq('id',i);S.modal=null;await load();render()};
+
 (async()=>{
   const {data}=await sb.auth.getSession();
   if(data.session){me=data.session.user.id;await load();if(!P[me]){await sb.auth.signOut();me=null}else subscribe()}
   render();
 })();
 </script></body></html>
-
