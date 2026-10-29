@@ -54,11 +54,16 @@ input:focus{border-color:var(--ac)}
 @keyframes g-bounce{50%{transform:translateY(-16px)}}@keyframes g-pulse{50%{transform:scale(1.3)}}@keyframes g-shake{25%{transform:translateX(-8px) rotate(-8deg)}75%{transform:translateX(8px) rotate(8deg)}}@keyframes g-spin{to{transform:rotate(360deg)}}@keyframes g-wave{50%{transform:rotate(28deg)}}@keyframes g-float{50%{transform:translateY(-10px) scale(.9);opacity:.7}}@keyframes g-flick{50%{transform:scale(1.15) rotate(5deg)}}@keyframes g-pop{50%{transform:scale(1.4)}}@keyframes g-swing{25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
 .ga{width:150px;height:110px;border-radius:14px;display:grid;place-items:center;font-size:52px;position:relative;overflow:hidden;margin-top:4px}.ga small{position:absolute;bottom:6px;font-size:11px;font-weight:700;color:#fff}.gp .ga{width:100%;height:84px;font-size:38px;margin:0}
 .chk{display:flex;gap:8px;align-items:center}.chk input{width:auto}
+.vgrid{flex:1;display:flex;flex-wrap:wrap;gap:16px;padding:24px;align-content:flex-start;overflow-y:auto}.vc{width:170px;height:130px;background:var(--p1);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px solid transparent;transition:.15s}.vc.sp{border-color:var(--gr);box-shadow:0 0 18px #34d39966}.vbar{padding:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.sv{position:relative}.bdg{position:absolute;right:-4px;bottom:-4px;background:var(--rd);color:#fff;border-radius:10px;min-width:18px;height:18px;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px;border:2px solid #0a0b18}
+.mn{background:#7c5cff33;color:#c4b5ff;border-radius:5px;padding:0 3px;font-weight:600}.mn.me{background:#f59e0b33;color:#fcd34d}.m.hl{background:#f59e0b14;box-shadow:inset 3px 0 #f59e0b;padding-left:8px;border-radius:6px}
 </style></head><body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-client.umd.min.js"></script>
 <script>
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
+const LK_URL='wss://XXXX.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -82,6 +87,7 @@ async function load(){
   P={};(a.data||[]).forEach(p=>P[p.id]=p);SV=b.data||[];MB=c.data||[];CH=d.data||[];
   const [e,f,g]=await Promise.all([sb.from('friendships').select('*'),sb.from('roles').select('*'),sb.from('member_roles').select('*')]);FR=e.data||[];RL=f.data||[];MR=g.data||[];
   const dm=await sb.from('messages').select('dm_key').not('dm_key','is',null).limit(1000);DMP=[...new Set((dm.data||[]).flatMap(r=>r.dm_key.split('_')).filter(x=>x!==me))];
+  const mq2=await sb.from('messages').select('id,channel_id,created_at,user_id').not('channel_id','is',null).or(`body.ilike.*<@${me}>*,body.ilike.*@everyone*`).order('created_at',{ascending:false}).limit(300);MROWS=mq2.data||[];MLOADED=true;
   await loadMsgs();
 }
 async function loadMsgs(){
@@ -91,7 +97,7 @@ async function loadMsgs(){
   else{MS=[];return}
   MS=(await q).data||[];
 }
-const refresh=async()=>{await load();render()};
+const refresh=async()=>{await load();soft()};
 function subscribe(){
   if(subbed)return;subbed=true;
   sb.channel('nvx').on('postgres_changes',{event:'*',schema:'public'},()=>{clearTimeout(rt);rt=setTimeout(()=>{if(!S.modal)refresh()},150)}).subscribe();
@@ -107,7 +113,7 @@ function sideHTML(){let h='';const u=U(me);
 if(S.view!=='server'){
   h=`<div class="sh">Direkt Mesajlar</div><div class="list"><div class="cat">KULLANICILAR</div>`+dmUsers().map(x=>`<button class="it ${S.dm===x.id?'on':''}" data-a="dm" data-i="${x.id}">${av(x,30)}<span>${esc(x.name)}</span></button>`).join('')+(dmUsers().length?'':'<div class="empty" style="font-size:13px">Arkadaşların ve mesajlaştığın kişiler burada görünür.</div>')+`</div>`;
 }else{
-  const s=srv(),own=s.owner===me,ln=(c,ic)=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${ic} ${esc(c.name)}</button>${own?`<button class="x" data-a="delCh" data-i="${c.id}">✕</button>`:''}</div>`;
+  const s=srv(),own=s.owner===me,ln=(c,ic)=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${ic} ${esc(c.name)}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="delCh" data-i="${c.id}">✕</button>`:''}</div>`;
   const cs=CH.filter(c=>c.server_id===s.id);
   h=`<button class="sh" data-a="srvMenu"><span>${esc(s.name)}</span><span>⌄</span></button><div class="list"><div class="cat">METİN KANALLARI ${own?'<button data-a="addCh" data-i="text">+</button>':''}</div>`+cs.filter(c=>c.type==='text').map(c=>ln(c,'#')).join('')+`<div class="cat">SES KANALLARI ${own?'<button data-a="addCh" data-i="voice">+</button>':''}</div>`+cs.filter(c=>c.type==='voice').map(c=>ln(c,'🔊')).join('')+`</div>`;
 }
@@ -136,7 +142,7 @@ if(!me){r.innerHTML=authHTML();return}
 if(!P[me]){r.innerHTML='<div class="empty">Yükleniyor…</div>';return}
 if(S.view==='server'&&(!srv()||!isMem(S.sid))){S.view='home';S.sid=null}
 r.className=S.nav?'nav':'';
-r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" data-a="home" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N</button><button class="sv ${S.view==='disc'?'on':''}" data-a="disc">🧭</button>`+mySv().map(s=>`<button class="sv ${S.sid===s.id&&S.view==='server'?'on':''}" data-a="srv" data-i="${s.id}" title="${esc(s.name)}" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}</button>`).join('')+`<button class="sv add" data-a="addSrv">+</button></div>${sideHTML()}${mainHTML()}${memHTML()}`+(S.modal?`<div class="ov" data-a="close"><form class="md" data-f="modal"><h3>${esc(S.modal.t)}</h3>${S.modal.b}<div class="row"><button type="button" class="btn g" data-a="close">${S.modal.ok?'İptal':'Kapat'}</button>${S.modal.ok?`<button class="btn">${S.modal.ok}</button>`:''}</div></form></div>`:'');
+r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" data-a="home" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N</button><button class="sv ${S.view==='disc'?'on':''}" data-a="disc">🧭</button>`+mySv().map(s=>`<button class="sv ${S.sid===s.id&&S.view==='server'?'on':''}" data-a="srv" data-i="${s.id}" title="${esc(s.name)}" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}${bdg(srvCount(s.id))}</button>`).join('')+`<button class="sv add" data-a="addSrv">+</button></div>${sideHTML()}${mainHTML()}${memHTML()}`+(S.modal?`<div class="ov" data-a="close"><form class="md" data-f="modal"><h3>${esc(S.modal.t)}</h3>${S.modal.b}<div class="row"><button type="button" class="btn g" data-a="close">${S.modal.ok?'İptal':'Kapat'}</button>${S.modal.ok?`<button class="btn">${S.modal.ok}</button>`:''}</div></form></div>`:'');
 const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
 const f=$('.in input');if(f){f.value=old;if((oldF||!old)&&!S.modal&&innerWidth>700)f.focus()}}
 
@@ -200,9 +206,9 @@ if(f==='auth'){
   S.err='';await load();subscribe();render();
 }
 else if(f==='modal')S.modal?.fn?.(d);
-else if(f==='send'){const x=(d.get('x')||'').trim();if(!x)return;e.target.x.value='';
+else if(f==='send'){let x=(d.get('x')||'').trim();if(!x)return;e.target.x.value='';x=encM(x);rmPop();
   const row={user_id:me,body:x};if(S.view==='home')row.dm_key=dk(me,S.dm);else row.channel_id=S.cid;
-  const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);await loadMsgs();render()}});
+  const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);await loadMsgs();soft();e.target.x?.focus?.()}});
 
 
 /* ===== Eklentiler: arkadaşlık, roller, profil kartı, GIF, fotoğraf, rapor ===== */
@@ -222,7 +228,7 @@ const ANIM='zıpla|😂|bounce|#f59e0b;kalp|😍|pulse|#ec4899;sinir|😡|shake|
 const gifHTML=g=>{if(g.startsWith('u:'))return`<img src="${esc(g.slice(2))}" alt="gif" style="display:block;max-width:260px;max-height:220px;border-radius:12px;margin-top:4px">`;const a=ANIM[+g.slice(2)];return a?`<div class="ga" style="background:linear-gradient(135deg,${a[3]},#1e2040)"><span style="display:block;animation:g-${a[2]} 1s infinite">${a[1]}</span><small>${a[0].toUpperCase()}</small></div>`:''};
 
 msgsHTML=function(){return MS.map(m=>{const u=U(m.user_id),s=S.view==='server'?srv():null,nm=s?nick(s.id,m.user_id):u.name;
-return`<div class="m"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div><b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${esc(m.body)}</p>`}</div></div>`}).join('')};
+return`<div class="m${hl(m)}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div><b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`}</div></div>`}).join('')};
 
 memHTML=function(){if(S.view!=='server')return'';const s=srv(),L=MB.filter(m=>m.server_id===s.id);
 return`<div class="mem"><div class="cat">ÜYELER — ${L.length}</div>`+L.map(m=>{const r=rolesOf(s.id,m.user_id)[0];return`<button class="it" data-a="prof" data-i="${m.user_id}" style="color:${rcol(s.id,m.user_id)}">${av(U(m.user_id),28)}<span>${esc(nick(s.id,m.user_id))}${s.owner===m.user_id?' 👑':''}<small style="display:block;color:var(--mu);font-size:11px">${r?esc(r.name):''}</small></span></button>`}).join('')+`</div>`};
@@ -278,9 +284,90 @@ document.addEventListener('input',e=>{if(e.target.id!=='gq')return;S.gq=e.target
 document.addEventListener('change',async e=>{if(e.target.id!=='gifup')return;const f=e.target.files[0];if(!f)return;if(f.type!=='image/gif')return alert('Sadece .gif dosyası seç.');if(f.size>400*1024)return alert('GIF en fazla 400 KB olabilir.');
   const p=me+'/'+Date.now()+'.gif',{error}=await sb.storage.from('media').upload(p,f,{contentType:'image/gif'});if(error)return alert(error.message);A.sg('u:'+sb.storage.from('media').getPublicUrl(p).data.publicUrl)});
 
+
+/* ===== Sesli kanal (LiveKit) ===== */
+let room=null,VP=[],spk=new Set(),vcid=null,vmute=false,vdeaf=false,wasM=false,vErr='';
+const inVoice=()=>S.view==='server'&&S.cid===vcid;
+function vUpd(){if(!room)return;VP=[room.localParticipant,...room.remoteParticipants.values()];if(inVoice())render()}
+function vClean(){document.querySelectorAll('audio[data-pid]').forEach(e=>e.remove());room=null;VP=[];spk=new Set();vcid=null;vmute=false;vdeaf=false}
+function vApply(){if(room)room.localParticipant.setMicrophoneEnabled(!vmute).catch(()=>{});document.querySelectorAll('audio[data-pid]').forEach(a=>a.muted=vdeaf);render()}
+async function vJoin(){
+  if(room)await vLeave();vErr='';
+  try{
+    const {data,error}=await sb.functions.invoke('lk-token',{body:{channel_id:S.cid}});
+    if(error||!data?.token)throw new Error(error?.message||'Token alınamadı (lk-token fonksiyonu kurulu mu?)');
+    const L=LivekitClient,r=new L.Room({adaptiveStream:true});room=r;
+    r.on(L.RoomEvent.TrackSubscribed,(t,pub,p)=>{if(t.kind==='audio'){const el=t.attach();el.dataset.pid=p.identity;el.muted=vdeaf;document.body.appendChild(el)}});
+    r.on(L.RoomEvent.TrackUnsubscribed,t=>t.detach().forEach(e=>e.remove()));
+    [L.RoomEvent.ParticipantConnected,L.RoomEvent.ParticipantDisconnected,L.RoomEvent.TrackMuted,L.RoomEvent.TrackUnmuted].forEach(ev=>r.on(ev,vUpd));
+    r.on(L.RoomEvent.ActiveSpeakersChanged,s=>{spk=new Set(s.map(x=>x.identity));vUpd()});
+    r.on(L.RoomEvent.Disconnected,()=>{vClean();render()});
+    await r.connect(LK_URL,data.token);vcid=S.cid;
+    try{await r.startAudio()}catch(e){}
+    try{await r.localParticipant.setMicrophoneEnabled(true)}catch(e){vmute=true;vErr='Mikrofon izni verilmedi, sadece dinleyerek bağlandın.'}
+    vUpd();render();
+  }catch(e){vErr='Bağlanılamadı: '+(e.message||e);if(room){try{room.disconnect()}catch(_){}}vClean();render()}
+}
+async function vLeave(){if(room)await room.disconnect();vClean();render()}
+A.vjoin=vJoin;A.vleave=vLeave;
+A.vmute=()=>{if(vdeaf){vdeaf=false;vmute=false}else vmute=!vmute;vApply()};
+A.vdeaf=()=>{vdeaf=!vdeaf;if(vdeaf){wasM=vmute;vmute=true}else vmute=wasM;vApply()};
+const _lo=A.logout;A.logout=async()=>{await vLeave();_lo()};
+const _mh2=mainHTML;mainHTML=function(){const c=S.view==='server'&&chan();if(!c||c.type!=='voice')return _mh2();
+const here=room&&vcid===c.id,s=srv();
+return`<div class="main"><div class="mh"><button class="hb" data-a="nav">☰</button>🔊 ${esc(c.name)}</div><div class="vgrid">${here?VP.map(p=>{const u=U(p.identity),self=p.identity===me;return`<div class="vc ${spk.has(p.identity)?'sp':''}">${av(u,56)}<small>${esc(nick(s.id,p.identity))} ${(self?vmute:!p.isMicrophoneEnabled)?'🔇':''}${self&&vdeaf?'🔕':''}</small></div>`}).join(''):'<div class="empty"><h2>Sesli kanal</h2>Katılarak konuşmaya başla.</div>'}</div>${vErr?`<div class="err" style="text-align:center;padding:0 16px">${esc(vErr)}</div>`:''}<div class="vbar">${here?`<button class="btn g" data-a="vmute">${vmute?'Sesi Aç':'Sustur'}</button><button class="btn g" data-a="vdeaf">${vdeaf?'Kulaklık Aç':'Sağırlaştır'}</button><button class="btn r" data-a="vleave">Ayrıl</button>`:`<button class="btn" data-a="vjoin">${room?'Buraya Geç':'Ses Kanalına Katıl'}</button>`}</div></div>`};
+const _sh2=sideHTML;sideHTML=function(){const h=_sh2();if(!room)return h;const c=CH.find(x=>x.id===vcid);
+return h.replace('<div class="me">',`<div class="me" style="background:#0f2a22;color:var(--gr)"><span class="n"><b>Ses bağlandı</b><small>${esc(c?c.name:'')}</small></span><button class="ib" data-a="vmute">${vmute?'🔇':'🎙'}</button><button class="ib" data-a="vdeaf">${vdeaf?'🔕':'🎧'}</button><button class="ib" data-a="vleave">📞</button></div><div class="me">`)};
+
+
+/* ===== Mobil yazma düzeltmesi, kanal düzenleme, @etiket, bildirim rozeti ===== */
+let MROWS=[],MC={},MLOADED=false,MEN={},ML=[],lt,lp=false;
+const bdg=n=>n?`<b class="bdg">${n>99?'99+':n}</b>`:'';
+const getRD=()=>{try{return JSON.parse(localStorage.getItem('nvx_rd_'+me)||'{}')}catch(e){return{}}};
+const setRD=o=>{try{localStorage.setItem('nvx_rd_'+me,JSON.stringify(o))}catch(e){}};
+function calcMC(){if(!me||!MLOADED)return;const rd=getRD();
+  if(!rd.__i){MROWS.forEach(r=>{if(!rd[r.channel_id]||r.created_at>rd[r.channel_id])rd[r.channel_id]=r.created_at});rd.__i=1;setRD(rd)}
+  if(S.view==='server'&&S.cid&&MS.length){const l=MS[MS.length-1].created_at;if(!rd[S.cid]||l>rd[S.cid]){rd[S.cid]=l;setRD(rd)}}
+  MC={};MROWS.forEach(r=>{if(r.user_id!==me&&(!rd[r.channel_id]||r.created_at>rd[r.channel_id])&&CH.some(c=>c.id===r.channel_id&&isMem(c.server_id)))MC[r.channel_id]=(MC[r.channel_id]||0)+1})}
+const srvCount=sid=>CH.filter(c=>c.server_id===sid).reduce((a,c)=>a+(MC[c.id]||0),0);
+const _r2=render;render=function(){calcMC();_r2()};
+
+/* Yazarken klavye kapanmasın: input açıkken sadece mesaj listesi/yan paneller güncellenir */
+function soft(){const a=document.activeElement;if(!me||!(a&&a.name==='x'&&a.closest('.in'))||S.modal){render();return}
+  const app=$('#app');app.id='app_old';const tmp=document.createElement('div');tmp.id='app';tmp.style.display='none';document.body.appendChild(tmp);
+  try{render()}catch(e){}
+  app.id='app';
+  ['.rail','.side','.mem'].forEach(s=>{const n=tmp.querySelector(s),o=app.querySelector(s);if(o&&n)o.replaceWith(n);else if(o)o.remove();else if(n)app.appendChild(n)});
+  const nm=tmp.querySelector('#msgs'),om=app.querySelector('#msgs');if(nm&&om){om.innerHTML=nm.innerHTML;om.scrollTop=om.scrollHeight}
+  tmp.remove()}
+document.addEventListener('mousedown',e=>{if(e.target.closest('.pop button,.in .btn'))e.preventDefault()});
+
+/* Açılır menü + kanal düzenleme (sağ tık / uzun basma) */
+const rmPop=()=>document.querySelectorAll('.pop').forEach(x=>x.remove());
+const pop=(x,y,html,w=190)=>{rmPop();const p=document.createElement('div');p.className='pop';p.style.cssText=`position:fixed;z-index:30;background:var(--p1);border:1px solid var(--p3);border-radius:12px;padding:6px;width:${w}px;box-shadow:0 10px 30px #000a;left:${Math.max(8,Math.min(x,innerWidth-w-8))}px;top:${Math.max(8,Math.min(y,innerHeight-70))}px`;p.innerHTML=html;document.body.appendChild(p)};
+document.addEventListener('click',e=>{if(lp){lp=false;e.stopPropagation();e.preventDefault();return}if(!e.target.closest('.pop'))rmPop()},true);
+const chMenu=(x,y,id)=>pop(x,y,`<button class="it" data-a="editCh" data-i="${id}">✏️ Kanalı düzenle</button>`);
+document.addEventListener('contextmenu',e=>{const t=e.target.closest('[data-a="ch"]');if(!t||S.view!=='server'||srv()?.owner!==me)return;e.preventDefault();chMenu(e.clientX,e.clientY,t.dataset.i)});
+document.addEventListener('touchstart',e=>{const t=e.target.closest('[data-a="ch"]');if(!t||S.view!=='server'||srv()?.owner!==me)return;const x=e.touches[0].clientX,y=e.touches[0].clientY;lt=setTimeout(()=>{lp=true;setTimeout(()=>lp=false,800);chMenu(x,y,t.dataset.i)},550)},{passive:true});
+['touchend','touchmove','touchcancel'].forEach(ev=>document.addEventListener(ev,()=>clearTimeout(lt),{passive:true}));
+A.editCh=i=>{rmPop();const c=CH.find(x=>x.id===i);if(!c)return;modal('Kanalı Düzenle',inp('name','KANAL ADI',c.name,'text','required maxlength=24')+`<small style="color:var(--mu)">Adı değiştirmek mesajları silmez.</small><button type="button" class="btn r" data-a="delCh" data-i="${i}">Kanalı Sil</button>`,'Kaydet',async d=>{const {error}=await sb.from('channels').update({name:d.get('name').trim()}).eq('id',i);if(error)return alert(error.message);S.modal=null;await load();render()})};
+const _dc=A.delCh;A.delCh=async i=>{await _dc(i);S.modal=null;render()};
+
+/* @etiketleme: listede isimler görünür, mesajda kimlik saklanır */
+const hl=m=>m.user_id!==me&&m.body&&(m.body.includes('<@'+me+'>')||m.body.includes('@everyone'))?' hl':'';
+const fmt=(b,sid)=>esc(b).replace(/&lt;@([0-9a-f-]{36})&gt;/g,(m,id)=>`<span class="mn${id===me?' me':''}">@${esc(nick(sid,id))}</span>`).replace(/@everyone/g,'<span class="mn me">@everyone</span>');
+const encM=x=>{Object.keys(MEN).sort((a,b)=>b.length-a.length).forEach(n=>{x=x.replace(new RegExp('@'+n.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?=$|[\\s.,!?;:)\\]])','g'),'<@'+MEN[n]+'>')});MEN={};return x};
+const mq=()=>{const i=$('.in input[name=x]');if(!i||S.view!=='server')return null;const pre=i.value.slice(0,i.selectionStart),m=pre.match(/(^|\s)@([^\s@]*)$/);return m?{i,q:m[2].toLowerCase(),at:pre.length-m[2].length-1}:null};
+document.addEventListener('input',e=>{if(e.target.name!=='x')return;const m=mq();if(!m)return rmPop();const s=srv();
+  ML=[{n:'everyone',u:'Herkesi etiketle'},...MB.filter(x=>x.server_id===s.id&&x.user_id!==me).map(x=>({n:nick(s.id,x.user_id),id:x.user_id,u:'@'+U(x.user_id).username}))].filter(x=>x.n.toLowerCase().includes(m.q)).slice(0,6);
+  if(!ML.length)return rmPop();const r=m.i.getBoundingClientRect();
+  pop(r.left,r.top-ML.length*46-16,ML.map((x,i)=>`<button type="button" class="it" data-a="mpick" data-i="${i}">${x.id?av(U(x.id),26):'<span style="width:26px;text-align:center">📢</span>'}<span>${esc(x.n)}<small style="display:block;color:var(--mu);font-size:11px">${esc(x.u)}</small></span></button>`).join(''),Math.min(300,innerWidth-16))});
+A.mpick=i=>{const x=ML[i],m=mq();if(!x||!m)return rmPop();const v=m.i.value,end=m.i.selectionStart,ins='@'+x.n+' ';m.i.value=v.slice(0,m.at)+ins+v.slice(end);const c=m.at+ins.length;m.i.setSelectionRange(c,c);if(x.id)MEN[x.n]=x.id;rmPop();m.i.focus()};
+
 (async()=>{
   const {data}=await sb.auth.getSession();
   if(data.session){me=data.session.user.id;await load();if(!P[me]){await sb.auth.signOut();me=null}else subscribe()}
   render();
 })();
 </script></body></html>
+
