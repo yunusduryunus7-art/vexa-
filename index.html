@@ -67,6 +67,12 @@ html,body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden}
 .bgi{width:42px;height:42px;border-radius:12px;background:var(--bg);border:2px solid var(--c);padding:5px;display:grid;place-items:center}.bgi svg{width:100%;height:100%;display:block}.bgi:hover{background:var(--p3)}
 .bdbox{display:flex;gap:12px;align-items:center;background:var(--bg);border:2px solid;border-radius:12px;padding:10px 12px;margin-top:2px}.bdic{width:44px;height:44px;flex:none}.bdic svg{width:100%;height:100%;display:block}
 .bchip{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:10px;border:2px solid var(--p3);opacity:.5;font-size:13px}.bchip.on{opacity:1;border-color:var(--c)}.bchip svg{width:22px;height:22px;flex:none}
+.ud{position:absolute;left:-9px;top:50%;margin-top:-4px;width:8px;height:8px;border-radius:50%;background:#fff;display:block}
+.mb{display:none;margin-left:auto;width:36px;height:36px;border-radius:8px;place-items:center;font-size:18px}.mb:hover{background:var(--p3)}
+.bd{position:fixed;inset:0;background:#0006;z-index:15}
+@media(max-width:900px){.mb{display:grid}#app.mp .mem{display:block;position:fixed;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);width:min(260px,80vw);z-index:20;box-shadow:-8px 0 30px #0008}}
+@media(min-width:901px){.bd{display:none}}
+body.ns{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}input,textarea,select{-webkit-user-select:text;user-select:text}
 </style></head><body><div id="app"></div>
 <script>
 (function(){function show(m){var a=document.getElementById('app');if(a&&!a.children.length)a.innerHTML='<pre style="color:#ff5d73;padding:20px;white-space:pre-wrap;font:14px/1.5 monospace">Nuvexa açılamadı.\n\nHata: '+String(m).replace(/</g,'&lt;')+'\n\nBu yazının ekran görüntüsünü gönder.</pre>'}
@@ -104,6 +110,8 @@ async function load(){
   const [e,f,g,k]=await Promise.all([sb.from('friendships').select('*'),sb.from('roles').select('*'),sb.from('member_roles').select('*'),sb.from('categories').select('*')]);FR=e.data||[];RL=f.data||[];MR=g.data||[];CAT=k.data||[];
   const dm=await sb.from('messages').select('dm_key,user_id,created_at').not('dm_key','is',null).order('created_at',{ascending:false}).limit(1000);DMROWS=dm.data||[];DMP=[...new Set(DMROWS.flatMap(r=>r.dm_key.split('_')).filter(x=>x!==me))];
   const mq2=await sb.from('messages').select('id,channel_id,created_at,user_id').not('channel_id','is',null).or(`body.ilike.*<@${me}>*,body.ilike.*@everyone*`).order('created_at',{ascending:false}).limit(300);MROWS=mq2.data||[];MLOADED=true;
+  const mine=CH.filter(c=>c.type==='text'&&isMem(c.server_id)).map(c=>c.id);LM={};
+  if(mine.length){const lr=await sb.from('messages').select('channel_id,user_id,created_at').in('channel_id',mine).order('created_at',{ascending:false}).limit(1000);(lr.data||[]).forEach(r=>{if(r.user_id!==me&&!LM[r.channel_id])LM[r.channel_id]=r.created_at})}
   const ub=await sb.from('user_badges').select('user_id,badge');UB={};(ub.data||[]).forEach(x=>(UB[x.user_id]=UB[x.user_id]||[]).push(x.badge));
   if(ADMIN===null){const r=await sb.rpc('is_admin');ADMIN=!!r.data}
   const ob=await sb.from('bans').select('*').eq('user_id',me);BAN=(ob.data||[]).find(b=>!b.until||new Date(b.until)>new Date())||null;
@@ -162,13 +170,13 @@ if(!me){r.innerHTML=authHTML();return}
 if(!P[me]){r.innerHTML='<div class="empty">Yükleniyor…</div>';return}
 if(S.view==='server'&&(!srv()||!isMem(S.sid))){S.view='home';S.sid=null}
 r.className=S.nav?'nav':'';
-r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" data-a="home" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N${bdg(dmTotal())}</button><button class="sv ${S.view==='disc'?'on':''}" data-a="disc">🧭</button>`+mySv().map(s=>`<button class="sv ${S.sid===s.id&&S.view==='server'?'on':''}" data-a="srv" data-i="${s.id}" title="${esc(s.name)}" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}${bdg(srvCount(s.id))}</button>`).join('')+`<button class="sv add" data-a="addSrv">+</button></div>${sideHTML()}${mainHTML()}${memHTML()}`+(S.modal?`<div class="ov" data-a="close"><form class="md" data-f="modal"><h3>${esc(S.modal.t)}</h3>${S.modal.b}<div class="row"><button type="button" class="btn g" data-a="close">${S.modal.ok?'İptal':'Kapat'}</button>${S.modal.ok?`<button class="btn">${S.modal.ok}</button>`:''}</div></form></div>`:'');
+r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" data-a="home" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N${bdg(dmTotal())}</button><button class="sv ${S.view==='disc'?'on':''}" data-a="disc">🧭</button>`+mySv().map(s=>`<button class="sv ${S.sid===s.id&&S.view==='server'?'on':''}" data-a="srv" data-i="${s.id}" title="${esc(s.name)}" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}${bdg(srvCount(s.id))}${!srvCount(s.id)&&srvAny(s.id)?'<i class="ud"></i>':''}</button>`).join('')+`<button class="sv add" data-a="addSrv">+</button></div>${sideHTML()}${mainHTML()}${memHTML()}`+(S.modal?`<div class="ov" data-a="close"><form class="md" data-f="modal"><h3>${esc(S.modal.t)}</h3>${S.modal.b}<div class="row"><button type="button" class="btn g" data-a="close">${S.modal.ok?'İptal':'Kapat'}</button>${S.modal.ok?`<button class="btn">${S.modal.ok}</button>`:''}</div></form></div>`:'');
 const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
 const f=$('.in input');if(f){f.value=old;if(((oldF&&same)||(!old&&matchMedia('(hover:hover) and (pointer:fine)').matches))&&!S.modal)f.focus()}}
 
-const modal=(t,b,ok,fn)=>{S.modal={t,b,ok,fn};S.nav=false;render()};
+const modal=(t,b,ok,fn)=>{S.modal={t,b,ok,fn};S.nav=false;S.mem=false;render()};
 const close=()=>{S.modal=null;render()};
-const go=async()=>{S.nav=false;await loadMsgs();render()};
+const go=async()=>{S.nav=false;S.mem=false;await loadMsgs();render()};
 
 /* ---------- İşlemler ---------- */
 const A={
@@ -352,7 +360,7 @@ function calcMC(){if(!me||!MLOADED)return;const rd=getRD();
   if(S.view==='server'&&S.cid&&MS.length){const l=MS[MS.length-1].created_at;if(!rd[S.cid]||l>rd[S.cid]){rd[S.cid]=l;setRD(rd)}}
   MC={};MROWS.forEach(r=>{if(r.user_id!==me&&(!rd[r.channel_id]||r.created_at>rd[r.channel_id])&&CH.some(c=>c.id===r.channel_id&&isMem(c.server_id)))MC[r.channel_id]=(MC[r.channel_id]||0)+1})}
 const srvCount=sid=>CH.filter(c=>c.server_id===sid).reduce((a,c)=>a+(MC[c.id]||0),0);
-const _r2=render;render=function(){if(me&&BAN){banScreen();return}calcMC();calcDM();_r2();const t=dmTotal()+Object.values(MC).reduce((a,b)=>a+b,0);document.title=(t?'('+t+') ':'')+'Nuvexa'};
+const _r2=render;render=function(){if(me&&BAN){banScreen();return}calcMC();calcUC();calcDM();_r2();memUI();const t=dmTotal()+Object.values(MC).reduce((a,b)=>a+b,0);document.title=(t?'('+t+') ':'')+'Nuvexa'};
 
 /* Yazarken klavye kapanmasın: input açıkken sadece mesaj listesi/yan paneller güncellenir */
 function soft(){const a=document.activeElement;if(!me||!(a&&a.name==='x'&&a.closest('.in'))||S.modal){render();return}
@@ -437,7 +445,7 @@ A.attach=()=>$('#attf').click();
 
 /* Kanal listesi: kategoriler + tür seçerek kanal oluşturma */
 function chList(s,own){const cs=CH.filter(c=>c.server_id===s.id).sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==='text'?-1:1),cats=CAT.filter(c=>c.server_id===s.id);
-  const ln=c=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${c.type==='voice'?'🔊':'#'} ${esc(c.name)}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="editCh" data-i="${c.id}">✏️</button>`:''}</div>`;
+  const ln=c=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${c.type==='voice'?'🔊':'#'} ${UC[c.id]?`<b style="color:#fff">${esc(c.name)}</b>`:esc(c.name)}${UC[c.id]&&!MC[c.id]?'<i class="ud" style="position:static;margin:0 0 0 auto"></i>':''}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="editCh" data-i="${c.id}">✏️</button>`:''}</div>`;
   return`<div class="cat"><span>KANALLAR</span>${own?'<button data-a="addMenu">+</button>':''}</div>`+cs.filter(c=>!cats.some(k=>k.id===c.category_id)).map(ln).join('')+cats.map(k=>`<div class="cat"><span>${esc(k.name.toUpperCase())}</span>${own?`<span><button data-a="addCh" data-i="${k.id}">+</button><button data-a="editCat" data-i="${k.id}">✏️</button></span>`:''}</div>`+cs.filter(c=>c.category_id===k.id).map(ln).join('')).join('')}
 const catSel=(sid,cur)=>`<div><label>KATEGORİ</label><select name="cat"><option value="">Kategorisiz</option>${CAT.filter(k=>k.server_id===sid).map(k=>`<option value="${k.id}" ${k.id===cur?'selected':''}>${esc(k.name)}</option>`).join('')}</select></div>`;
 A.addMenu=()=>modal('Oluştur',`<button type="button" class="it" data-a="addCh" data-i="">＃ Kanal oluştur</button><button type="button" class="it" data-a="addCat">📁 Kategori oluştur</button>`);
@@ -468,7 +476,7 @@ const eff=()=>{const s=myst();return s==='online'&&idleNow?'idle':s};
 const stOf=id=>id===me?(myst()==='invisible'?'off':eff()):(PS[id]||'off');
 const myLbl=()=>myst()==='invisible'?STL.invisible:stLbl(eff());
 const avp=(u,z)=>{const d=Math.max(9,Math.round(z*.3));return`<span class="avw">${av(u,z)}<i class="dot ${stOf(u.id)}" data-pu="${u.id||''}" style="width:${d}px;height:${d}px"></i></span>`};
-function paintP(){document.querySelectorAll('[data-pu]').forEach(el=>{el.className='dot '+stOf(el.dataset.pu)})}
+function paintP(){document.querySelectorAll('[data-pu]').forEach(el=>{el.className='dot '+stOf(el.dataset.pu)});const m=$('.mem');if(m&&S.view==='server'&&!S.modal){const t=document.createElement('div');t.innerHTML=memHTML();if(t.firstChild)m.replaceWith(t.firstChild)}}
 async function pTrack(){if(!PCH)return;const s=eff();try{if(s==='invisible')await PCH.untrack();else await PCH.track({status:s})}catch(e){}paintP()}
 function pStart(){if(PCH||!me)return;PCH=sb.channel('nvx_presence',{config:{presence:{key:me}}});
   PCH.on('presence',{event:'sync'},()=>{const st=PCH.presenceState();PS={};for(const k in st){const e=st[k][0];if(e)PS[k]=e.status||'online'}paintP()}).subscribe(s=>{if(s==='SUBSCRIBED')pTrack()})}
@@ -521,6 +529,39 @@ A.tbdg=async v=>{const [i,k]=v.split('|'),has=(UB[i]||[]).includes(k);
   const {error}=has?await sb.from('user_badges').delete().eq('user_id',i).eq('badge',k):await sb.from('user_badges').insert({user_id:i,badge:k});
   if(error)return alert(error.message);await load();A.prof(i)};
 A.bdesc=k=>{const el=$('#bdesc'),b=BD[k];if(!el||!b)return;if(S.bd===k){el.innerHTML='';S.bd=null;return}S.bd=k;el.innerHTML=`<div class="bdbox" style="border-color:${b.c}"><span class="bdic">${b.svg}</span><div><b>${esc(b.n)} rozeti</b><br><small style="color:var(--mu)">${esc(b.d)}</small></div></div>`};
+
+
+/* ===== Mobil üye paneli, okunmamış noktası, kopyalama menüsü ===== */
+let LM={},UC={};
+function calcUC(){if(!me||!MLOADED)return;const rd=getRD();
+  if(!rd.__u){for(const c in LM){if(!rd[c]||LM[c]>rd[c])rd[c]=LM[c]}rd.__u=1;setRD(rd)}
+  UC={};for(const c in LM){if(!rd[c]||LM[c]>rd[c])UC[c]=1}}
+const srvAny=sid=>CH.some(c=>c.server_id===sid&&UC[c.id]);
+function memUI(){const a=$('#app');if(!a||!me)return;if(S.view!=='server')S.mem=false;const hd=a.querySelector('.mh');
+  if(S.view==='server'&&hd&&!hd.querySelector('.mb'))hd.insertAdjacentHTML('beforeend','<button class="mb" data-a="memb" title="Üyeler">👥</button>');
+  a.classList.toggle('mp',!!S.mem);if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
+A.memb=()=>{S.mem=!S.mem;S.nav=false;render()};
+const _nv=A.nav;A.nav=()=>{S.mem=false;_nv()};
+
+memHTML=function(){if(S.view!=='server')return'';const s=srv(),L=MB.filter(m=>m.server_id===s.id).map(m=>m.user_id).sort((a,b)=>nick(s.id,a).localeCompare(nick(s.id,b),'tr'));
+  const on=L.filter(u=>stOf(u)!=='off'),off=L.filter(u=>stOf(u)==='off');
+  const it=(u,dim)=>{const r=rolesOf(s.id,u)[0];return`<button class="it" data-a="prof" data-i="${u}" style="color:${rcol(s.id,u)};${dim?'opacity:.55':''}">${avp(U(u),28)}<span>${esc(nick(s.id,u))}${s.owner===u?' 👑':''}<small style="display:block;color:var(--mu);font-size:11px">${r?esc(r.name):''}</small></span></button>`};
+  return`<div class="mem"><div class="cat">ÇEVRİMİÇİ — ${on.length}</div>${on.map(u=>it(u,0)).join('')}<div class="cat">ÇEVRİMDIŞI — ${off.length}</div>${off.map(u=>it(u,1)).join('')}</div>`};
+
+/* Sunucuya sağ tık / basılı tut: okundu işaretle */
+const srvPop=(x,y,id)=>pop(x,y,`<button class="it" data-a="readSrv" data-i="${id}">✔ Okundu olarak işaretle</button>`,230);
+document.addEventListener('contextmenu',e=>{const t=e.target.closest('[data-a="srv"]');if(t)srvPop(e.clientX,e.clientY,t.dataset.i)});
+document.addEventListener('touchstart',e=>{const t=e.target.closest('[data-a="srv"]');if(!t)return;const x=e.touches[0].clientX,y=e.touches[0].clientY;lt=setTimeout(()=>{lp=true;setTimeout(()=>lp=false,800);srvPop(x,y,t.dataset.i)},550)},{passive:true});
+A.readSrv=id=>{rmPop();const rd=getRD();CH.filter(c=>c.server_id===id).forEach(c=>{let t=LM[c.id]||'';MROWS.forEach(r=>{if(r.channel_id===c.id&&r.created_at>t)t=r.created_at});if(t&&(!rd[c.id]||t>rd[c.id]))rd[c.id]=t});setRD(rd);render()};
+
+/* Mesajlar sadece ⋯ menüsünden kopyalanır */
+if(location.hash!=='#dev'){document.body.classList.add('ns');document.addEventListener('copy',e=>{const a=document.activeElement;if(!(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)))e.preventDefault()},true)}
+A.mmenu=id=>{const m=MS.find(x=>x.id===id);if(!m||!lastEl)return;const r=lastEl.getBoundingClientRect();
+  pop(r.right-170,r.bottom+4,`<button class="it" data-a="cpmsg" data-i="${id}">📋 Kopyala</button>`+(m.user_id===me?`<button class="it" data-a="dmsg" data-i="${id}">🗑 Mesajı sil</button>`:`<button class="it" data-a="rmsg" data-i="${id}">🚩 Mesajı rapor et</button>`),170)};
+A.cpmsg=async id=>{rmPop();const m=MS.find(x=>x.id===id);if(!m)return;
+  const g=m.gif?m.gif.slice(2):'',txt=m.gif?(/^https:/i.test(g)?g:''):(m.body||'').replace(/<@([0-9a-f-]{36})>/g,(x,i)=>'@'+U(i).name);if(!txt)return;
+  try{await navigator.clipboard.writeText(txt)}catch(e){const t=document.createElement('textarea');t.value=txt;t.style.cssText='position:fixed;opacity:0;left:0;top:0';document.body.appendChild(t);t.focus();t.select();try{document.execCommand('copy')}catch(_){}t.remove()}
+  toast('Kopyalandı');setTimeout(()=>toast(''),1200)};
 
 (async()=>{
   const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
