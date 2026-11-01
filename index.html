@@ -74,6 +74,9 @@ html,body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden}
 @media(min-width:901px){.bd{display:none}}
 body.ns{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}input,textarea,select{-webkit-user-select:text;user-select:text}
 .pm{font-size:12px;padding:3px 8px;border-radius:8px;background:#34d39922;color:#34d399;flex:none;white-space:nowrap}.pm.no{background:#ff5d7322;color:#ff5d73}
+.rp{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mu);margin-bottom:3px;cursor:pointer;border-left:2px solid var(--p3);padding-left:6px;overflow:hidden;white-space:nowrap;max-width:100%}.rp span{overflow:hidden;text-overflow:ellipsis}.rp b{margin:0!important;font-size:12px}
+.rxs{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.rx{display:flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;background:var(--p3);border:1px solid transparent;font-size:13px}.rx b{margin:0!important;font-size:12px}.rx.on{border-color:var(--ac);background:#7c5cff33}
+.repbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;margin:0 16px;background:var(--p3);border-radius:10px 10px 0 0;font-size:13px;color:var(--mu)}.repbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.repbar button{color:var(--mu);padding:2px 8px}
 </style></head><body><div id="app"></div>
 <script>
 (function(){function show(m){var a=document.getElementById('app');if(a&&!a.children.length)a.innerHTML='<pre style="color:#ff5d73;padding:20px;white-space:pre-wrap;font:14px/1.5 monospace">Nuvexa açılamadı.\n\nHata: '+String(m).replace(/</g,'&lt;')+'\n\nBu yazının ekran görüntüsünü gönder.</pre>'}
@@ -125,7 +128,7 @@ async function loadMsgs(){
   if(S.view==='server'&&chan()?.type==='text')q=q.eq('channel_id',S.cid);
   else if(S.view==='home'&&S.dm)q=q.eq('dm_key',dk(me,S.dm));
   else{MS=[];return}
-  MS=(await q).data||[];
+  MS=(await q).data||[];await loadExtra();
 }
 const refresh=async()=>{await load();BAN?render():soft()};
 function subscribe(){
@@ -238,8 +241,8 @@ if(f==='auth'){
 }
 else if(f==='modal')S.modal?.fn?.(d);
 else if(f==='send'){let x=(d.get('x')||'').trim();if(!x)return;e.target.x.value='';x=encM(x);rmPop();
-  const row={user_id:me,body:x};if(S.view==='home')row.dm_key=dk(me,S.dm);else row.channel_id=S.cid;
-  const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);await loadMsgs();soft();e.target.x?.focus?.()}});
+  const row={user_id:me,body:x};if(S.rep){row.reply_to=S.rep;S.rep=null}if(S.view==='home')row.dm_key=dk(me,S.dm);else row.channel_id=S.cid;
+  const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);await loadMsgs();document.querySelectorAll('.repbar').forEach(b=>b.remove());soft();e.target.x?.focus?.()}});
 
 
 /* ===== Eklentiler: arkadaşlık, roller, profil kartı, GIF, fotoğraf, rapor ===== */
@@ -260,7 +263,7 @@ const okU=u=>/^https:\/\//i.test(u);
 const gifHTML=g=>{if(g[0]==='v')return okU(g.slice(2))?`<video src="${esc(g.slice(2))}" controls playsinline preload="metadata" style="display:block;max-width:300px;max-height:260px;border-radius:12px;margin-top:4px"></video>`:'';if(g[0]==='i')return okU(g.slice(2))?`<a href="${esc(g.slice(2))}" target="_blank" rel="noopener"><img src="${esc(g.slice(2))}" loading="lazy" alt="foto" style="display:block;max-width:300px;max-height:300px;border-radius:12px;margin-top:4px"></a>`:'';if(g.startsWith('u:'))return`<img src="${esc(g.slice(2))}" alt="gif" style="display:block;max-width:260px;max-height:220px;border-radius:12px;margin-top:4px">`;const a=ANIM[+g.slice(2)];return a?`<div class="ga" style="background:linear-gradient(135deg,${a[3]},#1e2040)"><span style="display:block;animation:g-${a[2]} 1s infinite">${a[1]}</span><small>${a[0].toUpperCase()}</small></div>`:''};
 
 msgsHTML=function(){return MS.map(m=>{const u=U(m.user_id),s=S.view==='server'?srv():null,nm=s?nick(s.id,m.user_id):u.name;
-return`<div class="m${hl(m)}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div><b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`}).join('')};
+return`<div class="m${hl(m)}" id="m-${m.id}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div>${rpHTML(m)}<b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`}${rxHTML(m)}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`}).join('')};
 
 memHTML=function(){if(S.view!=='server')return'';const s=srv(),L=MB.filter(m=>m.server_id===s.id);
 return`<div class="mem"><div class="cat">ÜYELER — ${L.length}</div>`+L.map(m=>{const r=rolesOf(s.id,m.user_id)[0];return`<button class="it" data-a="prof" data-i="${m.user_id}" style="color:${rcol(s.id,m.user_id)}">${avp(U(m.user_id),28)}<span>${esc(nick(s.id,m.user_id))}${s.owner===m.user_id?' 👑':''}<small style="display:block;color:var(--mu);font-size:11px">${r?esc(r.name):''}</small></span></button>`}).join('')+`</div>`};
@@ -311,7 +314,7 @@ A.renSrv=()=>{const s=srv();modal('Sunucuyu Düzenle',fileIn('img','SUNUCU FOTO�
 /* GIF */
 A.gif0=()=>{S.gq='';A.gif()};
 A.gif=()=>{const q=(S.gq||'').toLowerCase();modal('GIF Seç',`<input id="gq" placeholder="GIF ara…" autocomplete="off" value="${esc(S.gq||'')}"><div class="gp" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px">${ANIM.map((a,i)=>a[0].includes(q)?`<button type="button" data-a="sg" data-i="a:${i}" style="padding:0">${gifHTML('a:'+i)}</button>`:'').join('')}</div><div><label>GALERİDEN GIF YÜKLE (en fazla 400 KB)</label><input type="file" id="gifup" accept="image/gif"></div>`,null)};
-A.sg=async g=>{const row={user_id:me,body:'',gif:g};if(S.view==='home')row.dm_key=dk(me,S.dm);else row.channel_id=S.cid;const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);S.modal=null;await loadMsgs();render()};
+A.sg=async g=>{const row={user_id:me,body:'',gif:g};if(S.rep){row.reply_to=S.rep;S.rep=null}if(S.view==='home')row.dm_key=dk(me,S.dm);else row.channel_id=S.cid;const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);S.modal=null;await loadMsgs();render()};
 document.addEventListener('input',e=>{if(e.target.id!=='gq')return;S.gq=e.target.value;gSearch()});
 document.addEventListener('change',async e=>{if(e.target.id!=='gifup')return;const f=e.target.files[0];if(!f)return;if(f.type!=='image/gif')return alert('Sadece .gif dosyası seç.');if(f.size>400*1024)return alert('GIF en fazla 400 KB olabilir.');
   const p=me+'/'+Date.now()+'.gif',{error}=await sb.storage.from('media').upload(p,f,{contentType:'image/gif'});if(error)return alert(error.message);A.sg('u:'+sb.storage.from('media').getPublicUrl(p).data.publicUrl)});
@@ -541,7 +544,7 @@ function calcUC(){if(!me||!MLOADED)return;const rd=getRD();
 const srvAny=sid=>CH.some(c=>c.server_id===sid&&UC[c.id]);
 function memUI(){const a=$('#app');if(!a||!me)return;if(S.view!=='server')S.mem=false;const hd=a.querySelector('.mh');
   if(S.view==='server'&&hd&&!hd.querySelector('.mb'))hd.insertAdjacentHTML('beforeend','<button class="mb" data-a="memb" title="Üyeler">👥</button>');
-  a.classList.toggle('mp',!!S.mem);const fm=a.querySelector('.in');if(fm&&S.view==='server'&&cantSend(S.cid))fm.outerHTML='<div class="in" style="justify-content:center;color:var(--mu);padding:12px 16px 16px">🔒 Bu kanalda mesaj yazma iznin yok.</div>';if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
+  a.classList.toggle('mp',!!S.mem);repUI(a);const fm=a.querySelector('.in');if(fm&&S.view==='server'&&cantSend(S.cid))fm.outerHTML='<div class="in" style="justify-content:center;color:var(--mu);padding:12px 16px 16px">🔒 Bu kanalda mesaj yazma iznin yok.</div>';if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
 A.memb=()=>{S.mem=!S.mem;S.nav=false;render()};
 const _nv=A.nav;A.nav=()=>{S.mem=false;_nv()};
 
@@ -615,6 +618,38 @@ A.cblk=async v=>{const [c,u]=v.split('|'),has=CB.some(x=>x.channel_id===c&&x.use
   if(error)return alert(error.message);
   CB=has?CB.filter(x=>!(x.channel_id===c&&x.user_id===u)):CB.concat([{channel_id:c,user_id:u}]);
   const pm=el&&el.querySelector('.pm');if(pm){pm.textContent=has?'✅ Yazabilir':'🚫 Yazamaz';pm.className='pm'+(has?'':' no')}};
+
+
+/* ===== Mesaja yanıt verme + emoji tepkileri ===== */
+let RX={},RM={};
+const snip=o=>o.gif?(o.gif[0]==='v'?'🎬 Video':o.gif[0]==='i'?'📷 Fotoğraf':'GIF'):(o.body||'').replace(/<@([0-9a-f-]{36})>/g,(x,i)=>'@'+U(i).name).slice(0,90);
+async function loadExtra(){const scope=S.view==='server'?S.cid:(S.dm?dk(me,S.dm):'');
+  const miss=[...new Set(MS.filter(m=>m.reply_to&&!MS.some(x=>x.id===m.reply_to)).map(m=>m.reply_to))].slice(0,40);
+  RM={};if(miss.length){const r=await sb.from('messages').select('id,user_id,body,gif').in('id',miss);(r.data||[]).forEach(x=>RM[x.id]=x)}
+  RX={};if(scope){const rr=await sb.from('reactions').select('*').eq('scope',scope).order('created_at').limit(3000);
+    (rr.data||[]).forEach(r=>{const o=RX[r.message_id]||(RX[r.message_id]={});(o[r.emoji]||(o[r.emoji]=[])).push(r.user_id)})}}
+const rpHTML=m=>{if(!m.reply_to)return'';const o=MS.find(x=>x.id===m.reply_to)||RM[m.reply_to];
+  if(!o)return'<div class="rp"><span>↩ Silinmiş bir mesaja yanıt</span></div>';
+  const u=U(o.user_id),s=S.view==='server'?srv():null,nm=s?nick(s.id,o.user_id):u.name;
+  return`<div class="rp" data-a="jump" data-i="${o.id}">${av(u,16)}<b style="color:${s?rcol(s.id,o.user_id):'#fff'}">${esc(nm)}</b><span>${esc(snip(o))}</span></div>`};
+const rxHTML=m=>{const r=RX[m.id],ks=r?Object.keys(r):[];if(!ks.length)return'';
+  return`<div class="rxs">${ks.map(e=>{const L=r[e];return`<button type="button" class="rx${L.includes(me)?' on':''}" data-a="react" data-i="${m.id}|${e}" title="${esc(L.map(u=>U(u).name).join(', '))}">${e} <b>${L.length}</b></button>`}).join('')}<button type="button" class="rx" data-a="rpick" data-i="${m.id}">＋</button></div>`};
+function repUI(a){const k=S.view+'|'+S.cid+'|'+S.dm;if(S.rep&&S.repK!==k)S.rep=null;a.querySelectorAll('.repbar').forEach(b=>b.remove());
+  const f=a.querySelector('.in');if(!S.rep||!f)return;const o=MS.find(x=>x.id===S.rep)||RM[S.rep];if(!o){S.rep=null;return}
+  const sv=S.view==='server'?srv():null,nm=sv?nick(sv.id,o.user_id):U(o.user_id).name;
+  f.insertAdjacentHTML('beforebegin',`<div class="repbar"><span>↩ <b>${esc(nm)}</b> kişisine yanıt: ${esc(snip(o))}</span><button type="button" data-a="rcancel">✕</button></div>`)}
+A.reply=id=>{rmPop();S.rep=id;S.repK=S.view+'|'+S.cid+'|'+S.dm;render();const f=$('.in input');if(f)f.focus()};
+A.rcancel=()=>{S.rep=null;document.querySelectorAll('.repbar').forEach(b=>b.remove())};
+A.jump=id=>{const el=document.getElementById('m-'+id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.style.background='#7c5cff33';setTimeout(()=>el.style.background='',1500)}};
+const EMO=['👍','❤️','😂','😮','😢','😡','🔥','🎉','👀','🙏','👏','💯','😍','🤔','😭','🥳','😎','💀','✅','❌','😅','🤣','😴','🙌'];
+A.rpick=id=>{const r=lastEl?lastEl.getBoundingClientRect():{left:20,top:200};rmPop();
+  pop(r.left,Math.max(8,r.top-120),`<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px">${EMO.map(e=>`<button type="button" class="it" data-a="react" data-i="${id}|${e}" style="justify-content:center;font-size:20px;padding:6px">${e}</button>`).join('')}</div>`,Math.min(290,innerWidth-16))};
+A.react=async v=>{rmPop();const [id,e]=v.split('|'),has=((RX[id]||{})[e]||[]).includes(me),scope=S.view==='server'?S.cid:dk(me,S.dm);
+  const {error}=has?await sb.from('reactions').delete().eq('message_id',id).eq('user_id',me).eq('emoji',e):await sb.from('reactions').insert({message_id:id,user_id:me,emoji:e,scope});
+  if(error)return alert(error.message);
+  const o=RX[id]||(RX[id]={});if(has){o[e]=(o[e]||[]).filter(u=>u!==me);if(!o[e].length)delete o[e]}else(o[e]||(o[e]=[])).push(me);soft()};
+A.mmenu=id=>{const m=MS.find(x=>x.id===id);if(!m||!lastEl)return;const r=lastEl.getBoundingClientRect();
+  pop(r.right-190,Math.min(r.bottom+4,innerHeight-210),`<button class="it" data-a="reply" data-i="${id}">↩ Yanıtla</button><button class="it" data-a="rpick" data-i="${id}">😀 Tepki ver</button><button class="it" data-a="cpmsg" data-i="${id}">📋 Kopyala</button>`+(m.user_id===me?`<button class="it" data-a="dmsg" data-i="${id}">🗑 Mesajı sil</button>`:`<button class="it" data-a="rmsg" data-i="${id}">🚩 Mesajı rapor et</button>`),190)};
 
 (async()=>{
   const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
