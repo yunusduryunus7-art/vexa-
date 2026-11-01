@@ -73,6 +73,7 @@ html,body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden}
 @media(max-width:900px){.mb{display:grid}#app.mp .mem{display:block;position:fixed;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);width:min(260px,80vw);z-index:20;box-shadow:-8px 0 30px #0008}}
 @media(min-width:901px){.bd{display:none}}
 body.ns{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}input,textarea,select{-webkit-user-select:text;user-select:text}
+.pm{font-size:12px;padding:3px 8px;border-radius:8px;background:#34d39922;color:#34d399;flex:none;white-space:nowrap}.pm.no{background:#ff5d7322;color:#ff5d73}
 </style></head><body><div id="app"></div>
 <script>
 (function(){function show(m){var a=document.getElementById('app');if(a&&!a.children.length)a.innerHTML='<pre style="color:#ff5d73;padding:20px;white-space:pre-wrap;font:14px/1.5 monospace">Nuvexa açılamadı.\n\nHata: '+String(m).replace(/</g,'&lt;')+'\n\nBu yazının ekran görüntüsünü gönder.</pre>'}
@@ -110,6 +111,7 @@ async function load(){
   const [e,f,g,k]=await Promise.all([sb.from('friendships').select('*'),sb.from('roles').select('*'),sb.from('member_roles').select('*'),sb.from('categories').select('*')]);FR=e.data||[];RL=f.data||[];MR=g.data||[];CAT=k.data||[];
   const dm=await sb.from('messages').select('dm_key,user_id,created_at').not('dm_key','is',null).order('created_at',{ascending:false}).limit(1000);DMROWS=dm.data||[];DMP=[...new Set(DMROWS.flatMap(r=>r.dm_key.split('_')).filter(x=>x!==me))];
   const mq2=await sb.from('messages').select('id,channel_id,created_at,user_id').not('channel_id','is',null).or(`body.ilike.*<@${me}>*,body.ilike.*@everyone*`).order('created_at',{ascending:false}).limit(300);MROWS=mq2.data||[];MLOADED=true;
+  const cbq=await sb.from('channel_blocks').select('*');CB=cbq.data||[];
   const mine=CH.filter(c=>c.type==='text'&&isMem(c.server_id)).map(c=>c.id);LM={};
   if(mine.length){const lr=await sb.from('messages').select('channel_id,user_id,created_at').in('channel_id',mine).order('created_at',{ascending:false}).limit(1000);(lr.data||[]).forEach(r=>{if(r.user_id!==me&&!LM[r.channel_id])LM[r.channel_id]=r.created_at})}
   const ub=await sb.from('user_badges').select('user_id,badge');UB={};(ub.data||[]).forEach(x=>(UB[x.user_id]=UB[x.user_id]||[]).push(x.badge));
@@ -135,7 +137,7 @@ function subscribe(){
 function authHTML(){const r=S.tab==='register';return`<form class="auth" data-f="auth"><div class="logo">Nuvexa</div>
 <div class="tabs"><button type="button" data-a="tab" data-i="login" class="${r?'':'on'}">Giriş Yap</button><button type="button" data-a="tab" data-i="register" class="${r?'on':''}">Hesap Oluştur</button></div>
 ${r?inp('name','TAKMA AD','','text','maxlength=24'):''}${inp('username','KULLANICI ADI','','text','required autocapitalize=off')}${inp('pass','ŞİFRE','','password','required minlength=6')}
-<div class="err">${esc(S.err)}</div><button class="btn">${r?'Hesabı Oluştur':'Giriş Yap'}</button></form>`}
+<div class="err">${esc(S.err)}</div><small style="color:var(--mu);line-height:1.7">${r?'Hesap oluşturarak şunları kabul etmiş olursun: ':''}<button type="button" data-a="doc" data-i="tos" style="color:var(--ac2);text-decoration:underline">Hizmet Şartları</button> · <button type="button" data-a="doc" data-i="priv" style="color:var(--ac2);text-decoration:underline">Gizlilik Politikası</button></small><button class="btn">${r?'Hesabı Oluştur':'Giriş Yap'}</button></form>`}
 
 function sideHTML(){let h='';const u=U(me);
 if(S.view!=='server'){
@@ -189,8 +191,8 @@ dm(i){S.view='home';S.dm=i;go()},
 srv(i){S.view='server';S.sid=i;S.cid=(CH.find(c=>c.server_id===i&&c.type==='text')||CH.find(c=>c.server_id===i))?.id;go()},
 ch(i){S.cid=i;go()},
 async jsrv(i){const {error}=await sb.from('members').insert({server_id:i,user_id:me});if(error)return alert(error.message);await load();A.srv(i)},
-addSrv(){modal('Sunucu Oluştur',inp('name','SUNUCU ADI',U(me).name+' sunucusu','text','required maxlength=30')+inp('icon','SİMGE (emoji, isteğe bağlı)','','text','maxlength=2'),'Oluştur',async d=>{
-  const {data:s,error}=await sb.from('servers').insert({name:d.get('name'),icon:d.get('icon'),owner:me}).select().single();if(error)return alert(error.message);
+addSrv(){modal('Sunucu Oluştur',inp('name','SUNUCU ADI',(U(me).name+' sunucusu').slice(0,25),'text','required maxlength=25')+inp('icon','SİMGE (emoji, isteğe bağlı)','','text','maxlength=2'),'Oluştur',async d=>{
+  const {data:s,error}=await sb.from('servers').insert({name:d.get('name').trim().slice(0,25),icon:d.get('icon'),owner:me}).select().single();if(error)return alert(error.message);
   await sb.from('members').insert({server_id:s.id,user_id:me});
   const {data:kc}=await sb.from('categories').insert([{server_id:s.id,name:'Metin Kanalları'},{server_id:s.id,name:'Ses Kanalları'}]).select();
   await sb.from('channels').insert([{server_id:s.id,name:'genel',type:'text',category_id:kc?.find(x=>x.name==='Metin Kanalları')?.id||null},{server_id:s.id,name:'Sohbet Odası',type:'voice',category_id:kc?.find(x=>x.name==='Ses Kanalları')?.id||null}]);
@@ -203,12 +205,12 @@ async delCh(i){const c=CH.find(x=>x.id===i);if(CH.filter(x=>x.server_id===S.sid)
 srvMenu(){const s=srv(),o=s.owner===me;modal(s.name,`<button type="button" class="it" data-a="myNick">🪪 Sunucudaki takma adım</button>`+(o?`<button type="button" class="it" data-a="renSrv">✏️ Sunucuyu düzenle</button><button type="button" class="it" data-a="addRole">🎭 Rol oluştur</button>`:'')+`<button type="button" class="it" data-a="delSrv" style="color:var(--rd)">${o?'🗑 Sunucuyu sil':'🚪 Sunucudan ayrıl'}</button>`)},
 myNick(){modal('Sunucu Profilim',inp('nick','SUNUCUDA TAKMA AD',nick(S.sid,me)===U(me).name?'':nick(S.sid,me),'text','maxlength=24 placeholder="Boş = genel adın"'),'Kaydet',async d=>{
   await sb.from('members').update({nick:d.get('nick').trim()}).eq('server_id',S.sid).eq('user_id',me);S.modal=null;await load();render()})},
-renSrv(){const s=srv();modal('Sunucuyu Düzenle',inp('name','SUNUCU ADI',s.name,'text','required')+inp('icon','SİMGE',s.icon||'','text','maxlength=2'),'Kaydet',async d=>{
-  await sb.from('servers').update({name:d.get('name'),icon:d.get('icon')}).eq('id',s.id);S.modal=null;await load();render()})},
+renSrv(){const s=srv();modal('Sunucuyu Düzenle',inp('name','SUNUCU ADI',s.name,'text','required maxlength=25')+inp('icon','SİMGE',s.icon||'','text','maxlength=2'),'Kaydet',async d=>{
+  await sb.from('servers').update({name:d.get('name').trim().slice(0,25),icon:d.get('icon')}).eq('id',s.id);S.modal=null;await load();render()})},
 async delSrv(){const s=srv(),o=s.owner===me;if(!confirm(o?'Sunucu herkes için silinsin mi?':'Sunucudan ayrılınsın mı?'))return;
   if(o)await sb.from('servers').delete().eq('id',s.id);else await sb.from('members').delete().eq('server_id',s.id).eq('user_id',me);
   S.modal=null;S.view='home';S.sid=null;await load();render()},
-settings(){const u=U(me);modal('Profilim',`<div>${av(u,64)}</div>`+inp('name','TAKMA AD',u.name,'text','required maxlength=24')+inp('emoji','AVATAR EMOJİSİ',u.emoji||'','text','maxlength=2')+inp('color','AVATAR RENGİ',u.color||'#7c5cff','color')+inp('bio','HAKKINDA',u.bio||'','text','maxlength=100')+`<button type="button" class="btn r" data-a="logout">Hesaptan Çık</button>`,'Kaydet',async d=>{
+settings(){const u=U(me);modal('Profilim',`<div>${av(u,64)}</div>`+inp('name','TAKMA AD',u.name,'text','required maxlength=24')+inp('emoji','AVATAR EMOJİSİ',u.emoji||'','text','maxlength=2')+inp('color','AVATAR RENGİ',u.color||'#7c5cff','color')+inp('bio','HAKKINDA',u.bio||'','text','maxlength=100')+`<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn g" data-a="doc" data-i="tos">📄 Hizmet Şartları</button><button type="button" class="btn g" data-a="doc" data-i="priv">🔒 Gizlilik Politikası</button></div><button type="button" class="btn r" data-a="logout">Hesaptan Çık</button>`,'Kaydet',async d=>{
   await sb.from('profiles').update({name:d.get('name').trim(),emoji:d.get('emoji'),color:d.get('color'),bio:d.get('bio')}).eq('id',me);S.modal=null;await load();render()})},
 async logout(){await sb.auth.signOut();me=null;S={view:'home',sid:null,cid:null,dm:null,modal:null,tab:'login',err:'',q:'',nav:false};render()}
 };
@@ -297,12 +299,12 @@ A.addRole=()=>{const s=srv();modal('Rol Oluştur',(RL.some(r=>r.server_id===s.id
 A.rep=i=>{modal('Kullanıcıyı Rapor Et',`<small style="color:var(--mu)">@${esc(U(i).username)} kullanıcısını bildiriyorsun.</small><div><label>SEBEP</label><select name="why">${['Taciz / zorbalık','Spam','Uygunsuz içerik','Nefret söylemi','Dolandırıcılık','Diğer'].map(x=>`<option>${x}</option>`).join('')}</select></div>`+inp('note','EK AÇIKLAMA (isteğe bağlı)','','text','maxlength=200'),'Raporu Gönder',async d=>{const {error}=await sb.from('reports').insert({by_user:me,against:i,why:d.get('why'),note:d.get('note'),place:S.view==='server'?srv().name:'DM'});S.modal=null;render();alert(error?error.message:'Rapor gönderildi, teşekkürler.')})};
 
 /* Profil / sunucu düzenleme (fotoğraf + banner) */
-A.settings=()=>{const u=U(me);modal('Profilim',`<div>${av(u,64)}</div>`+fileIn('img','PROFİL FOTOĞRAFI (galeri / dosyalar)',u.img,'rm')+fileIn('bn','PROFİL BANNERI',u.banner,'rmb')+inp('name','TAKMA AD',u.name,'text','required maxlength=24')+inp('emoji','AVATAR EMOJİSİ (fotoğraf yoksa)',u.emoji||'','text','maxlength=2')+inp('color','AVATAR / BANNER RENGİ',u.color||'#7c5cff','color')+inp('bio','HAKKINDA',u.bio||'','text','maxlength=100')+`<button type="button" class="btn r" data-a="logout">Hesaptan Çık</button>`,'Kaydet',async d=>{
+A.settings=()=>{const u=U(me);modal('Profilim',`<div>${av(u,64)}</div>`+fileIn('img','PROFİL FOTOĞRAFI (galeri / dosyalar)',u.img,'rm')+fileIn('bn','PROFİL BANNERI',u.banner,'rmb')+inp('name','TAKMA AD',u.name,'text','required maxlength=24')+inp('emoji','AVATAR EMOJİSİ (fotoğraf yoksa)',u.emoji||'','text','maxlength=2')+inp('color','AVATAR / BANNER RENGİ',u.color||'#7c5cff','color')+inp('bio','HAKKINDA',u.bio||'','text','maxlength=100')+`<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn g" data-a="doc" data-i="tos">📄 Hizmet Şartları</button><button type="button" class="btn g" data-a="doc" data-i="priv">🔒 Gizlilik Politikası</button></div><button type="button" class="btn r" data-a="logout">Hesaptan Çık</button>`,'Kaydet',async d=>{
   const o={name:d.get('name').trim(),emoji:d.get('emoji'),color:d.get('color'),bio:d.get('bio')},a=await upl(d.get('img'),256,256),b=await upl(d.get('bn'),800,260);
   if(a)o.img=a;if(b)o.banner=b;if(d.get('rm'))o.img=null;if(d.get('rmb'))o.banner=null;
   await sb.from('profiles').update(o).eq('id',me);S.modal=null;await load();render()})};
-A.renSrv=()=>{const s=srv();modal('Sunucuyu Düzenle',fileIn('img','SUNUCU FOTOĞRAFI',s.img,'rm')+fileIn('bn','SUNUCU BANNERI',s.banner,'rmb')+inp('name','SUNUCU ADI',s.name,'text','required')+inp('icon','SİMGE (fotoğraf yoksa)',s.icon||'','text','maxlength=2'),'Kaydet',async d=>{
-  const o={name:d.get('name'),icon:d.get('icon')},a=await upl(d.get('img'),128,128),b=await upl(d.get('bn'),640,200);
+A.renSrv=()=>{const s=srv();modal('Sunucuyu Düzenle',fileIn('img','SUNUCU FOTOĞRAFI',s.img,'rm')+fileIn('bn','SUNUCU BANNERI',s.banner,'rmb')+inp('name','SUNUCU ADI',s.name,'text','required maxlength=25')+inp('icon','SİMGE (fotoğraf yoksa)',s.icon||'','text','maxlength=2'),'Kaydet',async d=>{
+  const o={name:d.get('name').trim().slice(0,25),icon:d.get('icon')},a=await upl(d.get('img'),128,128),b=await upl(d.get('bn'),640,200);
   if(a)o.img=a;if(b)o.banner=b;if(d.get('rm'))o.img=null;if(d.get('rmb'))o.banner=null;
   await sb.from('servers').update(o).eq('id',s.id);S.modal=null;await load();render()})};
 
@@ -360,7 +362,7 @@ function calcMC(){if(!me||!MLOADED)return;const rd=getRD();
   if(S.view==='server'&&S.cid&&MS.length){const l=MS[MS.length-1].created_at;if(!rd[S.cid]||l>rd[S.cid]){rd[S.cid]=l;setRD(rd)}}
   MC={};MROWS.forEach(r=>{if(r.user_id!==me&&(!rd[r.channel_id]||r.created_at>rd[r.channel_id])&&CH.some(c=>c.id===r.channel_id&&isMem(c.server_id)))MC[r.channel_id]=(MC[r.channel_id]||0)+1})}
 const srvCount=sid=>CH.filter(c=>c.server_id===sid).reduce((a,c)=>a+(MC[c.id]||0),0);
-const _r2=render;render=function(){if(me&&BAN){banScreen();return}calcMC();calcUC();calcDM();_r2();memUI();const t=dmTotal()+Object.values(MC).reduce((a,b)=>a+b,0);document.title=(t?'('+t+') ':'')+'Nuvexa'};
+const _r2=render;render=function(){if(me&&BAN){banScreen();return}if(me&&P[me]&&('tos_version' in P[me])&&(P[me].tos_version||0)<TOS_VERSION){tosGate();return}calcMC();calcUC();calcDM();_r2();memUI();const t=dmTotal()+Object.values(MC).reduce((a,b)=>a+b,0);document.title=(t?'('+t+') ':'')+'Nuvexa'};
 
 /* Yazarken klavye kapanmasın: input açıkken sadece mesaj listesi/yan paneller güncellenir */
 function soft(){const a=document.activeElement;if(!me||!(a&&a.name==='x'&&a.closest('.in'))||S.modal){render();return}
@@ -452,7 +454,7 @@ A.addMenu=()=>modal('Oluştur',`<button type="button" class="it" data-a="addCh" 
 A.addCh=cid=>{const s=srv();if(!s)return;modal('Kanal Oluştur',`<div><label>KANAL TÜRÜ</label><label class="chk"><input type="radio" name="t" value="text" checked># Metin: mesaj, GIF, fotoğraf, video</label><label class="chk"><input type="radio" name="t" value="voice">🔊 Ses: sesli konuşma</label></div>`+inp('name','KANAL ADI','','text','required maxlength=24')+catSel(s.id,cid),'Oluştur',async d=>{
   const {data:c,error}=await sb.from('channels').insert({server_id:s.id,name:d.get('name').trim(),type:d.get('t'),category_id:d.get('cat')||null}).select().single();if(error)return alert(error.message);
   S.cid=c.id;S.modal=null;await load();render()})};
-A.editCh=i=>{rmPop();const c=CH.find(x=>x.id===i);if(!c)return;modal('Kanalı Düzenle',inp('name','KANAL ADI',c.name,'text','required maxlength=24')+catSel(c.server_id,c.category_id)+`<button type="button" class="btn r" data-a="delCh" data-i="${i}">Kanalı Sil</button>`,'Kaydet',async d=>{
+A.editCh=i=>{rmPop();const c=CH.find(x=>x.id===i);if(!c)return;modal('Kanalı Düzenle',inp('name','KANAL ADI',c.name,'text','required maxlength=24')+catSel(c.server_id,c.category_id)+(c.type==='text'?permHTML(c):'')+`<button type="button" class="btn r" data-a="delCh" data-i="${i}">Kanalı Sil</button>`,'Kaydet',async d=>{
   const {error}=await sb.from('channels').update({name:d.get('name').trim(),category_id:d.get('cat')||null}).eq('id',i);if(error)return alert(error.message);S.modal=null;await load();render()})};
 A.addCat=()=>modal('Kategori Oluştur',inp('name','KATEGORİ ADI','','text','required maxlength=24')+'<small style="color:var(--mu)">Kanalları gruplayan başlık. Örn: Oyunlar, Sohbet, Duyurular</small>','Oluştur',async d=>{
   const {error}=await sb.from('categories').insert({server_id:S.sid,name:d.get('name').trim()});if(error)return alert(error.message);S.modal=null;await load();render()});
@@ -539,7 +541,7 @@ function calcUC(){if(!me||!MLOADED)return;const rd=getRD();
 const srvAny=sid=>CH.some(c=>c.server_id===sid&&UC[c.id]);
 function memUI(){const a=$('#app');if(!a||!me)return;if(S.view!=='server')S.mem=false;const hd=a.querySelector('.mh');
   if(S.view==='server'&&hd&&!hd.querySelector('.mb'))hd.insertAdjacentHTML('beforeend','<button class="mb" data-a="memb" title="Üyeler">👥</button>');
-  a.classList.toggle('mp',!!S.mem);if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
+  a.classList.toggle('mp',!!S.mem);const fm=a.querySelector('.in');if(fm&&S.view==='server'&&cantSend(S.cid))fm.outerHTML='<div class="in" style="justify-content:center;color:var(--mu);padding:12px 16px 16px">🔒 Bu kanalda mesaj yazma iznin yok.</div>';if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
 A.memb=()=>{S.mem=!S.mem;S.nav=false;render()};
 const _nv=A.nav;A.nav=()=>{S.mem=false;_nv()};
 
@@ -562,6 +564,57 @@ A.cpmsg=async id=>{rmPop();const m=MS.find(x=>x.id===id);if(!m)return;
   const g=m.gif?m.gif.slice(2):'',txt=m.gif?(/^https:/i.test(g)?g:''):(m.body||'').replace(/<@([0-9a-f-]{36})>/g,(x,i)=>'@'+U(i).name);if(!txt)return;
   try{await navigator.clipboard.writeText(txt)}catch(e){const t=document.createElement('textarea');t.value=txt;t.style.cssText='position:fixed;opacity:0;left:0;top:0';document.body.appendChild(t);t.focus();t.select();try{document.execCommand('copy')}catch(_){}t.remove()}
   toast('Kopyalandı');setTimeout(()=>toast(''),1200)};
+
+
+/* ===== Hizmet Şartları, Gizlilik Politikası, kanal yazma izni ===== */
+const TOS_VERSION=1,CONTACT_EMAIL='',DOC_DATE='1 Kasım 2026';
+let CB=[];
+const contact=()=>CONTACT_EMAIL?'E-posta: '+esc(CONTACT_EMAIL):'Uygulamadaki 🛡 Admin rozetli kullanıcılara mesaj atarak bize ulaşabilirsin.';
+const DOCS={
+tos:{t:'Hizmet Şartları',s:[
+['1. Kabul','Nuvexa’yı kullanarak bu Hizmet Şartları’nı kabul etmiş olursun. Kabul etmiyorsan hesabını kullanma ve uygulamadan çık.'],
+['2. Beta sürümü','Nuvexa şu anda beta aşamasındadır. Özellikler değişebilir, hizmette kesinti, hata ya da veri kaybı yaşanabilir. Hizmetin kesintisiz ve hatasız çalışacağını garanti edemeyiz. Önemli bilgilerini tek başına burada saklama.'],
+['3. Hesabın','• Nuvexa’yı kullanmak için en az 13 yaşında olmalısın. 18 yaşından küçükysen ebeveynin ya da vasinin bilgisi dahilinde kullanmalısın.\n• Hesabındaki her işlemden sen sorumlusun; şifreni kimseyle paylaşma.\n• Şifre sıfırlama otomatik değildir. Şifreni unutursan yönetime başvurman gerekir.\n• Kullanıcı adın başkasını taklit etmemeli ve kurallara aykırı olmamalıdır.'],
+['4. Yasak davranışlar','Şunları yapman yasaktır:\n• Taciz, zorbalık, tehdit, nefret söylemi ve ayrımcılık.\n• Çocukları istismar eden ya da cinselleştiren her türlü içerik. Bu tür içerikler kalıcı banla sonuçlanır ve yetkili makamlara bildirilebilir.\n• Yasa dışı içerik paylaşmak ya da yasa dışı faaliyeti teşvik etmek.\n• Spam, dolandırıcılık, oltalama ve zararlı yazılım paylaşmak.\n• Başkalarının kişisel bilgilerini izinsiz paylaşmak.\n• Rızası olmayan müstehcen içerik paylaşmak.\n• Başkasının telif hakkını ihlal etmek.\n• Uygulamayı bozmaya çalışmak: güvenlik açığı istismarı, otomatik hesap açma, başkalarının hesabına erişmeye çalışma.'],
+['5. Paylaştığın içerik','Yazdığın mesajlar, yüklediğin fotoğraf ve videolar sana aittir. Nuvexa’nın çalışabilmesi için bu içerikleri saklamamıza ve ilgili kullanıcılara göstermemize izin vermiş olursun. Paylaştığın içeriklerden sen sorumlusun; hakkın olmayan içerikleri paylaşma.'],
+['6. Moderasyon','• Yöneticiler raporları inceleyebilir, kurallara aykırı içerikleri kaldırabilir ve hesapları süreli ya da süresiz banlayabilir. Banlanan kişiye sebep ve süre gösterilir.\n• Sunucu sahipleri kendi sunucularında kanalları, kategorileri ve rolleri yönetebilir, üyelerin bir kanalda mesaj yazmasını sınırlayabilir.\n• Bir karara itirazın varsa yönetimle iletişime geçebilirsin.'],
+['7. Raporlama','Kurallara aykırı kullanıcıları ve mesajları raporlayabilirsin. Kötü niyetli ya da asılsız rapor göndermek de kural ihlalidir.'],
+['8. Üçüncü taraf hizmetler','Nuvexa; kimlik doğrulama, veri ve dosya depolama için Supabase’i, GIF araması için GIPHY’yi kullanır. Bu hizmetlerin kendi şartları ve gizlilik politikaları geçerlidir.'],
+['9. Hesabın sonlanması','Dilediğin zaman kullanmayı bırakabilirsin. Hesabının silinmesini istersen yönetime başvurabilirsin. Bu şartları ihlal edersen hesabın uyarı yapılmadan banlanabilir ya da kapatılabilir.'],
+['10. Sorumluluk sınırı','Hizmet “olduğu gibi” sunulur. Yasaların izin verdiği ölçüde; kesintilerden, veri kaybından ve diğer kullanıcıların paylaştığı içeriklerden doğan zararlardan sorumluluk kabul edilmez.'],
+['11. Değişiklikler','Bu şartlar zaman zaman güncellenebilir. Önemli bir değişiklik olursa uygulamayı kullanmaya devam etmeden önce yeniden onayını isteyebiliriz.'],
+['12. İletişim','{{iletisim}}']]},
+priv:{t:'Gizlilik Politikası',s:[
+['1. Kısaca','Reklam göstermiyoruz, verini satmıyoruz ve senden e-posta adresi ya da telefon numarası istemiyoruz. Aşağıda hangi verilerin nasıl kullanıldığı anlatılıyor.'],
+['2. Hangi verileri topluyoruz','• Hesap: kullanıcı adın, takma adın ve şifren. Şifren şifrelenmiş (özetlenmiş) biçimde saklanır, biz göremeyiz. Giriş için kullanıcı adından teknik bir adres üretilir (örneğin kullaniciadi@nuvexa.app); bu gerçek bir e-posta adresi değildir.\n• Profil: profil fotoğrafın, banner, “hakkında” yazın, avatar emojin ve rengin, rozetlerin.\n• İçerik: sunucu ve özel mesajların (DM), yüklediğin fotoğraf, video ve GIF’ler, oluşturduğun sunucu, kanal, kategori ve roller, arkadaşlıkların, sunucu üyeliklerin ve takma adların.\n• Çevrimiçi durumu: çevrimiçi, boşta ya da rahatsız etme durumun, sen uygulamadayken diğer kullanıcılarla geçici olarak paylaşılır; kalıcı olarak kaydedilmez.\n• Moderasyon: gönderilen raporlar (raporlayan, raporlanan, sebep ve mesaj metni), banlar, kabul ettiğin şartların sürümü ve zamanı.\n• Cihazında: tarayıcı deposunda oturum bilgin, okundu bilgisi, DM listen ve durum tercihin tutulur. Reklam ya da takip çerezi kullanmıyoruz.\n• Teknik kayıtlar: IP adresin ve tarayıcı bilgin, altyapı sağlayıcılarının kayıtlarında geçici olarak görünebilir.'],
+['3. Verileri neden kullanıyoruz','Hesabını ve hizmeti çalıştırmak, mesajları iletmek, güvenliği sağlamak, kötüye kullanımı önlemek, raporları incelemek, hataları düzeltmek ve hizmeti geliştirmek için.'],
+['4. Kimler görebilir','• Kullanıcı adın, takma adın, profil fotoğrafın, bannerın, “hakkında” yazın, rozetlerin, çevrimiçi durumun ve üye olduğun sunucular diğer kullanıcılara görünür.\n• Sunucu mesajları o sunucunun üyelerine görünür.\n• DM’ler yalnızca konuşmanın iki tarafına görünür.\n• Yüklenen dosyalar herkese açık bağlantıyla saklanır; bağlantıyı bilen herkes açabilir.\n• Yöneticiler, raporlanan içerikleri görebilir.\n• Uygulamayı işleten kişilerin veritabanına teknik erişimi vardır ve DM’ler dahil verilere teknik olarak ulaşabilir. Bu erişim yalnızca teknik bakım, güvenlik ve şikayet incelemesi için kullanılır.'],
+['5. Üçüncü taraflar','• Supabase: kimlik doğrulama, veritabanı, dosya depolama ve anlık iletişim altyapısı.\n• GIPHY: GIF ararken arama kelimen ve IP adresin GIPHY’ye gönderilir.\n• jsDelivr: uygulamanın kod kütüphaneleri buradan yüklenir; bu sırada IP adresin görünür.\n• Barındırma sağlayıcısı: sitenin yayınlandığı altyapı.\n• Sesli sohbet etkinleştirilirse ses altyapısı için LiveKit kullanılabilir.\nVerilerini reklam amacıyla kimseyle paylaşmıyoruz ve satmıyoruz.'],
+['6. Saklama süresi','Verilerin hesabın açık olduğu sürece saklanır. Bir mesajı sildiğinde kaldırılır. Bir sunucu ya da kanal silindiğinde içindeki mesajlar da silinir. Hesabın silindiğinde profilin ve ilişkili verilerin kaldırılır. Güvenlik amacıyla rapor ve ban kayıtları makul bir süre daha saklanabilir.'],
+['7. Haklarını nasıl kullanırsın','Profil bilgilerini ayarlardan düzeltebilir, mesajlarını silebilirsin. Verilerine erişmek, düzeltmek ya da hesabının silinmesini istemek için bize ulaşabilirsin. Bulunduğun ülkedeki veri koruma mevzuatından (örneğin KVKK ya da GDPR) doğan haklarını da bu yolla kullanabilirsin.'],
+['8. Güvenlik','Bağlantılar şifreli (HTTPS) kurulur ve şifreler özetlenerek saklanır. Yine de hiçbir sistem tamamen güvenli değildir ve Nuvexa beta aşamasındadır; çok hassas bilgilerini paylaşma.'],
+['9. Çocuklar','Nuvexa 13 yaşından küçükler için değildir. 13 yaşından küçük bir kullanıcı olduğunu fark edersek hesabı kaldırabiliriz.'],
+['10. Değişiklikler','Bu politika güncellenebilir. Önemli değişikliklerde yeniden onayını isteyebiliriz.'],
+['11. İletişim','{{iletisim}}']]}
+};
+function showDoc(k){const d=DOCS[k];if(!d)return;document.querySelector('.docov')?.remove();
+  const el=document.createElement('div');el.className='ov docov';el.dataset.a='docx';el.style.zIndex=70;
+  el.innerHTML=`<div class="md" style="width:min(600px,100%)"><h3>${esc(d.t)}</h3><small style="color:var(--mu)">Son güncelleme: ${DOC_DATE}</small>${d.s.map(([t,x])=>`<div><b>${t}</b><p style="color:var(--mu);margin-top:4px;line-height:1.55">${x.replace('{{iletisim}}',contact()).replace(/\n/g,'<br>')}</p></div>`).join('')}<div class="row"><button type="button" class="btn" data-a="docx">Kapat</button></div></div>`;
+  document.body.appendChild(el)}
+A.doc=k=>showDoc(k);A.docx=()=>document.querySelector('.docov')?.remove();
+function tosGate(){$('#app').innerHTML=`<div class="auth" style="width:min(460px,92%)"><div class="logo">Nuvexa</div><h3 style="text-align:center">Devam etmeden önce</h3><p style="color:var(--mu);line-height:1.55">Nuvexa’yı kullanmak için <b>Hizmet Şartları</b>’nı ve <b>Gizlilik Politikası</b>’nı okuyup kabul etmen gerekiyor.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn g" data-a="doc" data-i="tos">📄 Hizmet Şartları</button><button type="button" class="btn g" data-a="doc" data-i="priv">🔒 Gizlilik Politikası</button></div><button class="btn" data-a="tosok">Okudum, kabul ediyorum</button><button class="btn g" data-a="logout">Kabul etmiyorum (çıkış yap)</button></div>`}
+A.tosok=async()=>{const {error}=await sb.from('profiles').update({tos_version:TOS_VERSION,tos_at:new Date().toISOString()}).eq('id',me);if(error)return alert(error.message);await load();render()};
+
+/* Kanal yazma izni: sahip, kanalı düzenlerken üyelere dokunarak açıp kapatır */
+const cantSend=cid=>{const s=srv();return !!(s&&s.owner!==me&&CB.some(b=>b.channel_id===cid&&b.user_id===me))};
+const permHTML=c=>{const sv=SV.find(x=>x.id===c.server_id),L=MB.filter(m=>m.server_id===c.server_id&&m.user_id!==(sv&&sv.owner)).map(m=>m.user_id);
+  if(!L.length)return'<small style="color:var(--mu)">Yazma izni ayarlamak için sunucuda başka üye olmalı.</small>';
+  return`<div><label>MESAJ YAZMA İZNİ (üyeye dokunarak aç/kapat)</label><div style="display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;background:var(--bg);border-radius:10px;padding:4px">${L.map(u=>{const b=CB.some(x=>x.channel_id===c.id&&x.user_id===u);return`<button type="button" class="it" data-a="cblk" data-i="${c.id}|${u}" style="justify-content:space-between;color:var(--tx)"><span style="display:flex;gap:8px;align-items:center;min-width:0">${avp(U(u),26)}<span style="overflow:hidden;text-overflow:ellipsis">${esc(nick(c.server_id,u))}</span></span><span class="pm${b?' no':''}">${b?'🚫 Yazamaz':'✅ Yazabilir'}</span></button>`}).join('')}</div></div>`};
+A.cblk=async v=>{const [c,u]=v.split('|'),has=CB.some(x=>x.channel_id===c&&x.user_id===u),el=lastEl;
+  const {error}=has?await sb.from('channel_blocks').delete().eq('channel_id',c).eq('user_id',u):await sb.from('channel_blocks').insert({channel_id:c,user_id:u});
+  if(error)return alert(error.message);
+  CB=has?CB.filter(x=>!(x.channel_id===c&&x.user_id===u)):CB.concat([{channel_id:c,user_id:u}]);
+  const pm=el&&el.querySelector('.pm');if(pm){pm.textContent=has?'✅ Yazabilir':'🚫 Yazamaz';pm.className='pm'+(has?'':' no')}};
 
 (async()=>{
   const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
