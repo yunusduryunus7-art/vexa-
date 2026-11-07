@@ -205,7 +205,7 @@ addCh(t){modal(t==='text'?'Metin Kanalı Oluştur':'Ses Kanalı Oluştur',inp('n
   S.cid=c.id;S.modal=null;await load();render()})},
 async delCh(i){const c=CH.find(x=>x.id===i);if(CH.filter(x=>x.server_id===S.sid).length<2)return alert('Son kanal silinemez.');if(!confirm(c.name+' kanalı ve mesajları silinsin mi?'))return;
   await sb.from('channels').delete().eq('id',i);if(S.cid===i)S.cid=CH.find(x=>x.server_id===S.sid&&x.id!==i)?.id;await load();render()},
-srvMenu(){const s=srv(),o=s.owner===me;modal(s.name,`<button type="button" class="it" data-a="myNick">🪪 Sunucudaki takma adım</button>`+(o?`<button type="button" class="it" data-a="renSrv">✏️ Sunucuyu düzenle</button><button type="button" class="it" data-a="addRole">🎭 Rol oluştur</button>`:'')+`<button type="button" class="it" data-a="delSrv" style="color:var(--rd)">${o?'🗑 Sunucuyu sil':'🚪 Sunucudan ayrıl'}</button>`)},
+srvMenu(){const s=srv(),o=s.owner===me;modal(s.name,`<button type="button" class="it" data-a="myNick">🪪 Sunucudaki takma adım</button>`+(o?`<button type="button" class="it" data-a="renSrv">✏️ Sunucuyu düzenle</button><button type="button" class="it" data-a="addRole">🎭 Rol oluştur</button><button type="button" class="it" data-a="stats">📊 Sunucu istatistikleri</button>`:'')+`<button type="button" class="it" data-a="delSrv" style="color:var(--rd)">${o?'🗑 Sunucuyu sil':'🚪 Sunucudan ayrıl'}</button>`)},
 myNick(){modal('Sunucu Profilim',inp('nick','SUNUCUDA TAKMA AD',nick(S.sid,me)===U(me).name?'':nick(S.sid,me),'text','maxlength=24 placeholder="Boş = genel adın"'),'Kaydet',async d=>{
   await sb.from('members').update({nick:d.get('nick').trim()}).eq('server_id',S.sid).eq('user_id',me);S.modal=null;await load();render()})},
 renSrv(){const s=srv();modal('Sunucuyu Düzenle',inp('name','SUNUCU ADI',s.name,'text','required maxlength=25')+inp('icon','SİMGE',s.icon||'','text','maxlength=2'),'Kaydet',async d=>{
@@ -633,7 +633,7 @@ const rpHTML=m=>{if(!m.reply_to)return'';const o=MS.find(x=>x.id===m.reply_to)||
   const u=U(o.user_id),s=S.view==='server'?srv():null,nm=s?nick(s.id,o.user_id):u.name;
   return`<div class="rp" data-a="jump" data-i="${o.id}">${av(u,16)}<b style="color:${s?rcol(s.id,o.user_id):'#fff'}">${esc(nm)}</b><span>${esc(snip(o))}</span></div>`};
 const rxHTML=m=>{const r=RX[m.id],ks=r?Object.keys(r):[];if(!ks.length)return'';
-  return`<div class="rxs">${ks.map(e=>{const L=r[e];return`<button type="button" class="rx${L.includes(me)?' on':''}" data-a="react" data-i="${m.id}|${e}" title="${esc(L.map(u=>U(u).name).join(', '))}">${e} <b>${L.length}</b></button>`}).join('')}<button type="button" class="rx" data-a="rpick" data-i="${m.id}">＋</button></div>`};
+  return`<div class="rxs">${ks.map(e=>{const L=r[e];return`<button type="button" class="rx${L.includes(me)?' on':''}" data-a="react" data-i="${m.id}|${e}">${e} <b>${L.length}</b></button>`}).join('')}<button type="button" class="rx" data-a="rpick" data-i="${m.id}">＋</button></div>`};
 function repUI(a){const k=S.view+'|'+S.cid+'|'+S.dm;if(S.rep&&S.repK!==k)S.rep=null;a.querySelectorAll('.repbar').forEach(b=>b.remove());
   const f=a.querySelector('.in');if(!S.rep||!f)return;const o=MS.find(x=>x.id===S.rep)||RM[S.rep];if(!o){S.rep=null;return}
   const sv=S.view==='server'?srv():null,nm=sv?nick(sv.id,o.user_id):U(o.user_id).name;
@@ -650,6 +650,46 @@ A.react=async v=>{rmPop();const [id,e]=v.split('|'),has=((RX[id]||{})[e]||[]).in
   const o=RX[id]||(RX[id]={});if(has){o[e]=(o[e]||[]).filter(u=>u!==me);if(!o[e].length)delete o[e]}else(o[e]||(o[e]=[])).push(me);soft()};
 A.mmenu=id=>{const m=MS.find(x=>x.id===id);if(!m||!lastEl)return;const r=lastEl.getBoundingClientRect();
   pop(r.right-190,Math.min(r.bottom+4,innerHeight-210),`<button class="it" data-a="reply" data-i="${id}">↩ Yanıtla</button><button class="it" data-a="rpick" data-i="${id}">😀 Tepki ver</button><button class="it" data-a="cpmsg" data-i="${id}">📋 Kopyala</button>`+(m.user_id===me?`<button class="it" data-a="dmsg" data-i="${id}">🗑 Mesajı sil</button>`:`<button class="it" data-a="rmsg" data-i="${id}">🚩 Mesajı rapor et</button>`),190)};
+
+
+/* ===== Tepki verenleri görme + sunucu istatistikleri ===== */
+function rxTip(el){const cur=document.querySelector('.pop[data-tip]');if(cur&&cur.dataset.tip===el.dataset.i)return;
+  const [id,e]=el.dataset.i.split('|'),L=(RX[id]||{})[e]||[];if(!L.length)return;const s=S.view==='server'?srv():null,r=el.getBoundingClientRect();
+  pop(r.left,r.top-Math.min(L.length,12)*32-62,`<div style="padding:4px 8px;font-size:22px">${e} <small style="font-size:12px;color:var(--mu)">${L.length} kişi</small></div>`+L.slice(0,12).map(u=>`<div class="it" style="cursor:default;color:var(--tx);padding:4px 8px">${av(U(u),22)}<span style="overflow:hidden;text-overflow:ellipsis">${esc(s?nick(s.id,u):U(u).name)}</span></div>`).join('')+(L.length>12?`<div style="padding:4px 8px;color:var(--mu);font-size:12px">ve ${L.length-12} kişi daha</div>`:''),220);
+  const p=document.querySelector('.pop');if(p)p.dataset.tip=el.dataset.i}
+document.addEventListener('mouseover',e=>{const t=e.target.closest('.rx[data-a="react"]');if(t&&matchMedia('(hover:hover)').matches)rxTip(t)});
+document.addEventListener('mouseout',e=>{const t=e.target.closest('.rx[data-a="react"]');if(t&&!t.contains(e.relatedTarget))document.querySelectorAll('.pop[data-tip]').forEach(x=>x.remove())});
+document.addEventListener('touchstart',e=>{const t=e.target.closest('.rx[data-a="react"]');if(!t)return;lt=setTimeout(()=>{lp=true;setTimeout(()=>lp=false,800);rxTip(t)},450)},{passive:true});
+
+const lineSVG=(v,lb,c)=>{const W=360,H=150,pl=34,pr=10,pt=10,pb=22,n=v.length,mx=Math.max(...v),mn=Math.min(...v),lo=mn===mx?Math.max(0,mn-1):mn,hi=mn===mx?mx+1:mx,
+  x=i=>pl+(n<2?0:i*(W-pl-pr)/(n-1)),y=a=>pt+(1-(a-lo)/(hi-lo))*(H-pt-pb),f=a=>a%1?a.toFixed(1):a,pts=v.map((a,i)=>x(i).toFixed(1)+','+y(a).toFixed(1)),id='gr'+c.slice(1);
+  const g=[lo,(lo+hi)/2,hi].map(a=>`<line x1="${pl}" x2="${W-pr}" y1="${y(a)}" y2="${y(a)}" stroke="#ffffff14"/><text x="${pl-4}" y="${y(a)+3}" text-anchor="end" font-size="9" fill="#9a9dc9">${f(a)}</text>`).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".35"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>${g}<path d="M${x(0)},${H-pb} L${pts.join(' L')} L${x(n-1)},${H-pb}Z" fill="url(#${id})"/><polyline points="${pts.join(' ')}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>${n<=31?v.map((a,i)=>`<circle cx="${x(i)}" cy="${y(a)}" r="2.6" fill="${c}"><title>${lb[i]}: ${a}</title></circle>`).join(''):''}<text x="${pl}" y="${H-6}" font-size="9" fill="#9a9dc9">${lb[0]}</text><text x="${W-pr}" y="${H-6}" font-size="9" fill="#9a9dc9" text-anchor="end">${lb[n-1]}</text></svg>`};
+function statsHTML(D,days,s){const dl=D.daily||[],n=dl.length||1,lb=dl.map(x=>x.d.slice(5).split('-').reverse().join('.')),msg=dl.map(x=>x.m),jn=dl.map(x=>x.j),lv=dl.map(x=>x.l),sum=a=>a.reduce((p,q)=>p+q,0);
+  const mem=[];let c=D.members;for(let i=dl.length-1;i>=0;i--){mem[i]=c;c-=jn[i]-lv[i]}const start=c,tj=sum(jn),tl=sum(lv),tm=sum(msg),diff=D.members-start;
+  const C=[];
+  C.push(diff>0?`📈 Son ${days} günde üye sayısı ${start} → ${D.members} (+${diff}) olarak <b>arttı</b>. ${tj} kişi katıldı${tl?`, ${tl} kişi ayrıldı`:''}.`:diff<0?`📉 Son ${days} günde üye sayısı ${start} → ${D.members} (${diff}) olarak <b>azaldı</b>. ${tj} kişi katıldı, ${tl} kişi ayrıldı.`:`➖ Son ${days} günde üye sayısı <b>değişmedi</b> (${D.members}).${tj||tl?` ${tj} katılım, ${tl} ayrılış oldu.`:''}`);
+  const hf=Math.floor(dl.length/2),a=sum(msg.slice(0,hf)),b=sum(msg.slice(hf)),pc=a?Math.round((b-a)/a*100):0,top=dl.reduce((p,q)=>q.m>p.m?q:p,{m:0,d:''});
+  if(!tm)C.push('💤 Bu dönemde hiç mesaj yazılmadı.');
+  else{C.push(!a?'🔥 Mesaj aktivitesi dönemin ikinci yarısında başladı.':pc>=15?`🔥 Mesaj aktivitesi <b>yükseliyor</b>: dönemin ikinci yarısında ilk yarıya göre %${pc} daha fazla mesaj yazıldı.`:pc<=-15?`📉 Mesaj aktivitesi <b>düşüyor</b>: dönemin ikinci yarısında ilk yarıya göre %${-pc} daha az mesaj yazıldı.`:'⚖️ Mesaj aktivitesi <b>dengeli</b> seyrediyor.');
+    C.push(`💬 Günde ortalama ${(tm/n).toFixed(1)} mesaj. En yoğun gün ${top.d.slice(5).split('-').reverse().join('.')} (${top.m} mesaj).`)}
+  const tc=(D.top_channels||[])[0],tu=(D.top_users||[])[0];
+  if(tc)C.push(`# En aktif kanal <b>${esc(tc.name)}</b> (${tc.n} mesaj).`);if(tu)C.push(`🏅 En aktif üye <b>${esc(nick(s.id,tu.user_id))}</b> (${tu.n} mesaj).`);
+  if(diff<=0&&(!tm||pc<=-15))C.push('💡 İpucu: Bir etkinlik, anket ya da duyuru yaparak üyeleri tekrar sohbete çekebilirsin.');
+  else if(D.members<5)C.push('💡 İpucu: Daha fazla kişi katılsın diye arkadaşlarına sunucunu Keşfet sayfasından bulmalarını söyle.');
+  const card=(t,v,col)=>`<div class="card" style="gap:2px;padding:10px 12px"><small style="color:var(--mu)">${t}</small><b style="font-size:20px;color:${col||'var(--tx)'}">${v}</b></div>`;
+  return`<div class="gt">${[7,30,90].map(d=>`<button type="button" class="btn ${d===days?'':'g'}" data-a="statd" data-i="${d}">${d} gün</button>`).join('')}</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${card('Üye',D.members)}${card('Toplam mesaj',D.total_msgs)}${card('Son '+days+' gün mesaj',tm)}${card('Üye değişimi',(diff>0?'+':'')+diff,diff>0?'var(--gr)':diff<0?'var(--rd)':'')}</div>
+<div><label>ÜYE SAYISI (son ${days} gün)</label>${lineSVG(mem.length?mem:[D.members],lb.length?lb:['-'],'#34d399')}</div>
+<div><label>GÜNLÜK MESAJ SAYISI</label>${lineSVG(msg.length?msg:[0],lb.length?lb:['-'],'#7c5cff')}</div>
+<div><label>YORUMLAR</label><div style="display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:12px;padding:12px;font-size:14px;line-height:1.5">${C.map(t=>`<div>${t}</div>`).join('')}</div></div>
+<small style="color:var(--mu)">Günler UTC saatine göre sayılır. İstatistik takibi başlamadan önce katılıp ayrılanlar grafiğe yansımaz.</small>`}
+A.stats=async d=>{const s=srv();if(!s||s.owner!==me)return;const days=[7,30,90].includes(+d)?+d:30;
+  modal('📊 '+s.name,'<div class="empty" style="padding:20px">Yükleniyor…</div>',null);
+  const {data,error}=await sb.rpc('server_stats',{sid:s.id,days});
+  if(error||!data){modal('📊 İstatistikler','<div class="err">'+esc(error?error.message:'Veri alınamadı')+'</div><small style="color:var(--mu)">İstatistik SQL kurulumunu yaptığından emin ol.</small>',null);return}
+  modal('📊 '+s.name+' — istatistikler',statsHTML(data,days,s),null)};
+A.statd=d=>A.stats(d);
 
 (async()=>{
   const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
