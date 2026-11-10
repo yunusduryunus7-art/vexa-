@@ -103,6 +103,8 @@ input:focus,select:focus,textarea:focus{border-color:#71717a}
 #typbar{padding:0 18px 4px;font-size:12px;color:var(--mu);min-height:20px;display:flex;align-items:center;gap:6px}
 .td i{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--mu);margin-right:2px;animation:tdb 1s infinite}.td i:nth-child(2){animation-delay:.15s}.td i:nth-child(3){animation-delay:.3s}@keyframes tdb{50%{transform:translateY(-3px)}}
 .rolerow{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:10px}.tg{font-size:11px;padding:2px 7px;border-radius:6px;background:#ffffff14;color:var(--mu)}
+.m.cont{padding-top:1px;padding-bottom:1px}.m.cont .ct{width:40px;flex:none;text-align:center;font-size:10px;color:transparent;padding-top:4px}.m.cont:hover .ct{color:var(--mu)}
+.m.blk{align-items:center;background:#ffffff08;border-radius:10px;padding:6px 12px;margin:2px 0}
 </style></head><body><div id="app"></div>
 <script>
 (function(){function show(m){var a=document.getElementById('app');if(a&&!a.children.length)a.innerHTML='<pre style="color:#ff5d73;padding:20px;white-space:pre-wrap;font:14px/1.5 monospace">Nuvexa açılamadı.\n\nHata: '+String(m).replace(/</g,'&lt;')+'\n\nBu yazının ekran görüntüsünü gönder.</pre>'}
@@ -115,7 +117,7 @@ addEventListener('unhandledrejection',function(e){show(e.reason&&e.reason.messag
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
 const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv';
-const LK_URL='wss://XXXX.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
+const LK_URL='wss://nuvexaseslioda-g2d3hvcw.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -142,6 +144,8 @@ async function load(){
   const mq2=await sb.from('messages').select('id,channel_id,created_at,user_id').not('channel_id','is',null).or(['body.ilike.*<@'+me+'>*','body.ilike.*@everyone*',...MR.filter(x=>x.user_id===me&&(RL.find(r=>r.id===x.role_id)||{}).mentionable).map(x=>'body.ilike.*<@&'+x.role_id+'>*')].join(',')).order('created_at',{ascending:false}).limit(300);MROWS=mq2.data||[];MLOADED=true;
   const cbq=await sb.from('channel_blocks').select('*');CB=cbq.data||[];
   const crq=await sb.from('channel_role_perms').select('*');CRP=crq.data||[];
+  const ubq=await sb.from('user_blocks').select('blocked').eq('blocker',me);UBL=new Set((ubq.data||[]).map(x=>x.blocked));
+  const tq=await sb.from('member_timeouts').select('*');MTO=tq.data||[];const sbq=await sb.from('server_bans').select('*');SBN=sbq.data||[];
   const mine=CH.filter(c=>c.type==='text'&&isMem(c.server_id)).map(c=>c.id);LM={};
   if(mine.length){const lr=await sb.from('messages').select('channel_id,user_id,created_at').in('channel_id',mine).order('created_at',{ascending:false}).limit(1000);(lr.data||[]).forEach(r=>{if(r.user_id!==me&&!LM[r.channel_id])LM[r.channel_id]=r.created_at})}
   const ub=await sb.from('user_badges').select('user_id,badge');UB={};(ub.data||[]).forEach(x=>(UB[x.user_id]=UB[x.user_id]||[]).push(x.badge));
@@ -221,7 +225,7 @@ disc(){S.view='disc';S.sid=null;S.q='';S.nav=false;render()},
 dm(i){S.view='home';S.dm=i;go()},
 srv(i){S.view='server';S.sid=i;S.cid=(CH.find(c=>c.server_id===i&&c.type==='text')||CH.find(c=>c.server_id===i))?.id;go()},
 ch(i){S.cid=i;go()},
-async jsrv(i){const {error}=await sb.from('members').insert({server_id:i,user_id:me});if(error)return alert(error.message);await load();A.srv(i)},
+async jsrv(i){const {error}=await sb.from('members').insert({server_id:i,user_id:me});if(error)return alert(/row-level/i.test(error.message)?'Bu sunucuya katılamıyorsun (sunucudan banlanmış olabilirsin).':error.message);await load();A.srv(i)},
 addSrv(){modal('Sunucu Oluştur',inp('name','SUNUCU ADI',(U(me).name+' sunucusu').slice(0,25),'text','required maxlength=25')+inp('icon','SİMGE (emoji, isteğe bağlı)','','text','maxlength=2'),'Oluştur',async d=>{
   const {data:s,error}=await sb.from('servers').insert({name:d.get('name').trim().slice(0,25),icon:d.get('icon'),owner:me}).select().single();if(error)return alert(error.message);
   await sb.from('members').insert({server_id:s.id,user_id:me});
@@ -233,7 +237,7 @@ addCh(t){modal(t==='text'?'Metin Kanalı Oluştur':'Ses Kanalı Oluştur',inp('n
   S.cid=c.id;S.modal=null;await load();render()})},
 async delCh(i){const c=CH.find(x=>x.id===i);if(CH.filter(x=>x.server_id===S.sid).length<2)return alert('Son kanal silinemez.');if(!confirm(c.name+' kanalı ve mesajları silinsin mi?'))return;
   await sb.from('channels').delete().eq('id',i);if(S.cid===i)S.cid=CH.find(x=>x.server_id===S.sid&&x.id!==i)?.id;await load();render()},
-srvMenu(){const s=srv(),o=s.owner===me;modal(s.name,`<button type="button" class="it" data-a="myNick">🪪 Sunucudaki takma adım</button><button type="button" class="it" data-a="copyLink">🔗 Sunucu bağlantısını kopyala</button>`+(o?`<button type="button" class="it" data-a="renSrv">✏️ Sunucuyu düzenle</button><button type="button" class="it" data-a="roles">🎭 Roller</button><button type="button" class="it" data-a="stats">📊 Sunucu istatistikleri</button><button type="button" class="it" data-a="discReq">🧭 Keşfet gereksinimleri</button>`:'')+`<button type="button" class="it" data-a="delSrv" style="color:var(--rd)">${o?'🗑 Sunucuyu sil':'🚪 Sunucudan ayrıl'}</button>`)},
+srvMenu(){const s=srv(),o=s.owner===me;modal(s.name,`<button type="button" class="it" data-a="myNick">🪪 Sunucudaki takma adım</button><button type="button" class="it" data-a="copyLink">🔗 Sunucu bağlantısını kopyala</button>`+(modAny(s.id)?`<button type="button" class="it" data-a="modpanel">🛡 Moderasyon</button>`:'')+(o?`<button type="button" class="it" data-a="renSrv">✏️ Sunucuyu düzenle</button><button type="button" class="it" data-a="roles">🎭 Roller</button><button type="button" class="it" data-a="stats">📊 Sunucu istatistikleri</button><button type="button" class="it" data-a="discReq">🧭 Keşfet gereksinimleri</button>`:'')+`<button type="button" class="it" data-a="delSrv" style="color:var(--rd)">${o?'🗑 Sunucuyu sil':'🚪 Sunucudan ayrıl'}</button>`)},
 myNick(){modal('Sunucu Profilim',inp('nick','SUNUCUDA TAKMA AD',nick(S.sid,me)===U(me).name?'':nick(S.sid,me),'text','maxlength=24 placeholder="Boş = genel adın"'),'Kaydet',async d=>{
   await sb.from('members').update({nick:d.get('nick').trim()}).eq('server_id',S.sid).eq('user_id',me);S.modal=null;await load();render()})},
 renSrv(){const s=srv();modal('Sunucuyu Düzenle',inp('name','SUNUCU ADI',s.name,'text','required maxlength=25')+inp('icon','SİMGE',s.icon||'','text','maxlength=2'),'Kaydet',async d=>{
@@ -270,7 +274,7 @@ if(f==='auth'){
 else if(f==='modal')S.modal?.fn?.(d);
 else if(f==='send'){let x=(d.get('x')||'').trim();if(!x)return;e.target.x.value='';x=encM(x);rmPop();typStop();
   const row={user_id:me,body:x};if(S.rep){row.reply_to=S.rep;S.rep=null}if(S.view==='home')row.dm_key=dk(me,S.dm);else{row.channel_id=S.cid;if(S.post&&chan()?.type==='forum')row.post_id=S.post}
-  const {error}=await sb.from('messages').insert(row);if(error)alert(error.message);await loadMsgs();document.querySelectorAll('.repbar').forEach(b=>b.remove());soft();e.target.x?.focus?.()}});
+  const {error}=await sb.from('messages').insert(row);if(error)alert(/row-level/i.test(error.message)?(S.view==='home'?'Bu kişiye mesaj gönderemiyorsun.':'Bu kanalda şu an mesaj gönderemiyorsun (zaman aşımı ya da izin).'):error.message);await loadMsgs();document.querySelectorAll('.repbar').forEach(b=>b.remove());soft();e.target.x?.focus?.()}});
 
 
 /* ===== Eklentiler: arkadaşlık, roller, profil kartı, GIF, fotoğraf, rapor ===== */
@@ -322,7 +326,7 @@ else{const {error}=await sb.from('friendships').insert({a:me,b:u.id});S.fm=error
 /* Profil kartı (mesajdaki avatar / üye listesi / arkadaş listesi) */
 A.prof=i=>{S.pu=i;const u=U(i),s=S.view==='server'?srv():null,inS=s&&isMem(s.id,i),st=i===me?'me':frSt(i),rl=inS?rolesOf(s.id,i):[],srl=inS?RL.filter(r=>r.server_id===s.id&&!r.is_default):[],own=inS&&s.owner===me&&srl.length;
 const B=(a,c,l)=>`<button type="button" class="btn ${c}" data-a="${a}" data-i="${i}">${l}</button>`;
-const fb=st==='me'?B('settings','g','✏️ Profili Düzenle'):B('gdm','','💬 Mesaj Gönder')+({none:B('freq','g','➕ Arkadaş Ekle'),out:B('fdel','g','⏳ İstek gönderildi (iptal)'),in:B('facc','g','✔ İsteği kabul et'),ok:B('fdel','g','Arkadaşlıktan çıkar')})[st]+B('rep','r','🚩 Rapor et')+admBtn(i);
+const fb=st==='me'?B('settings','g','✏️ Profili Düzenle'):B('gdm','','💬 Mesaj Gönder')+({none:B('freq','g','➕ Arkadaş Ekle'),out:B('fdel','g','⏳ İstek gönderildi (iptal)'),in:B('facc','g','✔ İsteği kabul et'),ok:B('fdel','g','Arkadaşlıktan çıkar')})[st]+B('rep','r','🚩 Rapor et')+admBtn(i)+blkBtn(i)+modBtns(i,s,inS);
 modal('',`<div style="margin:-34px -22px 0;height:84px;background:${u.banner?`url(${esc(u.banner)}) center/cover`:`linear-gradient(135deg,${u.color||'#7c5cff'},var(--p3))`};border-radius:16px 16px 0 0"></div><div style="margin-top:-52px;display:flex;flex-direction:column;gap:10px"><div style="border:5px solid var(--p1);border-radius:50%;width:84px;height:84px">${avp(u,74)}</div><div><b style="font-size:21px">${esc(inS?nick(s.id,i):u.name)}</b>${inS&&s.owner===i?' 👑':''}<div style="color:var(--mu)">${esc(u.name)} · @${esc(u.username)}<br>${stLbl(stOf(i))}</div></div>${bdgRow(i)}`+(u.bio?`<div style="background:var(--bg);padding:10px 12px;border-radius:10px;word-break:break-word">${linkify(esc(u.bio))}</div>`:'')+(rl.length?`<div style="display:flex;gap:6px;flex-wrap:wrap">${rl.map(r=>`<span style="border:1px solid ${r.color};color:${r.color};border-radius:8px;padding:2px 9px;font-size:13px">${esc(r.name)}</span>`).join('')}</div>`:'')+(own?'<label style="margin-top:6px">ROLLERİ DÜZENLE</label>'+srl.map(r=>`<label class="chk"><input type="checkbox" name="r" value="${r.id}" ${rl.some(x=>x.id===r.id)?'checked':''}><b style="color:${r.color}">${esc(r.name)}</b></label>`).join(''):'')+`<div style="display:flex;gap:8px;flex-wrap:wrap">${fb}</div></div>`,own?'Rolleri Kaydet':null,async d=>{const ids=d.getAll('r');await sb.from('member_roles').delete().eq('server_id',s.id).eq('user_id',i).in('role_id',srl.map(r=>r.id));if(ids.length)await sb.from('member_roles').insert(ids.map(r=>({server_id:s.id,user_id:i,role_id:r})));S.modal=null;await load();render()})};
 
 A.addRole=()=>{const s=srv();modal('Rol Oluştur',(RL.some(r=>r.server_id===s.id)?'<small style="color:var(--mu)">Mevcut: '+RL.filter(r=>r.server_id===s.id).map(r=>`<b style="color:${r.color}">${esc(r.name)}</b>`).join(', ')+'</small>':'')+inp('name','ROL ADI','','text','required maxlength=20')+inp('color','RENK','#f472b6','color'),'Oluştur',async d=>{const {error}=await sb.from('roles').insert({server_id:s.id,name:d.get('name'),color:d.get('color')});if(error)return alert(error.message);S.modal=null;await load();A.roles()})};
@@ -572,7 +576,7 @@ function calcUC(){if(!me||!MLOADED)return;const rd=getRD();
 const srvAny=sid=>CH.some(c=>c.server_id===sid&&UC[c.id]);
 function memUI(){const a=$('#app');if(!a||!me)return;if(S.view!=='server')S.mem=false;const hd=a.querySelector('.mh');
   if(S.view==='server'&&hd&&!hd.querySelector('.mb'))hd.insertAdjacentHTML('beforeend','<button class="mb" data-a="memb" title="Üyeler">'+IC.users+'</button>');
-  a.classList.toggle('mp',!!S.mem);repUI(a);permUI(a);if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
+  a.classList.toggle('mp',!!S.mem);repUI(a);permUI(a);blkUI(a);if(S.mem&&S.view==='server'&&!a.querySelector('.bd'))a.insertAdjacentHTML('beforeend','<div class="bd" data-a="memb"></div>')}
 A.memb=()=>{S.mem=!S.mem;S.nav=false;render()};
 const _nv=A.nav;A.nav=()=>{S.mem=false;_nv()};
 
@@ -792,9 +796,9 @@ setInterval(showTyping,1000);
 
 /* Rol izinleri */
 const PERMS=[['can_send','Mesaj'],['can_files','Dosya'],['can_gifs','GIF'],['can_react','Tepki']];
-const can=(cid,perm)=>{const c=CH.find(x=>x.id===cid),s=c&&SV.find(x=>x.id===c.server_id);if(!s||s.owner===me)return true;
+const can=(cid,perm)=>{const c=CH.find(x=>x.id===cid),s=c&&SV.find(x=>x.id===c.server_id);if(!s||s.owner===me)return true;if(tmo(s.id))return false;
   const my=MR.filter(x=>x.server_id===s.id&&x.user_id===me).map(x=>x.role_id),rows=CRP.filter(x=>x.channel_id===cid&&my.includes(x.role_id));return !rows.length||rows.some(x=>x[perm])};
-function permUI(a){const f=a.querySelector('.in');if(!f||S.view!=='server'||!S.cid)return;const ps=can(S.cid,'can_send'),pf=can(S.cid,'can_files'),pg=can(S.cid,'can_gifs');
+function permUI(a){const f=a.querySelector('.in');if(!f||S.view!=='server'||!S.cid)return;const c0=CH.find(x=>x.id===S.cid),t0=c0&&tmo(c0.server_id);if(t0){f.outerHTML='<div class="in" style="justify-content:center;color:#f59e0b;padding:12px 16px 16px">⏳ Zaman aşımındasın · bitiş '+fmtD(t0.until)+'</div>';return}const ps=can(S.cid,'can_send'),pf=can(S.cid,'can_files'),pg=can(S.cid,'can_gifs');
   if(!ps&&!pf&&!pg){f.outerHTML='<div class="in" style="justify-content:center;color:var(--mu);padding:12px 16px 16px">🔒 Bu kanalda mesaj yazma iznin yok.</div>';return}
   const i=f.querySelector('input[name=x]');if(!ps&&i){i.disabled=true;i.placeholder='Bu kanalda mesaj yazma iznin yok'}
   if(!pf){const b=f.querySelector('[data-a="attach"]');if(b)b.remove()}if(!pg){const b=f.querySelector('[data-a="gif0"]');if(b)b.remove()}}
@@ -813,13 +817,56 @@ const _g0=A.gif0;A.gif0=()=>{if(S.view==='server'&&!can(S.cid,'can_gifs'))return
 A.roles=()=>{const s=srv();if(!s||s.owner!==me)return;const L=RL.filter(r=>r.server_id===s.id);
   modal('🎭 Roller',(L.length?L.map(r=>`<div class="rolerow"><span style="color:${r.color}">●</span><b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(r.name)}</b>${r.is_default?'<span class="tg">Varsayılan</span>':''}${r.mentionable?'<span class="tg">@</span>':''}<button type="button" class="btn g" style="padding:4px 12px" data-a="roleSet" data-i="${r.id}">⚙ Ayarlar</button></div>`).join(''):'<small style="color:var(--mu)">Henüz rol yok.</small>')+'<button type="button" class="btn" data-a="addRole">＋ Rol oluştur</button>',null)};
 A.roleSet=id=>{const r=RL.find(x=>x.id===id);if(!r)return;
-  modal('⚙ '+r.name,inp('name','ROL ADI',r.name,'text','required maxlength=20')+inp('color','RENK',r.color,'color')+`<label class="chk"><input type="checkbox" name="def" ${r.is_default?'checked':''}><span><b>Varsayılan rol</b><br><small style="color:var(--mu)">Sunucuya katılan herkese ve şu an üye olan herkese otomatik verilir.</small></span></label><label class="chk"><input type="checkbox" name="men" ${r.mentionable?'checked':''}><span><b>Etiketlenebilir</b><br><small style="color:var(--mu)">Açıksa mesajda @${esc(r.name)} yazılarak bu roldeki herkes etiketlenebilir.</small></span></label><button type="button" class="btn r" data-a="roleDel" data-i="${id}">Rolü sil</button>`,'Kaydet',async d=>{
+  modal('⚙ '+r.name,inp('name','ROL ADI',r.name,'text','required maxlength=20')+inp('color','RENK',r.color,'color')+`<label class="chk"><input type="checkbox" name="def" ${r.is_default?'checked':''}><span><b>Varsayılan rol</b><br><small style="color:var(--mu)">Sunucuya katılan herkese ve şu an üye olan herkese otomatik verilir.</small></span></label><label class="chk"><input type="checkbox" name="men" ${r.mentionable?'checked':''}><span><b>Etiketlenebilir</b><br><small style="color:var(--mu)">Açıksa mesajda @${esc(r.name)} yazılarak bu roldeki herkes etiketlenebilir.</small></span></label><label style="margin-top:4px">YETKİLER</label><label class="chk"><input type="checkbox" name="mto" ${r.can_timeout?'checked':''}><span><b>Zaman aşımı uygulayabilir</b><br><small style="color:var(--mu)">Üyelerin bir süre mesaj yazmasını engelleyebilir.</small></span></label><label class="chk"><input type="checkbox" name="mkick" ${r.can_kick?'checked':''}><span><b>Üyeleri sunucudan atabilir</b><br><small style="color:var(--mu)">Atılan kişi tekrar katılabilir.</small></span></label><label class="chk"><input type="checkbox" name="mban" ${r.can_ban?'checked':''}><span><b>Üyeleri sunucudan banlayabilir</b><br><small style="color:var(--mu)">Banlanan kişi süre dolana kadar katılamaz.</small></span></label><button type="button" class="btn r" data-a="roleDel" data-i="${id}">Rolü sil</button>`,'Kaydet',async d=>{
     const def=!!d.get('def'),men=!!d.get('men');
     if(def)await sb.from('roles').update({is_default:false}).eq('server_id',r.server_id).neq('id',r.id);
-    const {error}=await sb.from('roles').update({name:d.get('name').trim(),color:d.get('color'),is_default:def,mentionable:men}).eq('id',r.id);if(error)return alert(error.message);
+    const {error}=await sb.from('roles').update({name:d.get('name').trim(),color:d.get('color'),is_default:def,mentionable:men,can_timeout:!!d.get('mto'),can_kick:!!d.get('mkick'),can_ban:!!d.get('mban')}).eq('id',r.id);if(error)return alert(error.message);
     if(def&&!r.is_default){const rows=MB.filter(m=>m.server_id===r.server_id).map(m=>({server_id:r.server_id,user_id:m.user_id,role_id:r.id}));if(rows.length)await sb.from('member_roles').upsert(rows,{onConflict:'user_id,role_id',ignoreDuplicates:true})}
     S.modal=null;await load();A.roles()})};
 A.roleDel=async id=>{if(!confirm('Rol silinsin mi? Rolü olan herkesten alınır.'))return;const {error}=await sb.from('roles').delete().eq('id',id);if(error)return alert(error.message);S.modal=null;await load();A.roles()};
+
+
+/* ===== Mesaj gruplama, engelleme, sunucu moderasyonu ===== */
+const REV=new Set();let UBL=new Set(),MTO=[],SBN=[];
+msgsHTML=function(){const out=[],s=S.view==='server'?srv():null;let last=null,cnt=0;
+  for(let i=0;i<MS.length;i++){const m=MS[i];
+    if(UBL.has(m.user_id)&&m.user_id!==me&&!REV.has(m.id)){let j=i;while(j+1<MS.length&&MS[j+1].user_id===m.user_id&&!REV.has(MS[j+1].id))j++;
+      out.push(`<div class="m blk" id="m-${m.id}"><span style="flex:1;color:var(--mu)">🚫 Engellediğin kullanıcıdan ${j-i+1} mesaj</span><button type="button" class="btn g" style="padding:4px 12px" data-a="revmsg" data-i="${MS.slice(i,j+1).map(x=>x.id).join(',')}">Göster</button></div>`);i=j;last=null;cnt=0;continue}
+    const u=U(m.user_id),nm=s?nick(s.id,m.user_id):u.name,dt=new Date(m.created_at),
+      newg=!last||last.user_id!==m.user_id||m.reply_to||cnt>=10||dt-new Date(last.created_at)>420000||dt.toDateString()!==new Date(last.created_at).toDateString();
+    cnt=newg?1:cnt+1;last=m;
+    const body=m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`;
+    out.push(newg?`<div class="m${hl(m)}" id="m-${m.id}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div>${rpHTML(m)}<b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${body}${rxHTML(m)}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`
+      :`<div class="m cont${hl(m)}" id="m-${m.id}"><span class="ct">${time(m.created_at)}</span><div style="flex:1;min-width:0">${body}${rxHTML(m)}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`)}
+  return out.join('')};
+A.revmsg=v=>{v.split(',').forEach(x=>REV.add(x));soft()};
+
+/* Engelleme */
+const blkBtn=i=>UBL.has(i)?`<button type="button" class="btn g" data-a="unblock" data-i="${i}">✅ Engeli kaldır</button>`:`<button type="button" class="btn g" data-a="block" data-i="${i}">🚫 Engelle</button>`;
+A.block=async i=>{if(!confirm('@'+U(i).username+' engellensin mi? Birbirinize mesaj gönderemezsiniz ve onun mesajları gizlenir.'))return;const {error}=await sb.from('user_blocks').insert({blocker:me,blocked:i});if(error)return alert(error.message);UBL.add(i);if(S.modal)A.prof(i);else render()};
+A.unblock=async i=>{const {error}=await sb.from('user_blocks').delete().eq('blocker',me).eq('blocked',i);if(error)return alert(error.message);UBL.delete(i);if(S.modal)A.prof(i);else render()};
+function blkUI(a){if(S.view==='home'&&S.dm&&!S.fr&&UBL.has(S.dm)){const f=a.querySelector('.in');if(f)f.outerHTML='<div class="in" style="justify-content:center;align-items:center;gap:10px;color:var(--mu);padding:12px 16px 16px;flex-wrap:wrap">🚫 Bu kullanıcıyı engelledin, mesaj gönderemezsin. <button type="button" class="btn g" style="padding:6px 14px" data-a="unblock" data-i="'+S.dm+'">Engeli kaldır</button></div>'}}
+
+/* Sunucu moderasyonu: zaman aşımı, atma, banlama */
+const tmoOf=(sid,u)=>MTO.find(x=>x.server_id===sid&&x.user_id===u&&new Date(x.until)>new Date());
+const tmo=sid=>tmoOf(sid,me);
+const modOK=(sid,perm)=>{const s=SV.find(x=>x.id===sid);if(!s)return false;if(s.owner===me)return true;return MR.some(x=>x.server_id===sid&&x.user_id===me&&(RL.find(r=>r.id===x.role_id)||{})[perm])};
+const modAny=sid=>modOK(sid,'can_timeout')||modOK(sid,'can_kick')||modOK(sid,'can_ban');
+const isMod=(sid,u)=>{const s=SV.find(x=>x.id===sid);return !!s&&(s.owner===u||MR.some(x=>x.server_id===sid&&x.user_id===u&&['can_timeout','can_kick','can_ban'].some(k=>(RL.find(r=>r.id===x.role_id)||{})[k])))};
+const modBtns=(i,s,inS)=>{if(!s||!inS||i===me||s.owner===i)return'';if(isMod(s.id,i)&&s.owner!==me)return'';
+  const b=(a,c,l)=>`<button type="button" class="btn ${c}" data-a="${a}" data-i="${i}">${l}</button>`,t=tmoOf(s.id,i);
+  return(t?`<span class="tg" style="align-self:center">⏳ Zaman aşımında · ${fmtD(t.until)}</span>`:'')+(modOK(s.id,'can_timeout')?(t?b('untmo','g','⏳ Zaman aşımını kaldır'):b('tmo','g','⏳ Zaman aşımı')):'')+(modOK(s.id,'can_kick')?b('kick','r','👢 Sunucudan at'):'')+(modOK(s.id,'can_ban')?b('sban','r','⛔ Sunucudan banla'):'')};
+A.tmo=i=>{const s=srv();modal('Zaman aşımı: '+nick(s.id,i),'<small style="color:var(--mu)">Süre boyunca bu kişi sunucuda mesaj yazamaz, dosya ya da GIF gönderemez, tepki veremez.</small><div><label>SÜRE</label><select name="sec"><option value="60">60 saniye</option><option value="300">5 dakika</option><option value="600">10 dakika</option><option value="3600">1 saat</option><option value="86400">1 gün</option><option value="604800">1 hafta</option></select></div>'+inp('why','SEBEP (isteğe bağlı)','','text','maxlength=200'),'Uygula',async d=>{
+  const {error}=await sb.rpc('srv_timeout',{sid:s.id,target:i,secs:+d.get('sec'),why:d.get('why').trim()});if(error)return alert(error.message);S.modal=null;await load();A.prof(i)})};
+A.untmo=async i=>{const s=srv(),{error}=await sb.rpc('srv_untimeout',{sid:s.id,target:i});if(error)return alert(error.message);await load();A.prof(i)};
+A.kick=async i=>{const s=srv();if(!confirm(nick(s.id,i)+' sunucudan atılsın mı? İstersen tekrar katılabilir.'))return;const {error}=await sb.rpc('srv_kick',{sid:s.id,target:i});if(error)return alert(error.message);S.modal=null;await load();render()};
+A.sban=i=>{const s=srv();modal('Sunucudan banla: '+nick(s.id,i),'<small style="color:var(--mu)">Kişi sunucudan çıkarılır ve süre dolana kadar tekrar katılamaz.</small>'+inp('why','SEBEP','','text','maxlength=200')+'<div><label>SÜRE</label><select name="h"><option value="24">1 gün</option><option value="168">7 gün</option><option value="720">30 gün</option><option value="">Süresiz</option></select></div>','Banla',async d=>{
+  const h=d.get('h'),{error}=await sb.rpc('srv_ban',{sid:s.id,target:i,why:d.get('why').trim(),hours:h===''?null:+h});if(error)return alert(error.message);S.modal=null;await load();render()})};
+A.modpanel=()=>{const s=srv();if(!s)return;const now=new Date(),T=MTO.filter(x=>x.server_id===s.id&&new Date(x.until)>now),B=SBN.filter(x=>x.server_id===s.id&&(!x.until||new Date(x.until)>now));
+  modal('🛡 Moderasyon',`<label>ZAMAN AŞIMINDAKİLER (${T.length})</label>`+(T.map(x=>`<div class="rolerow"><b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(nick(s.id,x.user_id))}</b><small style="color:var(--mu)">${fmtD(x.until)}</small>${modOK(s.id,'can_timeout')?`<button type="button" class="btn g" style="padding:4px 10px" data-a="untmo2" data-i="${x.user_id}">Kaldır</button>`:''}</div>`).join('')||'<small style="color:var(--mu)">Yok</small>')+`<label>SUNUCU BANLARI (${B.length})</label>`+(B.map(x=>`<div class="rolerow" style="flex-wrap:wrap"><b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(U(x.user_id).name)}</b><small style="color:var(--mu)">${esc(x.reason||'')} · ${fmtD(x.until)}</small>${modOK(s.id,'can_ban')?`<button type="button" class="btn g" style="padding:4px 10px" data-a="sunban" data-i="${s.id}|${x.user_id}">Banı kaldır</button>`:''}</div>`).join('')||'<small style="color:var(--mu)">Yok</small>'),null)};
+A.untmo2=async u=>{const s=srv(),{error}=await sb.rpc('srv_untimeout',{sid:s.id,target:u});if(error)return alert(error.message);await load();A.modpanel()};
+A.sunban=async v=>{const [sid,u]=v.split('|'),{error}=await sb.rpc('srv_unban',{sid,target:u});if(error)return alert(error.message);await load();A.modpanel()};
+setInterval(()=>{if(!me)return;const n=Date.now();if(MTO.some(x=>x.user_id===me&&n-new Date(x.until)>0&&n-new Date(x.until)<30000))soft()},10000);
 
 (async()=>{
   const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
