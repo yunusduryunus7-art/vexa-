@@ -198,8 +198,8 @@ addEventListener('unhandledrejection',function(e){show(e.reason&&e.reason.messag
 <script>
 /* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
-const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv';
-const LK_URL='wss://nuvexa-2-t2numuet.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
+const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv'; // Gizli anahtarlar tarayıcıda tutulmaz; GIPHY için sunucu proxy'si kullan.
+const LK_URL='wss://nubexa-vljf8nfx.livekit.cloudd'; /* LiveKit Cloud > Project Settings > WebSocket URL */
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -754,7 +754,7 @@ function repUI(a){const k=S.view+'|'+S.cid+'|'+S.dm;if(S.rep&&S.repK!==k)S.rep=n
 A.reply=id=>{rmPop();S.rep=id;S.repK=S.view+'|'+S.cid+'|'+S.dm;render();const f=$('.in input');if(f)f.focus()};
 A.rcancel=()=>{S.rep=null;document.querySelectorAll('.repbar').forEach(b=>b.remove())};
 A.jump=id=>{const el=document.getElementById('m-'+id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.style.background='#7c5cff33';setTimeout(()=>el.style.background='',1500)}};
-const EMO=['👍','❤️','😂','😮','😢','😡','🔥','🎉','👀','🙏','👏','💯','😍','🤔','😭','🥳','😎','💀','✅','❌','😅','🤣','😴','🙌'];
+const EMO=['👍','❤️','😂','😮','😢','😡','🔥','🎉','👀','🙏','👏','💯','😍','🤔','😭','🥳','😎','💀','✅','❌','😅','🤣','😴','🙌','🫶','🩷','💜','💙','🤍','🖤','💚','💛','🧡','🤩','🥹','😤','🤯','🫡','🤝','🫠','😈','👻','🐱','🐸','🐼','🦊','🌈','⭐','⚡','🍀','🚀','🎮','🏆','💎','🧠','📌','☕','🍕','🌸','🦋','🪄'];
 A.rpick=id=>{const r=lastEl?lastEl.getBoundingClientRect():{left:20,top:200};rmPop();
   pop(r.left,Math.max(8,r.top-120),`<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px">${EMO.map(e=>`<button type="button" class="it" data-a="react" data-i="${id}|${e}" style="justify-content:center;font-size:20px;padding:6px">${e}</button>`).join('')}</div>`,Math.min(290,innerWidth-16))};
 A.react=async v=>{rmPop();if(S.view==='server'&&!can(S.cid,'can_react'))return alert('Bu kanalda tepki verme iznin yok.');const [id,e]=v.split('|'),has=((RX[id]||{})[e]||[]).includes(me),scope=S.view==='server'?S.cid:dk(me,S.dm);
@@ -1148,6 +1148,177 @@ A.oksort2=()=>{const g=okG();if(!g)return;S.rack.sort((x,y)=>{const a=tl(x,g.oke
     app.innerHTML='<div class="empty"><h2>Sunucuya bağlanılamadı</h2><p>'+esc(e.message||e)+'</p><p style="margin-top:10px">İnternetini ve VPN\'ini kontrol et. Supabase projen duraklatılmış olabilir (Supabase panelinde "Restore project").</p><button class="btn" onclick="location.reload()" style="margin-top:14px">Yeniden dene</button></div>';
   }
 })();
+
+/* ================= NUVEXA PLUS + NUCOIN + NUPOST (eklenti) =================
+   Bu bölüm, SQL migration dosyasıyla birlikte kullanılmalıdır.
+   Güvenli para/üyelik işlemleri yalnızca veritabanı RPC'leri üzerinden yapılır.
+*/
+const NV_EMOJI = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','🥹','😊','😇','🙂','🙃','😉','😍','🥰','😘','😗','😙','😚','😋','😛','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','🤥','😶','🫥','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','💩','👻','💀','☠️','👽','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','🩷','🩵','🩶','💔','❤️‍🔥','💕','💞','💓','💗','💖','💘','💝','💟','❣️','💯','💢','💥','💫','💦','💨','🕊️','🔥','✨','⭐','🌟','⚡','☀️','🌈','☁️','❄️','☔','🌊','🎉','🎊','🎈','🎁','🏆','🥇','🥈','🥉','⚽','🏀','🎮','🎧','🎵','🚀','🛸','🍕','🍔','🍟','🍩','🍪','☕','🧋','🐱','🐶','🦊','🐼','🐸','🦋','🌸','🌻','🍀','🌙','👀','👏','🙌','🤝','🙏','👍','👎','✌️','🤟','🤘','👌','🫶','💪','🧠','💎','🧿','🪄'];
+
+const nvEsc = s => String(s ?? '').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nvToast = s => { if(typeof toast==='function') toast(s); else alert(s); };
+let NV={tab:'feed',posts:[],comments:[],following:new Set(),followers:{},coin:0,plus:null,profile:null,loading:false};
+const nvUser = id => U(id);
+const nvPremiumName = id => ['yunn','kaizmyav'].includes((U(id).username||'').toLowerCase());
+const nvTime = v => new Date(v).toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
+async function nvLoad(){
+  if(!me)return;
+  NV.loading=true;
+  try{
+    const [p,f,c]=await Promise.all([
+      sb.from('nupost_posts').select('*').order('created_at',{ascending:false}).limit(60),
+      sb.from('nupost_follows').select('followed_id').eq('follower_id',me),
+      sb.from('nucoin_wallets').select('balance').eq('user_id',me).maybeSingle()
+    ]);
+    if(p.error) throw p.error;
+    NV.posts=p.data||[];
+    if(NV.posts.length){const vr=await sb.from('nupost_votes').select('post_id,vote').eq('user_id',me).in('post_id',NV.posts.map(x=>x.id));(vr.data||[]).forEach(v=>{const post=NV.posts.find(x=>x.id===v.post_id);if(post)post.my_vote=v.vote;});}
+    NV.following=new Set((f.data||[]).map(x=>x.followed_id));
+    const fr=await sb.from('nupost_follows').select('followed_id');NV.followers={};(fr.data||[]).forEach(x=>NV.followers[x.followed_id]=(NV.followers[x.followed_id]||0)+1);
+    NV.coin=c.data?.balance||0;
+    const pr=await sb.from('nuvexa_plus').select('*').eq('user_id',me).maybeSingle();
+    NV.plus=pr.data||null;
+  }catch(e){console.warn('NUPost yüklenemedi:',e.message);}
+  finally{NV.loading=false;}
+}
+function nvPlusActive(id){
+  if(nvPremiumName(id))return true;
+  if(id===me&&NV.plus?.expires_at)return new Date(NV.plus.expires_at)>new Date();
+  return false;
+}
+function nvVerified(id){
+  if(nvPremiumName(id))return true;
+  const profile=U(id);
+  return !!profile.nuvexa_verified;
+}
+function nvName(id){
+  const u=U(id),plus=nvPlusActive(id),verified=nvVerified(id);
+  return `${nvEsc(u.name)}${verified?' <span title="100+ takipçi / özel hesap" style="color:#60a5fa">●</span>':''}${plus?' <span title="Nuvexa+" style="color:#c4a7ff">✦</span>':''}`;
+}
+function nvPostCard(p){
+  const u=U(p.user_id),liked=p.my_vote===1,disliked=p.my_vote===-1;
+  return `<article class="card" style="gap:10px">
+    <div style="display:flex;align-items:center;gap:9px">
+      <button data-a="prof" data-i="${p.user_id}">${avp(u,38)}</button>
+      <div style="min-width:0;flex:1"><b>${nvName(p.user_id)}</b><small style="display:block;color:var(--mu)">@${nvEsc(u.username||'')} · ${nvTime(p.created_at)}</small></div>
+      ${p.user_id!==me?`<button class="btn ${NV.following.has(p.user_id)?'g':''}" data-a="nvFollow" data-i="${p.user_id}">${NV.following.has(p.user_id)?'Takiptesin':'Takip Et'}</button>`:''}
+    </div>
+    <p style="white-space:pre-wrap;overflow-wrap:anywhere">${nvEsc(p.body)}</p>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid #ffffff12;padding-top:8px">
+      <button class="btn ${liked?'':'g'}" data-a="nvVote" data-i="${p.id}|1">👍 ${p.likes||0}</button>
+      <button class="btn ${disliked?'':'g'}" data-a="nvVote" data-i="${p.id}|-1">👎 ${p.dislikes||0}</button>
+      <button class="btn g" data-a="nvComments" data-i="${p.id}">💬 ${p.comment_count||0} yorum</button>
+      ${p.user_id===me?`<button class="btn g" data-a="nvDelete" data-i="${p.id}" style="margin-left:auto">Sil</button>`:''}
+    </div></article>`;
+}
+function nvPostView(){
+ return `<div class="main"><div class="mh"><button class="hb" data-a="nav">☰</button>📝 NUPost <span style="margin-left:auto;color:var(--mu);font-size:12px">🪙 ${NV.coin} NUcoin</span></div>
+ <div class="list" style="padding:16px;max-width:850px;width:100%;align-self:center">
+ <form data-f="nvPost" class="card" style="margin-bottom:14px"><b>Yeni gönderi</b><textarea name="body" rows="3" maxlength="1000" placeholder="Aklından neler geçiyor?" required></textarea><div style="display:flex;justify-content:flex-end"><button class="btn">Paylaş</button></div></form>
+ ${NV.loading?'<div class="empty">Yükleniyor…</div>':NV.posts.map(nvPostCard).join('')||'<div class="empty">Henüz gönderi yok. İlk gönderiyi sen paylaş!</div>'}</div></div>`;
+}
+function nvTasksView(){
+ const tasks=[['daily_login','Günlük giriş','Her gün giriş yap: +10 NUcoin'],['first_post','İlk gönderin','NUPost’ta bir gönderi paylaş: +15 NUcoin'],['first_follow','İlk takip','Bir kullanıcıyı takip et: +10 NUcoin'],['profile_complete','Profilini tamamla','Hakkında kısmını doldur: +15 NUcoin']];
+ return `<div class="main"><div class="mh"><button class="hb" data-a="nav">☰</button>🎯 Görevler <span style="margin-left:auto">🪙 ${NV.coin} NUcoin</span></div><div class="list" style="padding:18px"><h2>NUcoin görevleri</h2><p style="color:var(--mu);margin:6px 0 16px">Görevleri tamamla, NUcoin kazan ve Nuvexa+ üyeliğini aç.</p><div class="grid">${tasks.map(([k,n,d])=>`<div class="card"><b>${n}</b><small style="color:var(--mu)">${d}</small><button class="btn g" data-a="nvClaim" data-i="${k}">Ödülü kontrol et</button></div>`).join('')}</div><h3 style="margin:22px 0 10px">Nuvexa+ mağazası</h3><div class="grid">${[['3 gün',50,3],['1 hafta',100,7],['1 ay',250,30],['1 yıl',1000,365]].map(([n,c,d])=>`<div class="card"><b>✦ ${n} Nuvexa+</b><strong style="font-size:22px">🪙 ${c}</strong><button class="btn" data-a="nvBuy" data-i="${d}">Satın al</button></div>`).join('')}</div><div class="card" style="margin-top:14px"><b>Hediye Nuvexa+</b><input id="nvGiftUser" placeholder="Kullanıcı adı"><select id="nvGiftDays"><option value="3">3 gün · 50 NUcoin</option><option value="7">1 hafta · 100 NUcoin</option><option value="30">1 ay · 250 NUcoin</option><option value="365">1 yıl · 1000 NUcoin</option></select><button class="btn" data-a="nvGift">Hediye et</button></div></div></div>`;
+}
+function nvExtraNav(){
+ const rail=$('.rail'); if(!rail||rail.querySelector('[data-a="nvPostNav"]'))return;
+ const b=document.createElement('button');b.className='sv';b.dataset.a='nvPostNav';b.title='NUPost';b.textContent='N';rail.appendChild(b);
+ const t=document.createElement('button');t.className='sv';t.dataset.a='nvTasksNav';t.title='Görevler / NUcoin';t.textContent='🪙';rail.appendChild(t);
+}
+const nvOldRender=render;
+render=function(){nvOldRender();if(me)nvExtraNav();};
+const nvOldMain=mainHTML;
+mainHTML=function(){
+ if(S.view==='nupost')return nvPostView();
+ if(S.view==='nvtasks')return nvTasksView();
+ return nvOldMain();
+};
+A.nvPostNav=async()=>{S.view='nupost';S.sid=null;S.modal=null;await nvLoad();render();};
+A.nvTasksNav=async()=>{S.view='nvtasks';S.sid=null;S.modal=null;await nvLoad();render();};
+A.nvFollow=async id=>{
+ const has=NV.following.has(id);
+ const q=has?sb.from('nupost_follows').delete().eq('follower_id',me).eq('followed_id',id):sb.from('nupost_follows').insert({follower_id:me,followed_id:id});
+ const {error}=await q;if(error)return nvToast(error.message);
+ if(has)NV.following.delete(id);else NV.following.add(id);
+ await nvLoad();render();
+};
+A.nvVote=async v=>{
+ const [id,vote]=v.split('|').map(Number);
+ const {error}=await sb.rpc('nupost_vote',{p_post_id:v.split('|')[0],p_vote:vote});
+ if(error)return nvToast(error.message);
+ await nvLoad();render();
+};
+A.nvDelete=async id=>{
+ if(!confirm('Bu gönderi silinsin mi?'))return;
+ const {error}=await sb.from('nupost_posts').delete().eq('id',id).eq('user_id',me);
+ if(error)return nvToast(error.message);
+ await nvLoad();render();
+};
+A.nvComments=id=>{
+ modal('Yorumlar',`<div id="nvCommentList" style="display:flex;flex-direction:column;gap:8px;max-height:45vh;overflow:auto">Yükleniyor…</div><textarea name="comment" rows="2" maxlength="500" placeholder="Yorum yaz…"></textarea>`,'Yorum Yap',async d=>{
+ const body=(d.get('comment')||'').trim();if(!body)return;
+ const {error}=await sb.from('nupost_comments').insert({post_id:id,user_id:me,body});
+ if(error)return nvToast(error.message);
+ S.modal=null;await nvLoad();render();
+ });
+ sb.from('nupost_comments').select('*').eq('post_id',id).order('created_at').then(({data,error})=>{
+  const el=$('#nvCommentList');if(!el)return;
+  el.innerHTML=error?nvEsc(error.message):(data||[]).map(c=>`<div class="card"><b>${nvName(c.user_id)}</b><small style="color:var(--mu)">${nvTime(c.created_at)}</small><p>${nvEsc(c.body)}</p></div>`).join('')||'Henüz yorum yok.';
+ });
+};
+A.nvClaim=async key=>{
+ const {data,error}=await sb.rpc('nucoin_claim_task',{p_task_key:key});
+ if(error)return nvToast(error.message);
+ nvToast(data?.message||'Görev kontrol edildi.');
+ await nvLoad();render();
+};
+A.nvBuy=async days=>{
+ const {data,error}=await sb.rpc('nuvexa_plus_buy',{p_days:Number(days),p_gift_user:null});
+ if(error)return nvToast(error.message);
+ nvToast('Nuvexa+ hesabına eklendi!');
+ await nvLoad();render();
+};
+A.nvGift=async()=>{
+ const un=($('#nvGiftUser')?.value||'').trim().toLowerCase().replace(/^@/,'');
+ const days=Number($('#nvGiftDays')?.value||3);
+ if(!un)return nvToast('Hediye göndermek için kullanıcı adı yaz.');
+ const target=Object.values(P).find(x=>(x.username||'').toLowerCase()===un);
+ if(!target)return nvToast('Kullanıcı bulunamadı.');
+ const {error}=await sb.rpc('nuvexa_plus_buy',{p_days:days,p_gift_user:target.id});
+ if(error)return nvToast(error.message);
+ nvToast('@'+un+' kullanıcısına Nuvexa+ hediye edildi.');
+ await nvLoad();render();
+};
+document.addEventListener('submit',async e=>{
+ if(e.target.dataset.f!=='nvPost')return;
+ e.preventDefault();
+ const body=(new FormData(e.target).get('body')||'').trim();if(!body)return;
+ const {error}=await sb.from('nupost_posts').insert({user_id:me,body});
+ if(error)return nvToast(error.message);
+ await sb.rpc('nucoin_claim_task',{p_task_key:'first_post'});
+ await nvLoad();render();
+});
+/* Profildeki mevcut banner/renk korunur; Plus dekorasyonları ve takipçi sayısı eklenir. */
+const nvOldProf=A.prof;
+A.prof=async id=>{
+ const {count}=await sb.from('nupost_follows').select('*',{count:'exact',head:true}).eq('followed_id',id);
+ const {data:custom}=await sb.from('nuvexa_plus').select('expires_at').eq('user_id',id).maybeSingle();
+ const u=U(id);u.nuvexa_verified=nvPremiumName(id)||(count||0)>=100;
+ const before=modal;
+ nvOldProf(id);
+ const md=document.querySelector('.md');
+ if(md){
+  const box=document.createElement('div');box.className='card';box.style.marginTop='8px';
+  box.innerHTML=`<b>NUPost</b><div style="color:var(--mu);font-size:13px">👥 ${count||0} takipçi · ${nvPremiumName(id)|| (custom?.expires_at&&new Date(custom.expires_at)>new Date())?'✦ Nuvexa+':'Standart hesap'}</div>${id!==me?`<button type="button" class="btn g" data-a="nvFollow" data-i="${id}">${NV.following.has(id)?'Takibi bırak':'Takip et'}</button>`:''}`;
+  md.appendChild(box);
+ }
+};
+/* Daha az mobil animasyon ve gereksiz yeniden çizim. */
+const nvStyle=document.createElement('style');
+nvStyle.textContent=`@media(max-width:700px){.sv{transition:none!important}.card:hover,.pcard:hover{transform:none!important}#msgs{padding:10px}.mt{opacity:1}}@media(prefers-reduced-motion:reduce){.m.newm,.pop,.ov.pin{animation:none!important}}`;
+document.head.appendChild(nvStyle);
+
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})</script>
 </body></html>
