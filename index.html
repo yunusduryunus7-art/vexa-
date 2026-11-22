@@ -186,6 +186,42 @@ select{-webkit-appearance:none;appearance:none;padding-right:36px;background-ima
 .okrack{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:14px;background:#4a3b2a;background:linear-gradient(#3b2f22,#2c2218);border-radius:16px;width:min(100%,640px);box-shadow:inset 0 2px 8px #0008}
 .okm{display:flex;align-items:center;gap:3px;flex-wrap:wrap;padding:6px 8px;background:#ffffff08;border-radius:10px}.okm small{color:var(--mu);margin-left:8px}
 .oktb{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:min(100%,640px)}
+
+/* ===== v4: düzeltmeler, performans, çerçeveler, arka planlar, paneller ===== */
+button{padding:0}
+.m{content-visibility:auto;contain-intrinsic-size:auto 58px}
+@media(max-width:700px){.mh,.ov{backdrop-filter:none!important}.logo{animation:none}.md,.pop,.btn{box-shadow:none}.card:hover,.sv:hover{transform:none}}
+.vt{vertical-align:-2px;margin:0 6px 0 -2px}.pp{font-size:10px;font-weight:800;padding:1px 6px;border-radius:7px;background:linear-gradient(135deg,#fde68a,#f472b6);color:#111;margin-right:6px;vertical-align:1px}
+.av[class*=fr-]{box-shadow:0 0 0 2px #09090b,0 0 0 4px var(--fc),0 0 14px var(--fc)}
+.fr-gold{--fc:#facc15}.fr-rose{--fc:#f472b6}.fr-fire{--fc:#f97316}.fr-ice{--fc:#7dd3fc}.fr-emerald{--fc:#34d399}
+.av.fr-neon{animation:frn 3s linear infinite}.av.fr-galaxy{animation:frg 4s linear infinite}.av.fr-rainbow{animation:frr 4s linear infinite}
+@keyframes frn{0%,100%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #22d3ee,0 0 16px #22d3ee}50%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #a78bfa,0 0 16px #a78bfa}}
+@keyframes frg{0%,100%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #6366f1,0 0 18px #6366f1}50%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #ec4899,0 0 18px #ec4899}}
+@keyframes frr{0%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #ef4444,0 0 14px #ef4444}25%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #eab308,0 0 14px #eab308}50%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #22c55e,0 0 14px #22c55e}75%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #3b82f6,0 0 14px #3b82f6}100%{box-shadow:0 0 0 2px #09090b,0 0 0 4px #ef4444,0 0 14px #ef4444}}
+.md.pbg-aurora,.sw.pbg-aurora{background:radial-gradient(ellipse at 15% 0,#22d3ee55,transparent 55%),radial-gradient(ellipse at 95% 25%,#a78bfa55,transparent 50%),#141416}
+.md.pbg-sunset,.sw.pbg-sunset{background:radial-gradient(ellipse at 80% 0,#fb923c66,transparent 55%),radial-gradient(ellipse at 0 40%,#ec489955,transparent 55%),#141416}
+.md.pbg-ocean,.sw.pbg-ocean{background:radial-gradient(ellipse at 50% 0,#0ea5e966,transparent 60%),radial-gradient(ellipse at 100% 80%,#1d4ed855,transparent 50%),#101418}
+.md.pbg-forest,.sw.pbg-forest{background:radial-gradient(ellipse at 10% 0,#22c55e55,transparent 55%),radial-gradient(ellipse at 90% 70%,#0d948855,transparent 55%),#111513}
+.md.pbg-nebula,.sw.pbg-nebula{background:radial-gradient(ellipse at 20% 10%,#8b5cf666,transparent 50%),radial-gradient(ellipse at 85% 60%,#ec489955,transparent 50%),radial-gradient(circle at 50% 100%,#3b82f633,transparent 50%),#0f0f16}
+.md.pbg-candy,.sw.pbg-candy{background:radial-gradient(ellipse at 0 0,#f472b666,transparent 50%),radial-gradient(ellipse at 100% 100%,#60a5fa66,transparent 50%),#16141a}
+.md.pbg-mono,.sw.pbg-mono{background:linear-gradient(135deg,#3f3f46,#0a0a0a 60%),#141416}
+.md.pbg-ember,.sw.pbg-ember{background:radial-gradient(ellipse at 50% 100%,#ef444466,transparent 60%),radial-gradient(ellipse at 0 0,#f9731633,transparent 50%),#150f0f}
+.pst{display:flex;gap:16px;color:var(--mu);font-size:13px}.pst b{color:var(--tx)}
+.prow{display:flex;gap:8px;flex-wrap:wrap}
+details.dt{background:#ffffff08;border-radius:12px;padding:0 12px}details.dt summary{cursor:pointer;padding:10px 0;color:var(--mu);font-size:13px;font-weight:600;list-style:none}details.dt summary::-webkit-details-marker{display:none}
+details.dt[open] summary{color:var(--tx)}.dtb{display:flex;flex-direction:column;gap:8px;padding:0 0 12px}.dtb .btn{padding:7px 12px;font-size:13px;align-self:flex-start}
+.mus{display:flex;align-items:center;gap:8px;background:#ffffff0d;border-radius:12px;padding:8px 12px;font-size:13px}.mus button{width:28px;height:28px;border-radius:50%;background:#f4f4f5;color:#0a0a0a}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.pl{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:16px;background:var(--p2);border:1px solid #ffffff12}
+.pl b.pr{font-size:22px}.qrow{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--p2);border-radius:12px}.qrow span{flex:1;min-width:0}.qrow small{color:var(--mu)}
+.fxg{display:flex;flex-wrap:wrap;gap:8px}.fxb{padding:6px;border-radius:12px;border:2px solid transparent;background:var(--p2);display:grid;place-items:center;gap:4px;min-width:64px;font-size:11px;color:var(--mu)}.fxb.on{border-color:#f4f4f5;color:var(--tx)}
+.sw{width:56px;height:36px;border-radius:8px}
+.npw{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:12px;padding:16px}
+.npc{background:var(--p2);border:1px solid #ffffff12;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.npc .np-h{display:flex;gap:10px;align-items:center}.npa{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.npa button{padding:5px 12px;border-radius:999px;background:#ffffff0d;font-size:13px;color:var(--mu)}.npa button.on{background:#f4f4f5;color:#0a0a0a}
+.npc img.pim{max-width:100%;max-height:340px;border-radius:12px;object-fit:cover}
+.fgw{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px}.fgw img{width:min(100%,360px);border-radius:12px;box-shadow:0 12px 40px #000a;border:1px solid #ffffff1a}
+.emg{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;max-height:210px;overflow-y:auto}.emg button{font-size:22px;padding:4px;border-radius:8px}.emg button:hover{background:#ffffff14}
+.emt{display:flex;gap:2px;margin-bottom:6px;overflow-x:auto}.emt button{padding:4px 8px;border-radius:8px;font-size:18px;opacity:.6}.emt button.on{opacity:1;background:#ffffff14}
 </style></head><body><div id="app"></div>
 <script>
 (function(){function show(m){var a=document.getElementById('app');if(a&&!a.children.length)a.innerHTML='<pre style="color:#ff5d73;padding:20px;white-space:pre-wrap;font:14px/1.5 monospace">Nuvexa açılamadı.\n\nHata: '+String(m).replace(/</g,'&lt;')+'\n\nBu yazının ekran görüntüsünü gönder.</pre>'}
@@ -196,10 +232,9 @@ addEventListener('unhandledrejection',function(e){show(e.reason&&e.reason.messag
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.7/dist/livekit-client.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script>
-/* >>> BURAYI DOLDUR: Supabase > Project Settings > API <<< */
+
 const SUPABASE_URL='https://awenfsewnqbqahqrosxr.supabase.co', SUPABASE_KEY='sb_publishable_QEwlrnGC4m82RzVbe4zxug_Wowh_a2I';
-const GIPHY_KEY='FqweOOjNTlDdVBRupnq67QtXSPKU72Tv'; // Gizli anahtarlar tarayıcıda tutulmaz; GIPHY için sunucu proxy'si kullan.
-const LK_URL='wss://nubexa-vljf8nfx.livekit.cloudd'; /* LiveKit Cloud > Project Settings > WebSocket URL */
+const LK_URL='wss://XXXX.livekit.cloud'; /* LiveKit Cloud > Project Settings > WebSocket URL */
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -209,7 +244,7 @@ let S={view:'home',sid:null,cid:null,dm:null,modal:null,tab:'login',err:'',q:'',
 
 const dk=(a,b)=>[a,b].sort().join('_');
 const U=id=>P[id]||{name:'?',color:'#666',username:'?'};
-const av=(u,z=38)=>`<div class="av" style="width:${z}px;height:${z}px;background:${u.img?`url(${esc(u.img)}) center/cover`:(u.color||'#666')};font-size:${z*.48}px">${u.img?'':esc(u.emoji||(u.name||'?')[0].toUpperCase())}</div>`;
+const av=(u,z=38)=>`<div class="av${frc(u,z)}" style="width:${z}px;height:${z}px;background:${u.img?`url(${esc(u.img)}) center/cover`:(u.color||'#666')};font-size:${z*.48}px">${u.img?'':esc(u.emoji||(u.name||'?')[0].toUpperCase())}</div>`;
 const isMem=(sid,u=me)=>MB.some(m=>m.server_id===sid&&m.user_id===u);
 const mySv=()=>SV.filter(s=>isMem(s.id));
 const srv=()=>SV.find(s=>s.id===S.sid),chan=()=>CH.find(c=>c.id===S.cid);
@@ -241,7 +276,7 @@ async function loadMsgs(){
   if(S.view==='server'&&chan()?.type==='text')q=q.eq('channel_id',S.cid);
   else if(S.view==='home'&&S.dm)q=q.eq('dm_key',dk(me,S.dm));
   else if(S.view==='server'&&chan()?.type==='forum'&&S.post)q=q.eq('post_id',S.post);
-  else{MS=[];RX={};RM={};await loadPosts();await loadChess();await loadOkey();return}
+  else{MS=[];RX={};RM={};await loadPosts();await loadChess();await loadOkey();await loadFlags();return}
   MS=((await q).data||[]).reverse();await Promise.all([loadExtra(),loadPosts()]);MCACHE[scopeKey()]={ms:MS,rx:RX,rm:RM};
 }
 const refresh=async()=>{await load();BAN?render():soft()};
@@ -289,13 +324,13 @@ if(!me){r.innerHTML=authHTML();return}
 if(!P[me]){r.innerHTML='<div class="empty">Yükleniyor…</div>';return}
 if(S.view==='server'&&(!srv()||!isMem(S.sid))){S.view='home';S.sid=null}
 r.className=S.nav?'nav':'';
-r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" data-a="home" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N${bdg(dmTotal())}</button><button class="sv ${S.view==='disc'?'on':''}" data-a="disc">${IC.compass}</button>`+mySv().map(s=>`<button class="sv ${S.sid===s.id&&S.view==='server'?'on':''}" data-a="srv" data-i="${s.id}" title="${esc(s.name)}" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}${bdg(srvCount(s.id))}${!srvCount(s.id)&&srvAny(s.id)?'<i class="ud"></i>':''}</button>`).join('')+`<button class="sv add" data-a="addSrv">+</button></div>${sideHTML()}${mainHTML()}${memHTML()}`+(S.modal?`<div class="ov" data-a="close"><form class="md" data-f="modal"><h3>${esc(S.modal.t)}</h3>${S.modal.b}<div class="row"><button type="button" class="btn g" data-a="close">${S.modal.ok?'İptal':'Kapat'}</button>${S.modal.ok?`<button class="btn">${S.modal.ok}</button>`:''}</div></form></div>`:'');
+r.innerHTML=`<div class="rail"><button class="sv ${S.view==='home'?'on':''}" data-a="home" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">N${bdg(dmTotal())}</button><button class="sv ${S.view==='disc'?'on':''}" data-a="disc">${IC.compass}</button><button class="sv ${S.view==='nu'?'on':''}" data-a="nu" title="NUPost">${IC.send}</button><button class="sv ${S.view==='plus'?'on':''}" data-a="plus" title="Nuvexa+">✦</button>`+mySv().map(s=>`<button class="sv ${S.sid===s.id&&S.view==='server'?'on':''}" data-a="srv" data-i="${s.id}" title="${esc(s.name)}" ${s.img?`style="background:url(${esc(s.img)}) center/cover"`:''}>${s.img?'':esc(s.icon||s.name[0].toUpperCase())}${bdg(srvCount(s.id))}${!srvCount(s.id)&&srvAny(s.id)?'<i class="ud"></i>':''}</button>`).join('')+`<button class="sv add" data-a="addSrv">+</button></div>${sideHTML()}${mainHTML()}${memHTML()}`+(S.modal?`<div class="ov" data-a="close"><form class="md" data-f="modal"><h3>${esc(S.modal.t)}</h3>${S.modal.b}<div class="row"><button type="button" class="btn g" data-a="close">${S.modal.ok?'İptal':'Kapat'}</button>${S.modal.ok?`<button class="btn">${S.modal.ok}</button>`:''}</div></form></div>`:'');
 const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
 const f=$('.in input');if(f){f.value=old;if(((oldF&&same)||(!old&&matchMedia('(hover:hover) and (pointer:fine)').matches))&&!S.modal)f.focus()}}
 
 const modal=(t,b,ok,fn)=>{S.modal={t,b,ok,fn,id:(window._mid=(window._mid||0)+1)};S.nav=false;S.mem=false;render()};
 const close=()=>{S.modal=null;render()};
-const go=async()=>{S.nav=false;S.mem=false;const c=MCACHE[scopeKey()];if(c){MS=c.ms;RX=c.rx;RM=c.rm}else{MS=[];RX={};RM={}}S.ml=true;render();try{await loadMsgs()}finally{S.ml=false}render()};
+const go=async()=>{S.nav=false;S.mem=false;S.vis=80;const c=MCACHE[scopeKey()];if(c){MS=c.ms;RX=c.rx;RM=c.rm}else{MS=[];RX={};RM={}}S.ml=true;render();try{await loadMsgs()}finally{S.ml=false}render()};
 
 /* ---------- İşlemler ---------- */
 const A={
@@ -480,7 +515,7 @@ function calcMC(){if(!me||!MLOADED)return;const rd=getRD();
   if(S.view==='server'&&S.cid&&MS.length){const l=MS[MS.length-1].created_at;if(!rd[S.cid]||l>rd[S.cid]){rd[S.cid]=l;setRD(rd)}}
   MC={};MROWS.forEach(r=>{if(r.user_id!==me&&(!rd[r.channel_id]||r.created_at>rd[r.channel_id])&&CH.some(c=>c.id===r.channel_id&&isMem(c.server_id)))MC[r.channel_id]=(MC[r.channel_id]||0)+1})}
 const srvCount=sid=>CH.filter(c=>c.server_id===sid).reduce((a,c)=>a+(MC[c.id]||0),0);
-const _r2=render;render=function(){if(me&&BAN){banScreen();return}if(me&&P[me]&&('tos_version' in P[me])&&(P[me].tos_version||0)<TOS_VERSION){tosGate();return}calcMC();calcUC();calcDM();_r2();memUI();pendJoin();typSync();showTyping();animNav();cgSync();okwSync();pvKeep();const t=dmTotal()+Object.values(MC).reduce((a,b)=>a+b,0);document.title=(t?'('+t+') ':'')+'Nuvexa'};
+const _r2=render;render=function(){if(me&&BAN){banScreen();return}if(me&&P[me]&&('tos_version' in P[me])&&(P[me].tos_version||0)<TOS_VERSION){tosGate();return}calcMC();calcUC();calcDM();_r2();memUI();pendJoin();typSync();showTyping();animNav();cgSync();okwSync();pvKeep();emoBtn();const t=dmTotal()+Object.values(MC).reduce((a,b)=>a+b,0);document.title=(t?'('+t+') ':'')+'Nuvexa'};
 
 /* Yazarken klavye kapanmasın: input açıkken sadece mesaj listesi/yan paneller güncellenir */
 function soft(){const a=document.activeElement;if(!me||!(a&&a.name==='x'&&a.closest('.in'))||S.modal){render();return}
@@ -537,14 +572,11 @@ function gTabs(){const t=$('#gtabs');if(t)t.innerHTML=GCATS.map((c,i)=>`<button 
 function gShow(b){b.innerHTML=GR.map((g,i)=>`<button type="button" data-a="sgu" data-i="${i}" style="padding:0"><img loading="lazy" src="${esc(g.t)}" alt="gif"></button>`).join('')||gm('Sonuç bulunamadı.')}
 async function gLoad(){const box=$('#gres');if(!box)return;gTabs();const q=(S.gq||'').trim(),tab=GCATS[S.gt||0],my=++gseq;
   if(!q&&tab[1]==='emoji'){GR=[];box.innerHTML=ANIM.map((a,i)=>`<button type="button" data-a="sg" data-i="a:${i}" style="padding:0">${gifHTML('a:'+i)}</button>`).join('');return}
-  if(!GIPHY_KEY||GIPHY_KEY==='GIPHY_ANAHTARI'){box.innerHTML=gm('Gerçek GIF aramak için dosyanın başına GIPHY anahtarını ekle. Şimdilik "Emoji" sekmesini kullanabilirsin.');return}
   const key=q||tab[1];if(gcache[key]){GR=gcache[key];gShow(box);return}
   box.innerHTML=gm('Yükleniyor…');
-  const base='https://api.giphy.com/v1/gifs/',qs=`api_key=${GIPHY_KEY}&limit=36&rating=pg-13&lang=tr`;
-  try{const r=await fetch((q||key!=='trending')?`${base}search?${qs}&q=${encodeURIComponent(key)}`:`${base}trending?${qs}`);
-    if(r.status===429)throw new Error('Saatlik GIF sınırına ulaşıldı, biraz sonra tekrar dene.');
-    const j=await r.json();if(my!==gseq)return;
-    GR=(j.data||[]).map(g=>({t:g.images.fixed_width_small.url,u:(g.images.downsized_medium||g.images.original).url}));gcache[key]=GR;gShow(box)
+  try{const {data,error}=await sb.functions.invoke('giphy',{body:{q:key}});
+    if(error){let st=0;try{st=error.context.status}catch(e){}throw new Error(st===429?'Saatlik GIF sınırına ulaşıldı, biraz sonra tekrar dene.':'GIF servisine ulaşılamadı (giphy fonksiyonu kurulu mu?)')}
+    if(my!==gseq)return;GR=(data&&data.items)||[];gcache[key]=GR;gShow(box)
   }catch(e){if(my===gseq)box.innerHTML=gm(esc(e.message||'GIF yüklenemedi'))}}
 A.gif=()=>{S.gq=S.gq||'';S.gt=S.gt||0;modal('GIF Seç',`<input id="gq" placeholder="GIF ara… (ör. mutlu, kedi, selam)" autocomplete="off" value="${esc(S.gq)}"><div class="gt" id="gtabs"></div><div class="gres" id="gres"></div><small style="color:var(--mu)">Powered by GIPHY</small><div><label>GALERİDEN GIF YÜKLE (en fazla 400 KB)</label><input type="file" id="gifup" accept="image/gif"></div>`,null);gLoad()};
 A.gtab=i=>{S.gt=+i;S.gq='';const q=$('#gq');if(q)q.value='';gLoad()};
@@ -565,11 +597,11 @@ A.attach=()=>$('#attf').click();
 
 /* Kanal listesi: kategoriler + tür seçerek kanal oluşturma */
 function chList(s,own){const cs=CH.filter(c=>c.server_id===s.id).sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==='text'?-1:1),cats=CAT.filter(c=>c.server_id===s.id);
-  const ln=c=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${c.type==='voice'?IC.sound:c.type==='forum'?IC.forum:c.type==='chess'?IC.chess:c.type==='okey'?IC.okey:IC.hash} ${UC[c.id]?`<b style="color:#fff">${esc(c.name)}</b>`:esc(c.name)}${UC[c.id]&&!MC[c.id]?'<i class="ud" style="position:static;margin:0 0 0 auto"></i>':''}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="editCh" data-i="${c.id}" title="Kanalı düzenle">${IC.pencil}</button>`:''}</div>`;
+  const ln=c=>`<div class="r2"><button class="it ${S.cid===c.id?'on':''}" data-a="ch" data-i="${c.id}">${c.type==='voice'?IC.sound:c.type==='forum'?IC.forum:c.type==='chess'?IC.chess:c.type==='okey'?IC.okey:c.type==='flags'?IC.flag:IC.hash} ${UC[c.id]?`<b style="color:#fff">${esc(c.name)}</b>`:esc(c.name)}${UC[c.id]&&!MC[c.id]?'<i class="ud" style="position:static;margin:0 0 0 auto"></i>':''}${MC[c.id]?`<b class="bdg" style="position:static;margin-left:auto">${MC[c.id]}</b>`:''}</button>${own?`<button class="x" data-a="editCh" data-i="${c.id}" title="Kanalı düzenle">${IC.pencil}</button>`:''}</div>`;
   return`<div class="cat"><span>KANALLAR</span>${own?'<button data-a="addMenu">+</button>':''}</div>`+cs.filter(c=>!cats.some(k=>k.id===c.category_id)).map(ln).join('')+cats.map(k=>`<div class="cat"><span>${esc(k.name.toUpperCase())}</span>${own?`<span><button data-a="addCh" data-i="${k.id}">+</button><button data-a="editCat" data-i="${k.id}" title="Kategoriyi düzenle">${IC.pencil}</button></span>`:''}</div>`+cs.filter(c=>c.category_id===k.id).map(ln).join('')).join('')}
 const catSel=(sid,cur)=>`<div><label>KATEGORİ</label><select name="cat"><option value="">Kategorisiz</option>${CAT.filter(k=>k.server_id===sid).map(k=>`<option value="${k.id}" ${k.id===cur?'selected':''}>${esc(k.name)}</option>`).join('')}</select></div>`;
 A.addMenu=()=>modal('Oluştur',`<button type="button" class="it" data-a="addCh" data-i="">＃ Kanal oluştur</button><button type="button" class="it" data-a="addCat">📁 Kategori oluştur</button>`);
-A.addCh=cid=>{const s=srv();if(!s)return;modal('Kanal Oluştur',`<div><label>KANAL TÜRÜ</label><label class="chk"><input type="radio" name="t" value="text" checked># Metin: mesaj, GIF, fotoğraf, video</label><label class="chk"><input type="radio" name="t" value="voice">🔊 Ses: sesli konuşma</label><label class="chk"><input type="radio" name="t" value="forum">💬 Forum: gönderi aç, tartışma yap</label><label class="chk"><input type="radio" name="t" value="chess">♟ Satranç: oda kur, 2 kişi oynasın</label><label class="chk"><input type="radio" name="t" value="okey">101 Okey: oda kur, 2-4 kişi oynasın</label></div>`+inp('name','KANAL ADI','','text','required maxlength=24')+catSel(s.id,cid),'Oluştur',async d=>{
+A.addCh=cid=>{const s=srv();if(!s)return;modal('Kanal Oluştur',`<div><label>KANAL TÜRÜ</label><label class="chk"><input type="radio" name="t" value="text" checked># Metin: mesaj, GIF, fotoğraf, video</label><label class="chk"><input type="radio" name="t" value="voice">🔊 Ses: sesli konuşma</label><label class="chk"><input type="radio" name="t" value="forum">💬 Forum: gönderi aç, tartışma yap</label><label class="chk"><input type="radio" name="t" value="chess">♟ Satranç: oda kur, 2 kişi oynasın</label><label class="chk"><input type="radio" name="t" value="okey">101 Okey: oda kur, 2-4 kişi oynasın</label><label class="chk"><input type="radio" name="t" value="flags">🏳 Bayrak bilmece: ülkeyi tahmin et</label></div>`+inp('name','KANAL ADI','','text','required maxlength=24')+catSel(s.id,cid),'Oluştur',async d=>{
   const {data:c,error}=await sb.from('channels').insert({server_id:s.id,name:d.get('name').trim(),type:d.get('t'),category_id:d.get('cat')||null}).select().single();if(error)return alert(error.message);
   S.cid=c.id;S.modal=null;await load();render()})};
 A.editCh=i=>{rmPop();const c=CH.find(x=>x.id===i);if(!c)return;modal('Kanalı Düzenle',inp('name','KANAL ADI',c.name,'text','required maxlength=24')+catSel(c.server_id,c.category_id)+(c.type==='text'||c.type==='forum'?permHTML(c):'')+`<button type="button" class="btn r" data-a="delCh" data-i="${i}">Kanalı Sil</button>`,'Kaydet',async d=>{
@@ -640,7 +672,7 @@ const BD={
  bug:{n:'Hata Avcısı',c:'#34d399',d:'Uygulamada hata bulup bildirenlere verilir.',svg:'<svg viewBox="0 0 32 32">'+bug('#34d399','#10b981','#0f766e')+'</svg>'},
  beta:{n:'Beta',c:'#7c5cff',d:'Nuvexa beta sürecindeyken uygulamayı kullananlara verilir.',svg:'<svg viewBox="0 0 32 32"><path d="M16 2l12 7v14l-12 7-12-7V9z" fill="#7c5cff"/><path d="M16 2l12 7v14l-12 7z" fill="#22d3ee" opacity=".35"/><text x="16" y="22.5" font-size="17" font-weight="800" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif">β</text></svg>'}
 };
-const BORDER=['admin','crit','bug','beta'];
+const BORDER=['admin','crit','bug','plus','idea','beta'];
 const bdgRow=i=>{const L=UB[i]||[];S.bd=null;
   const own=L.length?`<div style="display:flex;gap:8px;flex-wrap:wrap">${BORDER.filter(k=>L.includes(k)).map(k=>`<button type="button" class="bgi" data-a="bdesc" data-i="${k}" title="${esc(BD[k].n)}" style="--c:${BD[k].c}">${BD[k].svg}</button>`).join('')}</div><div id="bdesc"></div>`:'';
   const ed=ADMIN?`<label style="margin-top:4px">ROZETLERİ DÜZENLE (admin)</label><div style="display:flex;gap:6px;flex-wrap:wrap">${BORDER.map(k=>`<button type="button" class="bchip ${L.includes(k)?'on':''}" data-a="tbdg" data-i="${i}|${k}" style="--c:${BD[k].c}">${BD[k].svg}${esc(BD[k].n)}</button>`).join('')}</div>`:'';
@@ -665,7 +697,7 @@ const _nv=A.nav;A.nav=()=>{S.mem=false;_nv()};
 
 memHTML=function(){if(S.view!=='server')return'';const s=srv(),L=MB.filter(m=>m.server_id===s.id).map(m=>m.user_id).sort((a,b)=>nick(s.id,a).localeCompare(nick(s.id,b),'tr'));
   const on=L.filter(u=>stOf(u)!=='off'),off=L.filter(u=>stOf(u)==='off');
-  const it=(u,dim)=>{const r=rolesOf(s.id,u)[0];return`<button class="it" data-a="prof" data-i="${u}" style="color:${rcol(s.id,u)};${dim?'opacity:.55':''}">${avp(U(u),28)}<span>${esc(nick(s.id,u))}${s.owner===u?' 👑':''}<small style="display:block;color:var(--mu);font-size:11px">${r?esc(r.name):''}</small></span></button>`};
+  const it=(u,dim)=>{const r=rolesOf(s.id,u)[0];return`<button class="it" data-a="prof" data-i="${u}" style="color:${rcol(s.id,u)};${dim?'opacity:.55':''}">${avp(U(u),28)}<span>${esc(nick(s.id,u))}${tick(u)}${s.owner===u?' 👑':''}<small style="display:block;color:var(--mu);font-size:11px">${r?esc(r.name):''}</small></span></button>`};
   return`<div class="mem"><div class="cat">ÇEVRİMİÇİ — ${on.length}</div>${on.map(u=>it(u,0)).join('')}<div class="cat">ÇEVRİMDIŞI — ${off.length}</div>${off.map(u=>it(u,1)).join('')}</div>`};
 
 /* Sunucuya sağ tık / basılı tut: okundu işaretle */
@@ -707,7 +739,7 @@ priv:{t:'Gizlilik Politikası',s:[
 ['2. Hangi verileri topluyoruz','• Hesap: kullanıcı adın, takma adın ve şifren. Şifren şifrelenmiş (özetlenmiş) biçimde saklanır, biz göremeyiz. Giriş için kullanıcı adından teknik bir adres üretilir (örneğin kullaniciadi@nuvexa.app); bu gerçek bir e-posta adresi değildir.\n• Profil: profil fotoğrafın, banner, “hakkında” yazın, avatar emojin ve rengin, rozetlerin.\n• İçerik: sunucu ve özel mesajların (DM), yüklediğin fotoğraf, video ve GIF’ler, oluşturduğun sunucu, kanal, kategori ve roller, arkadaşlıkların, sunucu üyeliklerin ve takma adların.\n• Çevrimiçi durumu: çevrimiçi, boşta ya da rahatsız etme durumun, sen uygulamadayken diğer kullanıcılarla geçici olarak paylaşılır; kalıcı olarak kaydedilmez.\n• Moderasyon: gönderilen raporlar (raporlayan, raporlanan, sebep ve mesaj metni), banlar, kabul ettiğin şartların sürümü ve zamanı.\n• Cihazında: tarayıcı deposunda oturum bilgin, okundu bilgisi, DM listen ve durum tercihin tutulur. Reklam ya da takip çerezi kullanmıyoruz.\n• Teknik kayıtlar: IP adresin ve tarayıcı bilgin, altyapı sağlayıcılarının kayıtlarında geçici olarak görünebilir.'],
 ['3. Verileri neden kullanıyoruz','Hesabını ve hizmeti çalıştırmak, mesajları iletmek, güvenliği sağlamak, kötüye kullanımı önlemek, raporları incelemek, hataları düzeltmek ve hizmeti geliştirmek için.'],
 ['4. Kimler görebilir','• Kullanıcı adın, takma adın, profil fotoğrafın, bannerın, “hakkında” yazın, rozetlerin, çevrimiçi durumun ve üye olduğun sunucular diğer kullanıcılara görünür.\n• Sunucu mesajları o sunucunun üyelerine görünür.\n• DM’ler yalnızca konuşmanın iki tarafına görünür.\n• Yüklenen dosyalar herkese açık bağlantıyla saklanır; bağlantıyı bilen herkes açabilir.\n• Yöneticiler, raporlanan içerikleri görebilir.\n• Uygulamayı işleten kişilerin veritabanına teknik erişimi vardır ve DM’ler dahil verilere teknik olarak ulaşabilir. Bu erişim yalnızca teknik bakım, güvenlik ve şikayet incelemesi için kullanılır.'],
-['5. Üçüncü taraflar','• Supabase: kimlik doğrulama, veritabanı, dosya depolama ve anlık iletişim altyapısı.\n• GIPHY: GIF ararken arama kelimen ve IP adresin GIPHY’ye gönderilir.\n• jsDelivr: uygulamanın kod kütüphaneleri buradan yüklenir; bu sırada IP adresin görünür.\n• Barındırma sağlayıcısı: sitenin yayınlandığı altyapı.\n• Sesli sohbet etkinleştirilirse ses altyapısı için LiveKit kullanılabilir.\nVerilerini reklam amacıyla kimseyle paylaşmıyoruz ve satmıyoruz.'],
+['5. Üçüncü taraflar','• Supabase: kimlik doğrulama, veritabanı, dosya depolama ve anlık iletişim altyapısı.\n• GIPHY: GIF ararken arama kelimen ve IP adresin GIPHY’ye gönderilir.\n• jsDelivr ve cdnjs: uygulamanın kod kütüphaneleri buradan yüklenir; bu sırada IP adresin görünür.\n• flagcdn: bayrak bilmece görselleri buradan yüklenir.\n• Barındırma sağlayıcısı: sitenin yayınlandığı altyapı.\n• Sesli sohbet etkinleştirilirse ses altyapısı için LiveKit kullanılabilir.\nVerilerini reklam amacıyla kimseyle paylaşmıyoruz ve satmıyoruz.'],
 ['6. Saklama süresi','Verilerin hesabın açık olduğu sürece saklanır. Bir mesajı sildiğinde kaldırılır. Bir sunucu ya da kanal silindiğinde içindeki mesajlar da silinir. Hesabını sildiğinde profilin, mesajların, yüklediğin dosyalar ve sahibi olduğun sunucular kaldırılır. Güvenlik amacıyla rapor ve ban kayıtları makul bir süre daha saklanabilir.'],
 ['7. Haklarını nasıl kullanırsın','Profil bilgilerini ayarlardan düzeltebilir, mesajlarını silebilirsin. Hesabını profil ayarlarından şifrenle silebilirsin. Verilerine erişmek ya da düzeltmek için bize ulaşabilirsin. Bulunduğun ülkedeki veri koruma mevzuatından (örneğin KVKK ya da GDPR) doğan haklarını da bu yolla kullanabilirsin.'],
 ['8. Güvenlik','Bağlantılar şifreli (HTTPS) kurulur ve şifreler özetlenerek saklanır. Yine de hiçbir sistem tamamen güvenli değildir ve Nuvexa beta aşamasındadır; çok hassas bilgilerini paylaşma.'],
@@ -754,7 +786,7 @@ function repUI(a){const k=S.view+'|'+S.cid+'|'+S.dm;if(S.rep&&S.repK!==k)S.rep=n
 A.reply=id=>{rmPop();S.rep=id;S.repK=S.view+'|'+S.cid+'|'+S.dm;render();const f=$('.in input');if(f)f.focus()};
 A.rcancel=()=>{S.rep=null;document.querySelectorAll('.repbar').forEach(b=>b.remove())};
 A.jump=id=>{const el=document.getElementById('m-'+id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.style.background='#7c5cff33';setTimeout(()=>el.style.background='',1500)}};
-const EMO=['👍','❤️','😂','😮','😢','😡','🔥','🎉','👀','🙏','👏','💯','😍','🤔','😭','🥳','😎','💀','✅','❌','😅','🤣','😴','🙌','🫶','🩷','💜','💙','🤍','🖤','💚','💛','🧡','🤩','🥹','😤','🤯','🫡','🤝','🫠','😈','👻','🐱','🐸','🐼','🦊','🌈','⭐','⚡','🍀','🚀','🎮','🏆','💎','🧠','📌','☕','🍕','🌸','🦋','🪄'];
+const EMO=['👍','❤️','😂','😮','😢','😡','🔥','🎉','👀','🙏','👏','💯','😍','🤔','😭','🥳','😎','💀','✅','❌','😅','🤣','😴','🙌'];
 A.rpick=id=>{const r=lastEl?lastEl.getBoundingClientRect():{left:20,top:200};rmPop();
   pop(r.left,Math.max(8,r.top-120),`<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px">${EMO.map(e=>`<button type="button" class="it" data-a="react" data-i="${id}|${e}" style="justify-content:center;font-size:20px;padding:6px">${e}</button>`).join('')}</div>`,Math.min(290,innerWidth-16))};
 A.react=async v=>{rmPop();if(S.view==='server'&&!can(S.cid,'can_react'))return alert('Bu kanalda tepki verme iznin yok.');const [id,e]=v.split('|'),has=((RX[id]||{})[e]||[]).includes(me),scope=S.view==='server'?S.cid:dk(me,S.dm);
@@ -859,7 +891,7 @@ A.openpost=async id=>{S.post=id;await go()};
 A.postback=async()=>{S.post=null;await go()};
 A.delpost=async id=>{if(!confirm('Gönderi ve tüm yanıtları silinsin mi?'))return;const {error}=await sb.from('forum_posts').delete().eq('id',id);if(error)return alert(error.message);S.post=null;await go()};
 const _ch2=A.ch,_sv2=A.srv;A.ch=i=>{S.post=null;S.game=null;S.cgSel=null;S.okg=null;_ch2(i)};A.srv=i=>{S.post=null;S.game=null;S.cgSel=null;S.okg=null;_sv2(i)};
-const _mh9=mainHTML;mainHTML=function(){const c=S.view==='server'&&chan();if(S.view==='disc')return discHTML();if(c&&c.type==='forum')return forumHTML(c);if(c&&c.type==='chess')return chessHTML(c);if(c&&c.type==='okey')return okeyHTML(c);return _mh9()};
+const _mh9=mainHTML;mainHTML=function(){const c=S.view==='server'&&chan();if(S.view==='disc')return discHTML();if(S.view==='nu')return nuHTML();if(S.view==='plus')return plusHTML();if(c&&c.type==='flags')return flagsHTML(c);if(c&&c.type==='forum')return forumHTML(c);if(c&&c.type==='chess')return chessHTML(c);if(c&&c.type==='okey')return okeyHTML(c);return _mh9()};
 
 
 /* ===== Yazıyor göstergesi, roller (ayar/varsayılan/etiket), kanal rol izinleri ===== */
@@ -919,7 +951,7 @@ msgsHTML=function(){const out=[],s=S.view==='server'?srv():null;let last=null,cn
       newg=!last||last.user_id!==m.user_id||m.reply_to||cnt>=10||dt-new Date(last.created_at)>420000||dt.toDateString()!==new Date(last.created_at).toDateString();
     cnt=newg?1:cnt+1;last=m;
     const body=m.gif?gifHTML(m.gif):`<p>${fmt(m.body,s?s.id:null)}</p>`;
-    out.push(newg?`<div class="m${hl(m)}" id="m-${m.id}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div>${rpHTML(m)}<b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b><small>${time(m.created_at)}</small>${body}${rxHTML(m)}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`
+    out.push(newg?`<div class="m${hl(m)}" id="m-${m.id}"><button data-a="prof" data-i="${m.user_id}" style="flex:none;height:fit-content">${av(u,40)}</button><div>${rpHTML(m)}<b style="color:${s?rcol(s.id,m.user_id):'#fff'}">${esc(nm)}</b>${tick(m.user_id)}<small>${time(m.created_at)}</small>${body}${rxHTML(m)}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`
       :`<div class="m cont${hl(m)}" id="m-${m.id}"><span class="ct">${time(m.created_at)}</span><div style="flex:1;min-width:0">${body}${rxHTML(m)}</div><button class="mm" data-a="mmenu" data-i="${m.id}">⋯</button></div>`)}
   return out.join('')};
 A.revmsg=v=>{v.split(',').forEach(x=>REV.add(x));soft()};
@@ -955,7 +987,7 @@ setInterval(()=>{if(!me)return;const n=Date.now();if(MTO.some(x=>x.user_id===me&
 /* ===== Geçiş animasyonları, satranç, hesap silme ===== */
 let _ak='',_mk=0,_lm='',CG=[],CGW=null,CGR=null;
 function animNav(){const a=document.getElementById('app');if(!a||!me||!P[me])return;
-  const k=[S.view,S.sid,S.cid,S.dm,S.post,S.game,S.okg,S.fr].join('|'),ch=k!==_ak;
+  const k=[S.view,S.sid,S.cid,S.dm,S.post,S.game,S.okg,S.fr,S.view==='nu'?1:0].join('|'),ch=k!==_ak;
   if(ch){_ak=k;['.main','.side','.rail'].forEach(q=>{const e=a.querySelector(q);if(e)e.classList.add('anim')})}
   const lid=MS.length?MS[MS.length-1].id:'';
   if(!ch&&lid&&_lm&&lid!==_lm){const ms=a.querySelectorAll('#msgs .m');if(ms.length)ms[ms.length-1].classList.add('newm')}
@@ -1042,9 +1074,12 @@ load=async function(){const T=n=>sb.from(n).select('*');
   DMROWS=dm.data||[];DMP=[...new Set(DMROWS.flatMap(r=>r.dm_key.split('_')).filter(x=>x!==me))];
   UB={};(ub.data||[]).forEach(x=>(UB[x.user_id]=UB[x.user_id]||[]).push(x.badge));CB=cb.data||[];CRP=crp.data||[];UBL=new Set((ubl.data||[]).map(x=>x.blocked));MTO=mt.data||[];SBN=sbn.data||[];
   BAN=(ob.data||[]).find(x=>!x.until||new Date(x.until)>new Date())||null;if(adm)ADMIN=!!adm.data;
-  await Promise.all([loadUnread(true),ADMIN?Promise.all([sb.from('bans').select('*').order('created_at',{ascending:false}),sb.from('reports').select('*').order('created_at',{ascending:false}).limit(100)]).then(([x,y])=>{BANS=x.data||[];REPS=y.data||[]}):null,loadMsgs()]);
+  await Promise.all([loadPlus(),loadUnread(true),ADMIN?Promise.all([sb.from('bans').select('*').order('created_at',{ascending:false}),sb.from('reports').select('*').order('created_at',{ascending:false}).limit(100)]).then(([x,y])=>{BANS=x.data||[];REPS=y.data||[]}):null,loadMsgs()]);
   MLOADED=true};
-async function quick(){await Promise.all([loadMsgs(),loadUnread()]);BAN?render():soft()}
+let _lu=0,_ts=0,_tt;
+function softMsgs(){const m=document.getElementById('msgs');if(!m||S.modal)return false;const near=m.scrollHeight-m.scrollTop-m.clientHeight<140;m.innerHTML=msgsHTML();if(near)m.scrollTop=m.scrollHeight;const l=m.querySelectorAll('.m');if(l.length)l[l.length-1].classList.add('newm');return true}
+function thrSoft(){clearTimeout(_tt);_tt=setTimeout(()=>{_ts=Date.now();soft()},Math.max(0,4000-(Date.now()-_ts)))}
+async function quick(){const n=Date.now();await Promise.all([loadMsgs(),n-_lu>8000?(_lu=n,loadUnread()):null]);if(BAN)render();else if(softMsgs())thrSoft();else soft()}
 
 /* Mesajlar: araç çubuğu, gün ayırıcı, iskelet yükleme */
 const dayLbl=d=>{const x=new Date(d),t=new Date(),y=new Date(Date.now()-864e5);return x.toDateString()===t.toDateString()?'Bugün':x.toDateString()===y.toDateString()?'Dün':x.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})};
@@ -1137,6 +1172,134 @@ A.oklay=async()=>{const g=okG(),st=S.okStage||[];if(!g||!st.length)return alert(
 A.oksort=()=>{const g=okG();if(!g)return;S.rack.sort((x,y)=>{const a=tl(x,g.okey),b=tl(y,g.okey);return a.c-b.c||a.n-b.n});drawOk()};
 A.oksort2=()=>{const g=okG();if(!g)return;S.rack.sort((x,y)=>{const a=tl(x,g.okey),b=tl(y,g.okey);return a.n-b.n||a.c-b.c});drawOk()};
 
+
+/* ===== v4: Nuvexa+, NUcoin, NUPost, bayrak bilmece, emoji, profil ===== */
+let PLUS={},STAT={},VER=new Set(),COINS=0,GIFTS=[],QC=new Set(),FOL=new Set(),NP=[],NPR={},NPC={},NPO=null,NPT='all',FS=null,FSC=[],FGW=null,FGR=null;
+const today=()=>new Date().toISOString().slice(0,10);
+async function loadPlus(){const [a,b,c,d,e,f,g]=await Promise.all([sb.from('plus_subs').select('*'),sb.from('user_stats').select('*'),sb.from('verified_users').select('user_id'),sb.from('wallets').select('coins').eq('user_id',me).maybeSingle(),sb.from('plus_gifts').select('*').eq('to_user',me).order('created_at',{ascending:false}).limit(3),sb.from('quest_claims').select('quest,day').eq('user_id',me),sb.from('follows').select('followee').eq('follower',me)]);
+  PLUS={};(a.data||[]).forEach(x=>PLUS[x.user_id]=x);STAT={};(b.data||[]).forEach(x=>STAT[x.user_id]=x);VER=new Set((c.data||[]).map(x=>x.user_id));COINS=d.data?d.data.coins:0;GIFTS=e.data||[];
+  QC=new Set((f.data||[]).filter(x=>x.day==='1970-01-01'||x.day===today()).map(x=>x.quest+(x.day==='1970-01-01'?'':'@'+x.day)));FOL=new Set((g.data||[]).map(x=>x.followee));
+  if(GIFTS[0]){const k='nvx_gs_'+me;let s;try{s=localStorage.getItem(k)}catch(_){}if(s!==GIFTS[0].id){try{localStorage.setItem(k,GIFTS[0].id)}catch(_){}setTimeout(()=>toast('🎁 '+U(GIFTS[0].from_user).name+' sana Nuvexa+ hediye etti!'),800);setTimeout(()=>toast(''),5000)}}}
+const plusOn=id=>{const r=PLUS[id];return !!r&&(r.lifetime||new Date(r.until)>new Date())};
+const vOn=id=>VER.has(id)||((STAT[id]||{}).followers||0)>=100;
+const TICK='<svg class="vt" viewBox="0 0 24 24" width="15" height="15"><path d="M12 1.8l2.4 1.7 2.9-.1 1 2.8 2.4 1.7-.9 2.8.9 2.8-2.4 1.7-1 2.8-2.9-.1L12 22.2l-2.4-1.7-2.9.1-1-2.8-2.4-1.7.9-2.8-.9-2.8 2.4-1.7 1-2.8 2.9.1z" fill="#3b82f6"/><path d="M8 12.3l2.6 2.6L16 9.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const tick=id=>vOn(id)?TICK:'';
+const FRM={gold:'Altın',rose:'Gül',neon:'Neon',fire:'Ateş',ice:'Buz',emerald:'Zümrüt',galaxy:'Galaksi',rainbow:'Gökkuşağı'};
+const PBG={aurora:'Aurora',sunset:'Gün batımı',ocean:'Okyanus',forest:'Orman',nebula:'Nebula',candy:'Şeker',mono:'Gece',ember:'Köz'};
+function frc(u,z){if(z<30||!u||!u.id||!FRM[u.frame]||!plusOn(u.id))return'';return' fr-'+u.frame}
+IC.send=svg('<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>');IC.flag=svg('<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',15);
+BD.plus={n:'Nuvexa+',c:'#f472b6',d:'Nuvexa+ üyeliği aktif olanlarda görünür.',svg:'<svg viewBox="0 0 32 32"><defs><linearGradient id="bgP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs><rect x="3" y="3" width="26" height="26" rx="9" fill="url(#bgP)"/><text x="16" y="21.500" font-size="15" font-weight="900" text-anchor="middle" fill="#111" font-family="system-ui,sans-serif">N+</text></svg>'};
+BD.idea={n:'Fikir Mimarı',c:'#fbbf24',d:'Önerisi beğenilip Nuvexa’ya eklenen kullanıcılara verilir.',svg:'<svg viewBox="0 0 32 32"><defs><linearGradient id="bgI" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><path d="M16 3a9 9 0 00-5 16.500V23h10v-3.500A9 9 0 0016 3z" fill="url(#bgI)"/><rect x="11.500" y="24" width="9" height="3" rx="1.500" fill="#a16207"/><rect x="13" y="28" width="6" height="2" rx="1" fill="#a16207"/></svg>'};
+const bdList=i=>[...(UB[i]||[]),...(plusOn(i)?['plus']:[])];
+const bdgShow=i=>{const L=bdList(i);S.bd=null;return L.length?`<div style="display:flex;gap:8px;flex-wrap:wrap">${BORDER.filter(k=>L.includes(k)).map(k=>`<button type="button" class="bgi" data-a="bdesc" data-i="${k}" title="${esc(BD[k].n)}" style="--c:${BD[k].c}">${BD[k].svg}</button>`).join('')}</div><div id="bdesc"></div>`:''};
+const bdgEdit=i=>{const L=UB[i]||[];return`<label>ROZETLER</label><div style="display:flex;gap:6px;flex-wrap:wrap">${BORDER.filter(k=>k!=='plus'&&(k!=='beta'||L.includes(k))).map(k=>`<button type="button" class="bchip ${L.includes(k)?'on':''}" data-a="tbdg" data-i="${i}|${k}" style="--c:${BD[k].c}">${BD[k].svg}${esc(BD[k].n)}</button>`).join('')}</div>`};
+
+/* Profil müziği: telifsiz, tarayıcıda üretilen melodiler */
+const TRK={
+ lofi:{n:'Gece Yarısı',sd:.4167,step(M,i,t){const C=[[57,60,64,67],[50,53,57,60],[55,59,62,65],[48,52,55,59]][Math.floor(i/8)%4];if(i%8===0)C.forEach(n=>M.n(n,t,3.2,'triangle',.06));if(i%4===0)M.n(C[0]-12,t,1.1,'sine',.16);if(i%2)M.hat(t,.025);if(Math.random()<.4)M.n([69,72,74,76,79,81][Math.floor(Math.random()*6)],t,.8,'sine',.07)}},
+ ambient:{n:'Okyanus',sd:2,step(M,i,t){const C=[[50,57,62,65],[48,55,60,64],[53,57,60,64],[52,55,59,62]][Math.floor(i/4)%4];if(i%4===0)C.forEach(n=>M.n(n,t,8,'sine',.05));if(Math.random()<.6)M.n(C[Math.floor(Math.random()*4)]+24,t,2.5,'sine',.04)}},
+ synth:{n:'Neon Sürüş',sd:.15,step(M,i,t){const R=[57,53,60,55][Math.floor(i/16)%4],A=[0,4,7,12,7,4,0,4];if(i%4===0)M.n(R-12,t,.3,'square',.05);M.n(R+(Math.floor(i/16)%4===1?[0,4,7,12,7,4,0,4]:[0,3,7,12,7,3,0,3])[i%8],t,.14,'triangle',.07)}},
+ box:{n:'Müzik Kutusu',sd:.333,step(M,i,t){const T=[72,null,76,79,null,76,74,null,72,null,69,null,67,null,null,null,69,72,null,76,null,74,72,null,71,null,67,null,null,null,null,null],n=T[i%32];if(n){M.n(n,t,1.4,'sine',.12);M.n(n+12,t,.8,'sine',.03)}}},
+ piano:{n:'Sakin Piyano',sd:.5,step(M,i,t){const C=[[48,52,55,59],[45,48,52,55],[41,45,48,52],[43,47,50,53]][Math.floor(i/8)%4],P=[0,2,1,3,2,1,3,2];M.n(C[P[i%8]]+12,t,2,'triangle',.1);if(i%8===0)M.n(C[0]-12,t,3,'sine',.12)}},
+ space:{n:'Uzay',sd:4,step(M,i,t){[36,43,48][i%3]&&M.n([36,43,48][i%3],t,7,'sine',.08);if(Math.random()<.7)M.n(72+Math.floor(Math.random()*12),t+Math.random()*3,1.2,'sine',.03)}}};
+const Mus={ctx:null,id:null,timer:null,out:null,i:0,next:0,
+ start(id){this.stop();const T=TRK[id];if(!T)return;try{const C=this.ctx||(this.ctx=new(window.AudioContext||window.webkitAudioContext)());C.resume&&C.resume();this.id=id;this.i=0;this.next=C.currentTime+.1;const g=C.createGain();g.gain.value=.5;g.connect(C.destination);this.out=g;
+   this.timer=setInterval(()=>{while(this.next<C.currentTime+.4){T.step(this,this.i++,this.next);this.next+=T.sd}},100)}catch(e){this.id=null}},
+ stop(){clearInterval(this.timer);this.timer=null;if(this.out){const o=this.out;try{o.gain.setTargetAtTime(0,this.ctx.currentTime,.1)}catch(e){}setTimeout(()=>{try{o.disconnect()}catch(e){}},500);this.out=null}this.id=null},
+ n(m,t,d,type,v){if(!this.out)return;const C=this.ctx,o=C.createOscillator(),g=C.createGain();o.type=type;o.frequency.value=440*2**((m-69)/12);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(this.out);o.start(t);o.stop(t+d+.05)},
+ hat(t,v){if(!this.out)return;const C=this.ctx,b=C.createBuffer(1,2205,C.sampleRate),a=b.getChannelData(0);for(let k=0;k<a.length;k++)a[k]=(Math.random()*2-1)*(1-k/a.length);const s=C.createBufferSource(),g=C.createGain();s.buffer=b;g.gain.value=v;s.connect(g);g.connect(this.out);s.start(t)}};
+A.musToggle=()=>{const u=U(S.pu);if(Mus.id){Mus.stop();S.musOff=true}else if(TRK[u.music]){Mus.start(u.music);S.musOff=false}const b=document.querySelector('.mus button');if(b)b.textContent=Mus.id?'⏸':'▶'};
+const _anav=animNav;animNav=function(){_anav();if(Mus.id&&!(S.modal&&S.modal.mus===Mus.id))Mus.stop();if(S.modal&&S.modal.cls){const m=document.querySelector('#app .md');if(m)S.modal.cls.split(' ').forEach(c=>m.classList.add(c))}};
+
+/* Profil kartı (yeniden düzenlendi) */
+A.prof=i=>{S.pu=i;const u=U(i),s=S.view==='server'?srv():null,inS=s&&isMem(s.id,i),st=i===me?'me':frSt(i),rl=inS?rolesOf(s.id,i):[],srl=inS?RL.filter(r=>r.server_id===s.id&&!r.is_default):[],own=inS&&s.owner===me&&srl.length,
+  pl=plusOn(i),ss=STAT[i]||{followers:0,following:0},fl=FOL.has(i),B=(a,c,l)=>`<button type="button" class="btn ${c}" data-a="${a}" data-i="${i}">${l}</button>`,
+  prim=st==='me'?B('settings','g','Profili düzenle')+B('plus','g','✦ Nuvexa+'):B('gdm','','Mesaj')+({none:B('freq','g','Arkadaş ekle'),out:B('fdel','g','İstek gönderildi'),in:B('facc','g','Kabul et'),ok:B('fdel','g','Arkadaşsın ✓')})[st]+B(fl?'unfollow':'follow','g',fl?'Takibi bırak':'Takip et'),
+  mods=st==='me'?'':modBtns(i,s,inS)+admBtn(i),
+  modBox=(mods||own||ADMIN)?`<details class="dt"><summary>🛡 Moderasyon</summary><div class="dtb">${mods}${own?'<label>ROLLER</label>'+srl.map(r=>`<label class="chk"><input type="checkbox" name="r" value="${r.id}" ${rl.some(x=>x.id===r.id)?'checked':''}><b style="color:${r.color}">${esc(r.name)}</b></label>`).join(''):''}${ADMIN?bdgEdit(i):''}</div></details>`:'',
+  more=st==='me'?'':`<details class="dt"><summary>⋯ Diğer</summary><div class="dtb">${blkBtn(i)}${B('rep','g','🚩 Rapor et')}</div></details>`,
+  mus=pl&&TRK[u.music]?`<div class="mus"><button type="button" data-a="musToggle">${Mus.id===u.music||!S.musOff?'⏸':'▶'}</button>🎵 ${esc(TRK[u.music].n)}</div>`:'';
+  modal('',`<div style="margin:-34px -22px 0;height:96px;background:${u.banner?`url(${esc(u.banner)}) center/cover`:`linear-gradient(135deg,${u.color||'#7c5cff'},var(--p3))`};border-radius:20px 20px 0 0"></div><div style="margin-top:-46px;display:flex;flex-direction:column;gap:10px"><div style="width:92px;height:92px;border:5px solid var(--p1);border-radius:50%">${avp(u,82)}</div><div><b style="font-size:21px">${esc(inS?nick(s.id,i):u.name)}</b>${tick(i)}${pl?' <span class="pp">N+</span>':''}${inS&&s.owner===i?' 👑':''}<div style="color:var(--mu)">@${esc(u.username)} · ${stLbl(stOf(i))}</div></div><div class="pst"><span><b>${ss.followers}</b> takipçi</span><span><b>${ss.following}</b> takip</span></div>${bdgShow(i)}${u.bio?`<div style="background:#ffffff0a;padding:10px 12px;border-radius:12px;word-break:break-word">${linkify(esc(u.bio))}</div>`:''}${rl.length?`<div style="display:flex;gap:6px;flex-wrap:wrap">${rl.map(r=>`<span style="border:1px solid ${r.color};color:${r.color};border-radius:8px;padding:2px 9px;font-size:13px">${esc(r.name)}</span>`).join('')}</div>`:''}${mus}<div class="prow">${prim}</div>${more}${modBox}</div>`,own?'Rolleri Kaydet':null,async d=>{const ids=d.getAll('r');await sb.from('member_roles').delete().eq('server_id',s.id).eq('user_id',i).in('role_id',srl.map(r=>r.id));if(ids.length)await sb.from('member_roles').insert(ids.map(r=>({server_id:s.id,user_id:i,role_id:r})));S.modal=null;await load();render()});
+  S.modal.cls=pl&&PBG[u.pbg]?'pbg pbg-'+u.pbg:'';S.modal.mus=pl&&TRK[u.music]?u.music:null;
+  if(S.modal.mus){if(Mus.id!==u.music&&!S.musOff)Mus.start(u.music)}else Mus.stop()};
+A.follow=async i=>{const {error}=await sb.from('follows').insert({follower:me,followee:i});if(error)return alert(error.message);FOL.add(i);const s=STAT[i]||(STAT[i]={user_id:i,followers:0,following:0});s.followers++;A.prof(i)};
+A.unfollow=async i=>{const {error}=await sb.from('follows').delete().eq('follower',me).eq('followee',i);if(error)return alert(error.message);FOL.delete(i);const s=STAT[i];if(s)s.followers=Math.max(0,s.followers-1);A.prof(i)};
+
+/* Nuvexa+ sayfası */
+const PLANS=[['3d','3 gün',50],['1w','1 hafta',100],['1m','1 ay',250],['1y','1 yıl',1000]];
+const QST=[['daily_login','Günlük giriş',5,1],['daily_msgs','Bugün 10 mesaj yaz',10,1],['daily_react','Bugün 3 tepki ver',5,1],['daily_post','Bugün NUPost’ta paylaşım yap',10,1],['avatar','Profil fotoğrafı ekle',20,0],['bio','“Hakkında” yazısı ekle',10,0],['join','Bir sunucuya katıl',10,0],['friend','Bir arkadaş edin',15,0],['follow3','3 kişiyi takip et',15,0],['first_post','İlk NUPost’unu paylaş',20,0]];
+function plusHTML(){const hb='<button class="hb" data-a="nav">☰</button>',r=PLUS[me],on=plusOn(me),u=U(me),fx=(k,L,cur,pv)=>`<div class="fxg">${Object.keys(L).map(x=>`<button type="button" class="fxb${cur===x?' on':''}" data-a="setfx" data-i="${k}|${x}">${pv(x)}${esc(L[x])}</button>`).join('')}<button type="button" class="fxb${!cur?' on':''}" data-a="setfx" data-i="${k}|">Yok</button></div>`;
+  return`<div class="main"><div class="mh">${hb}✦ Nuvexa+</div><div class="list"><div class="npw"><div class="npc" style="background:linear-gradient(135deg,#2a2438,#18181a)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:30px">🪙</div><div><b style="font-size:24px">${COINS} NUcoin</b><br><small style="color:var(--mu)">Görevleri tamamlayarak kazan</small></div></div><div>${on?`<span class="pp">N+</span> Nuvexa+ aktif · ${r.lifetime?'<b>sınırsız</b>':'bitiş '+fmtD(r.until)}`:'<span style="color:var(--mu)">Nuvexa+ aktif değil</span>'}</div></div>
+<label>PLANLAR</label><div class="pg">${PLANS.map(([k,l,p])=>`<div class="pl"><b>${l}</b><b class="pr">${p} 🪙</b><button class="btn" data-a="buyplus" data-i="${k}">Satın al</button><button class="btn g" data-a="giftplus" data-i="${k}">🎁 Hediye et</button></div>`).join('')}</div>
+<small style="color:var(--mu)">Nuvexa+ ile: profil çerçevesi, profil arka planı, profil müziği ve özel rozet.</small>
+<label>GÖREVLER</label>${QST.map(([q,t,c,d])=>{const done=QC.has(d?q+'@'+today():q);return`<div class="qrow"><span>${esc(t)}<br><small>${d?'Günlük':'Tek seferlik'} · +${c} 🪙</small></span>${done?'<small>✓ Alındı</small>':`<button class="btn g" style="padding:6px 14px" data-a="claimq" data-i="${q}">Ödülü al</button>`}</div>`}).join('')}
+<label>PROFİL ÖZELLEŞTİRME ${on?'':'(Nuvexa+ gerekli)'}</label><small style="color:var(--mu)">ÇERÇEVE</small>${fx('frame',FRM,u.frame,k=>av({...u,id:me,frame:k},40).replace('fr-','fr-')||'')}<small style="color:var(--mu)">ARKA PLAN</small>${fx('pbg',PBG,u.pbg,k=>`<span class="sw pbg-${k}" style="display:block"></span>`)}<small style="color:var(--mu)">MÜZİK</small><div class="fxg">${Object.keys(TRK).map(k=>`<button type="button" class="fxb${u.music===k?' on':''}" data-a="setfx" data-i="music|${k}">🎵 ${esc(TRK[k].n)}</button>`).join('')}<button type="button" class="fxb${!u.music?' on':''}" data-a="setfx" data-i="music|">Yok</button><button type="button" class="fxb" data-a="musprev">${Mus.id?'⏸ Durdur':'▶ Dene'}</button></div></div></div></div>`}
+A.plus=async()=>{S.view='plus';S.sid=null;S.fr=false;S.nav=false;render();await loadPlus();render()};
+A.buyplus=async k=>{const pl=PLANS.find(x=>x[0]===k);if(!confirm(pl[1]+' Nuvexa+ için '+pl[2]+' NUcoin harcanacak. Onaylıyor musun?'))return;const {error}=await sb.rpc('buy_plus',{plan:k,target:null});if(error)return alert(error.message);await loadPlus();render();toast('✦ Nuvexa+ aktif!');setTimeout(()=>toast(''),2500)};
+A.giftplus=k=>{const pl=PLANS.find(x=>x[0]===k);modal('🎁 '+pl[1]+' Nuvexa+ hediye et',inp('un','KULLANICI ADI','','text','required autocapitalize=off')+`<small style="color:var(--mu)">${pl[2]} NUcoin harcanır.</small>`,'Hediye et',async d=>{const un=d.get('un').trim().toLowerCase().replace(/^@/,''),t=Object.values(P).find(x=>x.username===un);if(!t)return alert('Kullanıcı bulunamadı.');if(t.id===me)return alert('Kendine hediye edemezsin, “Satın al”ı kullan.');
+  const {error}=await sb.rpc('buy_plus',{plan:k,target:t.id});if(error)return alert(error.message);S.modal=null;await loadPlus();render();toast('🎁 Hediye gönderildi!');setTimeout(()=>toast(''),2500)})};
+A.claimq=async q=>{const {data,error}=await sb.rpc('claim_quest',{q});if(error)return alert(error.message);await loadPlus();render();toast('+'+data+' NUcoin 🪙');setTimeout(()=>toast(''),2000)};
+A.setfx=async v=>{const [k,x]=v.split('|');if(!plusOn(me))return alert('Bunun için Nuvexa+ gerekli.');const {error}=await sb.from('profiles').update({[k]:x||null}).eq('id',me);if(error)return alert(error.message);P[me][k]=x||null;if(k==='music'&&x){S.musOff=false;Mus.start(x)}render()};
+A.musprev=()=>{const u=U(me);if(Mus.id)Mus.stop();else if(TRK[u.music])Mus.start(u.music);else alert('Önce bir müzik seç.');render()};
+
+/* NUPost */
+async function loadNu(){let q=sb.from('nu_posts').select('*').order('created_at',{ascending:false}).limit(40);if(NPT==='fol')q=q.in('user_id',[...FOL,me]);const {data}=await q;NP=data||[];
+  const ids=NP.map(x=>x.id);NPR={};if(ids.length){const r=await sb.from('nu_reacts').select('post_id,val').eq('user_id',me).in('post_id',ids);(r.data||[]).forEach(x=>NPR[x.post_id]=x.val)}if(NPO)await loadNuC(NPO)}
+async function loadNuC(id){const {data}=await sb.from('nu_comments').select('*').eq('post_id',id).order('created_at').limit(100);NPC[id]=data||[]}
+function nuCard(p){const u=U(p.user_id),mine=p.user_id===me,v=NPR[p.id];
+  return`<div class="npc"><div class="np-h"><button data-a="prof" data-i="${p.user_id}" style="display:flex">${av(u,40)}</button><div style="flex:1;min-width:0"><b>${esc(u.name)}</b>${tick(p.user_id)}${plusOn(p.user_id)?' <span class="pp">N+</span>':''}<br><small style="color:var(--mu)">@${esc(u.username)} · ${ago(p.created_at)}</small></div>${!mine&&!FOL.has(p.user_id)?`<button class="btn g" style="padding:5px 12px;font-size:12px" data-a="nufol" data-i="${p.user_id}">Takip et</button>`:''}${mine||ADMIN?`<button class="ib" data-a="nudel" data-i="${p.id}" title="Sil">🗑</button>`:''}</div><div style="white-space:pre-wrap;word-break:break-word;line-height:1.5">${fmt(p.body,null)}</div>${p.img&&okU(p.img)?`<img class="pim" loading="lazy" src="${esc(p.img)}">`:''}<div class="npa"><button class="${v===1?'on':''}" data-a="nulike" data-i="${p.id}">👍 ${p.likes}</button><button class="${v===-1?'on':''}" data-a="nudis" data-i="${p.id}">👎 ${p.dislikes}</button><button class="${NPO===p.id?'on':''}" data-a="nucm" data-i="${p.id}">💬 ${p.comments}</button></div>${NPO===p.id?`<div style="display:flex;flex-direction:column;gap:8px">${(NPC[p.id]||[]).map(c=>{const cu=U(c.user_id);return`<div style="display:flex;gap:8px"><button data-a="prof" data-i="${c.user_id}" style="display:flex">${av(cu,28)}</button><div style="flex:1;min-width:0"><b style="font-size:13px">${esc(cu.name)}</b>${tick(c.user_id)} <small style="color:var(--mu)">${ago(c.created_at)}</small><div style="word-break:break-word">${fmt(c.body,null)}</div></div>${c.user_id===me||mine||ADMIN?`<button class="ib" style="width:24px;height:24px" data-a="nucdel" data-i="${c.id}">✕</button>`:''}</div>`}).join('')}<form data-f="nucsend" style="display:flex;gap:8px"><input name="c" maxlength="300" placeholder="Yorum yaz…" autocomplete="off"><button class="btn">Gönder</button></form></div>`:''}</div>`}
+function nuHTML(){const hb='<button class="hb" data-a="nav">☰</button>';return`<div class="main"><div class="mh">${hb}${IC.send} NUPost</div><div class="list"><div class="npw"><div class="npc"><textarea id="nutxt" rows="3" maxlength="500" placeholder="Neler oluyor?"></textarea><div style="display:flex;gap:8px;align-items:center"><button class="btn g" data-a="nuimg">📷 Fotoğraf</button><small id="nuimgn" style="color:var(--mu);flex:1"></small><button class="btn" data-a="nupost">Paylaş</button></div></div><div class="npa"><button class="${NPT==='all'?'on':''}" data-a="nutab" data-i="all">Keşfet</button><button class="${NPT==='fol'?'on':''}" data-a="nutab" data-i="fol">Takip ettiklerim</button><button data-a="nuref">↻ Yenile</button></div>${NP.length?NP.map(nuCard).join(''):'<div class="empty"><h2>Henüz gönderi yok</h2>İlk gönderiyi sen paylaş.</div>'}</div></div></div>`}
+let NUF=null;(()=>{const f=document.createElement('input');f.type='file';f.accept='image/*';f.hidden=true;document.body.appendChild(f);f.addEventListener('change',()=>{NUF=f.files[0]||null;const n=document.getElementById('nuimgn');if(n)n.textContent=NUF?NUF.name:''})})();
+A.nu=async()=>{S.view='nu';S.sid=null;S.fr=false;S.nav=false;render();await loadNu();render()};
+A.nuref=async()=>{await loadNu();render()};A.nutab=async t=>{NPT=t;await loadNu();render()};
+A.nuimg=()=>document.querySelector('input[type=file][hidden]:not(#attf)').click();
+A.nupost=async()=>{const t=document.getElementById('nutxt'),b=(t.value||'').trim();if(!b)return;let img=null;
+  if(NUF){toast('Yükleniyor…');const bl=await rzm(NUF,1400);if(bl){const pa=me+'/'+Date.now()+'.jpg',{error}=await sb.storage.from('media').upload(pa,bl,{contentType:'image/jpeg'});if(!error)img=sb.storage.from('media').getPublicUrl(pa).data.publicUrl}toast('')}
+  const {error}=await sb.from('nu_posts').insert({user_id:me,body:b,img});if(error)return alert(error.message);NUF=null;await loadNu();render()};
+A.nulike=id=>nuVote(id,1);A.nudis=id=>nuVote(id,-1);
+async function nuVote(id,v){const p=NP.find(x=>x.id===id),cur=NPR[id];if(!p)return;let error;
+  if(cur===v){({error}=await sb.from('nu_reacts').delete().eq('post_id',id).eq('user_id',me));if(!error){delete NPR[id];if(v===1)p.likes--;else p.dislikes--}}
+  else if(cur){({error}=await sb.from('nu_reacts').update({val:v}).eq('post_id',id).eq('user_id',me));if(!error){NPR[id]=v;if(v===1){p.likes++;p.dislikes--}else{p.dislikes++;p.likes--}}}
+  else{({error}=await sb.from('nu_reacts').insert({post_id:id,user_id:me,val:v}));if(!error){NPR[id]=v;if(v===1)p.likes++;else p.dislikes++}}
+  if(error)alert(error.message);render()}
+A.nucm=async id=>{NPO=NPO===id?null:id;if(NPO)await loadNuC(id);render()};
+A.nucdel=async id=>{await sb.from('nu_comments').delete().eq('id',id);await loadNuC(NPO);const p=NP.find(x=>x.id===NPO);if(p)p.comments=Math.max(0,p.comments-1);render()};
+A.nudel=async id=>{if(!confirm('Gönderi silinsin mi?'))return;const {error}=await sb.from('nu_posts').delete().eq('id',id);if(error)return alert(error.message);await loadNu();render()};
+A.nufol=async i=>{const {error}=await sb.from('follows').insert({follower:me,followee:i});if(error)return alert(error.message);FOL.add(i);const s=STAT[i]||(STAT[i]={user_id:i,followers:0,following:0});s.followers++;render()};
+document.addEventListener('submit',async e=>{if(e.target.dataset.f!=='nucsend')return;const c=new FormData(e.target).get('c').trim();if(!c||!NPO)return;const {error}=await sb.from('nu_comments').insert({post_id:NPO,user_id:me,body:c});if(error)return alert(error.message);const p=NP.find(x=>x.id===NPO);if(p)p.comments++;await loadNuC(NPO);render()});
+
+/* Bayrak bilmece */
+const CTRY='TR:Türkiye|Turkiye|Turkey;DE:Almanya|Germany;FR:Fransa|France;IT:İtalya|Italya|Italy;ES:İspanya|Ispanya|Spain;PT:Portekiz|Portugal;GB:İngiltere|Ingiltere|Birleşik Krallık|Birlesik Krallik|United Kingdom|UK|England;IE:İrlanda|Irlanda|Ireland;NL:Hollanda|Netherlands;BE:Belçika|Belcika|Belgium;CH:İsviçre|Isvicre|Switzerland;AT:Avusturya|Austria;SE:İsveç|Isvec|Sweden;NO:Norveç|Norvec|Norway;DK:Danimarka|Denmark;FI:Finlandiya|Finland;IS:İzlanda|Izlanda|Iceland;PL:Polonya|Poland;CZ:Çekya|Cekya|Çek Cumhuriyeti|Czechia;SK:Slovakya|Slovakia;HU:Macaristan|Hungary;RO:Romanya|Romania;BG:Bulgaristan|Bulgaria;GR:Yunanistan|Greece;HR:Hırvatistan|Hirvatistan|Croatia;RS:Sırbistan|Sirbistan|Serbia;BA:Bosna Hersek|Bosna|Bosnia;AL:Arnavutluk|Albania;MK:Kuzey Makedonya|Makedonya|North Macedonia;SI:Slovenya|Slovenia;UA:Ukrayna|Ukraine;RU:Rusya|Russia;BY:Belarus|Beyaz Rusya;LT:Litvanya|Lithuania;LV:Letonya|Latvia;EE:Estonya|Estonia;GE:Gürcistan|Gurcistan|Georgia;AM:Ermenistan|Armenia;AZ:Azerbaycan|Azerbaijan;KZ:Kazakistan|Kazakhstan;UZ:Özbekistan|Ozbekistan|Uzbekistan;CY:Kıbrıs|Kibris|Cyprus;US:Amerika|ABD|Amerika Birleşik Devletleri|United States|USA;CA:Kanada|Canada;MX:Meksika|Mexico;BR:Brezilya|Brazil;AR:Arjantin|Argentina;CL:Şili|Sili|Chile;CO:Kolombiya|Colombia;PE:Peru;VE:Venezuela;UY:Uruguay;CU:Küba|Kuba|Cuba;EG:Mısır|Misir|Egypt;MA:Fas|Morocco;DZ:Cezayir|Algeria;TN:Tunus|Tunisia;LY:Libya;SA:Suudi Arabistan|Saudi Arabia;AE:Birleşik Arap Emirlikleri|BAE|Dubai|UAE;QA:Katar|Qatar;KW:Kuveyt|Kuwait;IQ:Irak|Iraq;IR:İran|Iran;IL:İsrail|Israil|Israel;JO:Ürdün|Urdun|Jordan;LB:Lübnan|Lubnan|Lebanon;SY:Suriye|Syria;AF:Afganistan|Afghanistan;PK:Pakistan;IN:Hindistan|India;BD:Bangladeş|Banglades|Bangladesh;NP:Nepal;LK:Sri Lanka;CN:Çin|Cin|China;JP:Japonya|Japan;KR:Güney Kore|Guney Kore|South Korea|Kore;KP:Kuzey Kore|North Korea;MN:Moğolistan|Mogolistan|Mongolia;TH:Tayland|Thailand;VN:Vietnam;MY:Malezya|Malaysia;SG:Singapur|Singapore;ID:Endonezya|Indonesia;PH:Filipinler|Philippines;AU:Avustralya|Australia;NZ:Yeni Zelanda|New Zealand;ZA:Güney Afrika|Guney Afrika|South Africa;NG:Nijerya|Nigeria;KE:Kenya;ET:Etiyopya|Ethiopia;GH:Gana|Ghana;SN:Senegal;TZ:Tanzanya|Tanzania;CM:Kamerun|Cameroon;JM:Jamaika|Jamaica;BO:Bolivya|Bolivia;PY:Paraguay;EC:Ekvador|Ecuador';
+const CT={};CTRY.split(';').forEach(s=>{const [c,n]=s.split(':');CT[c]=n.split('|')});
+const nrm=s=>String(s).toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9 ]/g,'').trim();
+async function loadFlags(){const c=chan();if(S.view!=='server'||!c||c.type!=='flags'){FS=null;return}
+  await sb.rpc('flag_init',{cid:c.id});const [a,b]=await Promise.all([sb.from('flag_state').select('*').eq('channel_id',c.id).maybeSingle(),sb.from('flag_scores').select('*').eq('channel_id',c.id).order('points',{ascending:false}).limit(10)]);FS=a.data;FSC=b.data||[]}
+function flagsHTML(c){const hb='<button class="hb" data-a="nav">☰</button>',s=srv(),last=FS&&FS.last_answer?`<div style="color:var(--mu);text-align:center">${FS.last_winner?'✅ '+esc(nick(s.id,FS.last_winner))+' bildi: ':'⏭ Geçildi: '}<b style="color:var(--tx)">${esc((CT[FS.last_answer]||[''])[0])}</b></div>`:'';
+  return`<div class="main"><div class="mh">${hb}${IC.flag} ${esc(c.name)}</div><div class="cgwrap"><div class="fgw">${FS?`<img alt="bayrak" src="https://flagcdn.com/w320/${FS.code.toLowerCase()}.png">`:'<div class="empty">Yükleniyor…</div>'}${last}<form data-f="fgguess" style="display:flex;gap:8px;width:min(100%,360px)"><input name="g" placeholder="Hangi ülkenin bayrağı?" autocomplete="off"><button class="btn">Tahmin</button></form><button class="btn g" data-a="fgskip">⏭ Geç</button></div><div class="okp" style="flex-direction:column;align-items:stretch"><b>🏆 Sıralama</b>${FSC.length?FSC.map((x,i)=>`<div style="display:flex;justify-content:space-between"><span>${i+1}. ${esc(nick(s.id,x.user_id))}</span><b>${x.points}</b></div>`).join(''):'<small style="color:var(--mu)">Henüz puan yok. İlk bilen sen ol!</small>'}</div></div></div>`}
+document.addEventListener('submit',async e=>{if(e.target.dataset.f!=='fgguess')return;const g=nrm(new FormData(e.target).get('g')||''),c=chan();if(!g||!FS||!c)return;e.target.g.value='';
+  const ok=(CT[FS.code]||[]).some(n=>nrm(n)===g);if(!ok){e.target.classList.add('shk');setTimeout(()=>e.target.classList.remove('shk'),400);return}
+  const {error}=await sb.rpc('flag_win',{cid:c.id,ans:FS.code});if(error&&error.message!=='Yanlış')alert(error.message);await loadFlags();render()});
+A.fgskip=async()=>{const c=chan();const {error}=await sb.rpc('flag_skip',{cid:c.id});if(error)return alert(error.message);await loadFlags();render()};
+function fgWatch(id){if(FGW===id)return;if(FGR){try{sb.removeChannel(FGR)}catch(e){}FGR=null}FGW=id;if(!id)return;
+  FGR=sb.channel('fg:'+id).on('postgres_changes',{event:'*',schema:'public',table:'flag_state',filter:'channel_id=eq.'+id},p=>{if(p.new){FS=p.new;render()}}).on('postgres_changes',{event:'*',schema:'public',table:'flag_scores',filter:'channel_id=eq.'+id},async()=>{await loadFlags();render()}).subscribe()}
+setInterval(()=>{const c=S.view==='server'&&chan();fgWatch(c&&c.type==='flags'?c.id:null)},1500);
+
+/* Emoji paneli (mesaj kutusu + tepkiler) */
+const EMC=[['😀','Yüzler','😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗😚😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬😌😔😪🤤😴😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯🤠🥳😎🤓🧐😕😟🙁😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬😈👿💀💩🤡👻👽🤖'],['👍','Eller','👍👎👌✌🤞🤟🤘🤙👈👉👆👇☝✋🤚🖐🖖👋🤝🙏✍💪👏🙌👐🤲🤜🤛✊👊🫶🫡🫰'],['❤','Kalpler','❤🧡💛💚💙💜🖤🤍🤎💔❣💕💞💓💗💖💘💝💟💋'],['🐶','Hayvanlar','🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐸🐵🙈🙉🙊🐔🐧🐦🦆🦅🦉🦇🐺🐗🐴🦄🐝🐛🦋🐌🐞🐢🐍🐙🦑🦀🐠🐟🐬🐳🦈'],['🍕','Yiyecek','🍎🍐🍊🍋🍌🍉🍇🍓🍒🍑🥭🍍🥥🥝🍅🥑🍆🥕🌽🥔🍞🧀🥚🍳🥞🥓🍔🍟🍕🌭🥪🌮🍝🍜🍣🍤🍙🍚🍦🍩🍪🎂🍰🍫🍬🍭☕🍵🍺🍻🥂🍷'],['⚽','Aktivite','⚽🏀🏈⚾🎾🏐🎱🏓🥊🎯🎮🎲🎨🎤🎧🎸🎹🥁🎬🏆🥇🥈🥉🎉🎊🎁🎈🚀✈🚗🏠'],['🔥','Semboller','🔥✨⭐🌟💫⚡💥💯✅❌❓❗💤💢💬👀🎵🎶☀🌙🌈☁❄💧🌊🌹🌸🍀⚠🚫♻']];
+const emoList=s=>{try{return[...new Intl.Segmenter().segment(s)].map(x=>x.segment)}catch(e){return s.match(/\p{Extended_Pictographic}\uFE0F?/gu)||[]}};
+const emoRec=()=>{try{return JSON.parse(localStorage.getItem('nvx_emo')||'[]')}catch(e){return[]}};
+function emoPanel(){const r=S.emoRect||{left:20,top:400},tab=S.emoTab||0,cats=[['🕘',emoRec()],...EMC.map(c=>[c[0],emoList(c[2])])],items=cats[tab][1];
+  pop(r.left-120,r.top-300,`<div class="emt">${cats.map((c,i)=>`<button type="button" class="${i===tab?'on':''}" data-a="emotab" data-i="${i}">${c[0]}</button>`).join('')}</div><div class="emg">${items.map(e=>`<button type="button" data-a="emopick" data-i="${e}">${e}</button>`).join('')||'<small style="grid-column:1/-1;color:var(--mu)">Henüz yok</small>'}</div>`,Math.min(330,innerWidth-16))}
+A.emotab=i=>{S.emoTab=+i;emoPanel()};
+A.emoopen=()=>{const r=lastEl?lastEl.getBoundingClientRect():{left:20,top:400};S.emoMode='input';S.emoRect={left:r.left,top:r.top};S.emoTab=0;emoPanel()};
+A.rpick=id=>{const r=lastEl?lastEl.getBoundingClientRect():{left:20,top:400};rmPop();S.emoMode='react';S.emoId=id;S.emoRect={left:r.left,top:r.top};S.emoTab=0;emoPanel()};
+A.emopick=e=>{const rec=[e,...emoRec().filter(x=>x!==e)].slice(0,24);try{localStorage.setItem('nvx_emo',JSON.stringify(rec))}catch(_){}
+  if(S.emoMode==='react'){A.react(S.emoId+'|'+e);return}const i=document.querySelector('.in input[name=x]');if(!i||i.disabled)return;const a=i.selectionStart??i.value.length,b=i.selectionEnd??a;i.value=i.value.slice(0,a)+e+i.value.slice(b);const c=a+e.length;i.setSelectionRange(c,c);i.dispatchEvent(new Event('input',{bubbles:true}))};
+function emoBtn(){document.querySelectorAll('#app .in').forEach(f=>{if(f.querySelector('.emo')||!f.querySelector('input[name=x]'))return;const b=document.createElement('button');b.type='button';b.className='btn g emo';b.dataset.a='emoopen';b.title='Emoji';b.textContent='☺';b.style.fontSize='18px';const t=f.querySelector('[data-a="gif0"]')||f.querySelector('.btn:not([data-a])');f.insertBefore(b,t||null)})}
+/* eski mesajlar penceresi */
+const _mo=msgsHTML;msgsHTML=function(){const full=MS,v=S.vis||80;if(full.length<=v)return _mo();MS=full.slice(-v);let h='';try{h=_mo()}finally{MS=full}return`<div style="text-align:center;padding:6px"><button type="button" class="btn g" data-a="older">Önceki ${full.length-v} mesajı göster</button></div>`+h};
+A.older=()=>{const m=document.getElementById('msgs'),h0=m.scrollHeight,t0=m.scrollTop;S.vis=(S.vis||80)+80;render();const n=document.getElementById('msgs');n.scrollTop=n.scrollHeight-h0+t0};
+
 (async()=>{
   const app=$('#app'),to=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('zaman aşımı')),ms))]);
   app.innerHTML='<div class="empty"><div class="logo" style="font-size:44px">Nuvexa</div><div class="ld"><i></i><i></i><i></i></div></div>';
@@ -1148,177 +1311,6 @@ A.oksort2=()=>{const g=okG();if(!g)return;S.rack.sort((x,y)=>{const a=tl(x,g.oke
     app.innerHTML='<div class="empty"><h2>Sunucuya bağlanılamadı</h2><p>'+esc(e.message||e)+'</p><p style="margin-top:10px">İnternetini ve VPN\'ini kontrol et. Supabase projen duraklatılmış olabilir (Supabase panelinde "Restore project").</p><button class="btn" onclick="location.reload()" style="margin-top:14px">Yeniden dene</button></div>';
   }
 })();
-
-/* ================= NUVEXA PLUS + NUCOIN + NUPOST (eklenti) =================
-   Bu bölüm, SQL migration dosyasıyla birlikte kullanılmalıdır.
-   Güvenli para/üyelik işlemleri yalnızca veritabanı RPC'leri üzerinden yapılır.
-*/
-const NV_EMOJI = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','🥹','😊','😇','🙂','🙃','😉','😍','🥰','😘','😗','😙','😚','😋','😛','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🤭','🫢','🫡','🤫','🫠','🤥','😶','🫥','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','💩','👻','💀','☠️','👽','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','🩷','🩵','🩶','💔','❤️‍🔥','💕','💞','💓','💗','💖','💘','💝','💟','❣️','💯','💢','💥','💫','💦','💨','🕊️','🔥','✨','⭐','🌟','⚡','☀️','🌈','☁️','❄️','☔','🌊','🎉','🎊','🎈','🎁','🏆','🥇','🥈','🥉','⚽','🏀','🎮','🎧','🎵','🚀','🛸','🍕','🍔','🍟','🍩','🍪','☕','🧋','🐱','🐶','🦊','🐼','🐸','🦋','🌸','🌻','🍀','🌙','👀','👏','🙌','🤝','🙏','👍','👎','✌️','🤟','🤘','👌','🫶','💪','🧠','💎','🧿','🪄'];
-
-const nvEsc = s => String(s ?? '').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const nvToast = s => { if(typeof toast==='function') toast(s); else alert(s); };
-let NV={tab:'feed',posts:[],comments:[],following:new Set(),followers:{},coin:0,plus:null,profile:null,loading:false};
-const nvUser = id => U(id);
-const nvPremiumName = id => ['yunn','kaizmyav'].includes((U(id).username||'').toLowerCase());
-const nvTime = v => new Date(v).toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
-async function nvLoad(){
-  if(!me)return;
-  NV.loading=true;
-  try{
-    const [p,f,c]=await Promise.all([
-      sb.from('nupost_posts').select('*').order('created_at',{ascending:false}).limit(60),
-      sb.from('nupost_follows').select('followed_id').eq('follower_id',me),
-      sb.from('nucoin_wallets').select('balance').eq('user_id',me).maybeSingle()
-    ]);
-    if(p.error) throw p.error;
-    NV.posts=p.data||[];
-    if(NV.posts.length){const vr=await sb.from('nupost_votes').select('post_id,vote').eq('user_id',me).in('post_id',NV.posts.map(x=>x.id));(vr.data||[]).forEach(v=>{const post=NV.posts.find(x=>x.id===v.post_id);if(post)post.my_vote=v.vote;});}
-    NV.following=new Set((f.data||[]).map(x=>x.followed_id));
-    const fr=await sb.from('nupost_follows').select('followed_id');NV.followers={};(fr.data||[]).forEach(x=>NV.followers[x.followed_id]=(NV.followers[x.followed_id]||0)+1);
-    NV.coin=c.data?.balance||0;
-    const pr=await sb.from('nuvexa_plus').select('*').eq('user_id',me).maybeSingle();
-    NV.plus=pr.data||null;
-  }catch(e){console.warn('NUPost yüklenemedi:',e.message);}
-  finally{NV.loading=false;}
-}
-function nvPlusActive(id){
-  if(nvPremiumName(id))return true;
-  if(id===me&&NV.plus?.expires_at)return new Date(NV.plus.expires_at)>new Date();
-  return false;
-}
-function nvVerified(id){
-  if(nvPremiumName(id))return true;
-  const profile=U(id);
-  return !!profile.nuvexa_verified;
-}
-function nvName(id){
-  const u=U(id),plus=nvPlusActive(id),verified=nvVerified(id);
-  return `${nvEsc(u.name)}${verified?' <span title="100+ takipçi / özel hesap" style="color:#60a5fa">●</span>':''}${plus?' <span title="Nuvexa+" style="color:#c4a7ff">✦</span>':''}`;
-}
-function nvPostCard(p){
-  const u=U(p.user_id),liked=p.my_vote===1,disliked=p.my_vote===-1;
-  return `<article class="card" style="gap:10px">
-    <div style="display:flex;align-items:center;gap:9px">
-      <button data-a="prof" data-i="${p.user_id}">${avp(u,38)}</button>
-      <div style="min-width:0;flex:1"><b>${nvName(p.user_id)}</b><small style="display:block;color:var(--mu)">@${nvEsc(u.username||'')} · ${nvTime(p.created_at)}</small></div>
-      ${p.user_id!==me?`<button class="btn ${NV.following.has(p.user_id)?'g':''}" data-a="nvFollow" data-i="${p.user_id}">${NV.following.has(p.user_id)?'Takiptesin':'Takip Et'}</button>`:''}
-    </div>
-    <p style="white-space:pre-wrap;overflow-wrap:anywhere">${nvEsc(p.body)}</p>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid #ffffff12;padding-top:8px">
-      <button class="btn ${liked?'':'g'}" data-a="nvVote" data-i="${p.id}|1">👍 ${p.likes||0}</button>
-      <button class="btn ${disliked?'':'g'}" data-a="nvVote" data-i="${p.id}|-1">👎 ${p.dislikes||0}</button>
-      <button class="btn g" data-a="nvComments" data-i="${p.id}">💬 ${p.comment_count||0} yorum</button>
-      ${p.user_id===me?`<button class="btn g" data-a="nvDelete" data-i="${p.id}" style="margin-left:auto">Sil</button>`:''}
-    </div></article>`;
-}
-function nvPostView(){
- return `<div class="main"><div class="mh"><button class="hb" data-a="nav">☰</button>📝 NUPost <span style="margin-left:auto;color:var(--mu);font-size:12px">🪙 ${NV.coin} NUcoin</span></div>
- <div class="list" style="padding:16px;max-width:850px;width:100%;align-self:center">
- <form data-f="nvPost" class="card" style="margin-bottom:14px"><b>Yeni gönderi</b><textarea name="body" rows="3" maxlength="1000" placeholder="Aklından neler geçiyor?" required></textarea><div style="display:flex;justify-content:flex-end"><button class="btn">Paylaş</button></div></form>
- ${NV.loading?'<div class="empty">Yükleniyor…</div>':NV.posts.map(nvPostCard).join('')||'<div class="empty">Henüz gönderi yok. İlk gönderiyi sen paylaş!</div>'}</div></div>`;
-}
-function nvTasksView(){
- const tasks=[['daily_login','Günlük giriş','Her gün giriş yap: +10 NUcoin'],['first_post','İlk gönderin','NUPost’ta bir gönderi paylaş: +15 NUcoin'],['first_follow','İlk takip','Bir kullanıcıyı takip et: +10 NUcoin'],['profile_complete','Profilini tamamla','Hakkında kısmını doldur: +15 NUcoin']];
- return `<div class="main"><div class="mh"><button class="hb" data-a="nav">☰</button>🎯 Görevler <span style="margin-left:auto">🪙 ${NV.coin} NUcoin</span></div><div class="list" style="padding:18px"><h2>NUcoin görevleri</h2><p style="color:var(--mu);margin:6px 0 16px">Görevleri tamamla, NUcoin kazan ve Nuvexa+ üyeliğini aç.</p><div class="grid">${tasks.map(([k,n,d])=>`<div class="card"><b>${n}</b><small style="color:var(--mu)">${d}</small><button class="btn g" data-a="nvClaim" data-i="${k}">Ödülü kontrol et</button></div>`).join('')}</div><h3 style="margin:22px 0 10px">Nuvexa+ mağazası</h3><div class="grid">${[['3 gün',50,3],['1 hafta',100,7],['1 ay',250,30],['1 yıl',1000,365]].map(([n,c,d])=>`<div class="card"><b>✦ ${n} Nuvexa+</b><strong style="font-size:22px">🪙 ${c}</strong><button class="btn" data-a="nvBuy" data-i="${d}">Satın al</button></div>`).join('')}</div><div class="card" style="margin-top:14px"><b>Hediye Nuvexa+</b><input id="nvGiftUser" placeholder="Kullanıcı adı"><select id="nvGiftDays"><option value="3">3 gün · 50 NUcoin</option><option value="7">1 hafta · 100 NUcoin</option><option value="30">1 ay · 250 NUcoin</option><option value="365">1 yıl · 1000 NUcoin</option></select><button class="btn" data-a="nvGift">Hediye et</button></div></div></div>`;
-}
-function nvExtraNav(){
- const rail=$('.rail'); if(!rail||rail.querySelector('[data-a="nvPostNav"]'))return;
- const b=document.createElement('button');b.className='sv';b.dataset.a='nvPostNav';b.title='NUPost';b.textContent='N';rail.appendChild(b);
- const t=document.createElement('button');t.className='sv';t.dataset.a='nvTasksNav';t.title='Görevler / NUcoin';t.textContent='🪙';rail.appendChild(t);
-}
-const nvOldRender=render;
-render=function(){nvOldRender();if(me)nvExtraNav();};
-const nvOldMain=mainHTML;
-mainHTML=function(){
- if(S.view==='nupost')return nvPostView();
- if(S.view==='nvtasks')return nvTasksView();
- return nvOldMain();
-};
-A.nvPostNav=async()=>{S.view='nupost';S.sid=null;S.modal=null;await nvLoad();render();};
-A.nvTasksNav=async()=>{S.view='nvtasks';S.sid=null;S.modal=null;await nvLoad();render();};
-A.nvFollow=async id=>{
- const has=NV.following.has(id);
- const q=has?sb.from('nupost_follows').delete().eq('follower_id',me).eq('followed_id',id):sb.from('nupost_follows').insert({follower_id:me,followed_id:id});
- const {error}=await q;if(error)return nvToast(error.message);
- if(has)NV.following.delete(id);else NV.following.add(id);
- await nvLoad();render();
-};
-A.nvVote=async v=>{
- const [id,vote]=v.split('|').map(Number);
- const {error}=await sb.rpc('nupost_vote',{p_post_id:v.split('|')[0],p_vote:vote});
- if(error)return nvToast(error.message);
- await nvLoad();render();
-};
-A.nvDelete=async id=>{
- if(!confirm('Bu gönderi silinsin mi?'))return;
- const {error}=await sb.from('nupost_posts').delete().eq('id',id).eq('user_id',me);
- if(error)return nvToast(error.message);
- await nvLoad();render();
-};
-A.nvComments=id=>{
- modal('Yorumlar',`<div id="nvCommentList" style="display:flex;flex-direction:column;gap:8px;max-height:45vh;overflow:auto">Yükleniyor…</div><textarea name="comment" rows="2" maxlength="500" placeholder="Yorum yaz…"></textarea>`,'Yorum Yap',async d=>{
- const body=(d.get('comment')||'').trim();if(!body)return;
- const {error}=await sb.from('nupost_comments').insert({post_id:id,user_id:me,body});
- if(error)return nvToast(error.message);
- S.modal=null;await nvLoad();render();
- });
- sb.from('nupost_comments').select('*').eq('post_id',id).order('created_at').then(({data,error})=>{
-  const el=$('#nvCommentList');if(!el)return;
-  el.innerHTML=error?nvEsc(error.message):(data||[]).map(c=>`<div class="card"><b>${nvName(c.user_id)}</b><small style="color:var(--mu)">${nvTime(c.created_at)}</small><p>${nvEsc(c.body)}</p></div>`).join('')||'Henüz yorum yok.';
- });
-};
-A.nvClaim=async key=>{
- const {data,error}=await sb.rpc('nucoin_claim_task',{p_task_key:key});
- if(error)return nvToast(error.message);
- nvToast(data?.message||'Görev kontrol edildi.');
- await nvLoad();render();
-};
-A.nvBuy=async days=>{
- const {data,error}=await sb.rpc('nuvexa_plus_buy',{p_days:Number(days),p_gift_user:null});
- if(error)return nvToast(error.message);
- nvToast('Nuvexa+ hesabına eklendi!');
- await nvLoad();render();
-};
-A.nvGift=async()=>{
- const un=($('#nvGiftUser')?.value||'').trim().toLowerCase().replace(/^@/,'');
- const days=Number($('#nvGiftDays')?.value||3);
- if(!un)return nvToast('Hediye göndermek için kullanıcı adı yaz.');
- const target=Object.values(P).find(x=>(x.username||'').toLowerCase()===un);
- if(!target)return nvToast('Kullanıcı bulunamadı.');
- const {error}=await sb.rpc('nuvexa_plus_buy',{p_days:days,p_gift_user:target.id});
- if(error)return nvToast(error.message);
- nvToast('@'+un+' kullanıcısına Nuvexa+ hediye edildi.');
- await nvLoad();render();
-};
-document.addEventListener('submit',async e=>{
- if(e.target.dataset.f!=='nvPost')return;
- e.preventDefault();
- const body=(new FormData(e.target).get('body')||'').trim();if(!body)return;
- const {error}=await sb.from('nupost_posts').insert({user_id:me,body});
- if(error)return nvToast(error.message);
- await sb.rpc('nucoin_claim_task',{p_task_key:'first_post'});
- await nvLoad();render();
-});
-/* Profildeki mevcut banner/renk korunur; Plus dekorasyonları ve takipçi sayısı eklenir. */
-const nvOldProf=A.prof;
-A.prof=async id=>{
- const {count}=await sb.from('nupost_follows').select('*',{count:'exact',head:true}).eq('followed_id',id);
- const {data:custom}=await sb.from('nuvexa_plus').select('expires_at').eq('user_id',id).maybeSingle();
- const u=U(id);u.nuvexa_verified=nvPremiumName(id)||(count||0)>=100;
- const before=modal;
- nvOldProf(id);
- const md=document.querySelector('.md');
- if(md){
-  const box=document.createElement('div');box.className='card';box.style.marginTop='8px';
-  box.innerHTML=`<b>NUPost</b><div style="color:var(--mu);font-size:13px">👥 ${count||0} takipçi · ${nvPremiumName(id)|| (custom?.expires_at&&new Date(custom.expires_at)>new Date())?'✦ Nuvexa+':'Standart hesap'}</div>${id!==me?`<button type="button" class="btn g" data-a="nvFollow" data-i="${id}">${NV.following.has(id)?'Takibi bırak':'Takip et'}</button>`:''}`;
-  md.appendChild(box);
- }
-};
-/* Daha az mobil animasyon ve gereksiz yeniden çizim. */
-const nvStyle=document.createElement('style');
-nvStyle.textContent=`@media(max-width:700px){.sv{transition:none!important}.card:hover,.pcard:hover{transform:none!important}#msgs{padding:10px}.mt{opacity:1}}@media(prefers-reduced-motion:reduce){.m.newm,.pop,.ov.pin{animation:none!important}}`;
-document.head.appendChild(nvStyle);
-
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})</script>
 </body></html>
